@@ -1,0 +1,92 @@
+# Agent Architecture — the 2-minute version
+
+A way to put AI to work across your day — and scale it from one agent to a system that helps run a business — **without it becoming something you can't understand.**
+
+> The full docs: [`AGENT_ARCHITECTURE.md`](./AGENT_ARCHITECTURE.md) (the vision) and [`BRAIN_BRIEF.md`](./BRAIN_BRIEF.md) (how to build the foundation). This is the digest.
+
+---
+
+## Three ideas hold the whole thing up
+
+1. **The brain is the bus.** All durable state lives in one place — plain files in git. Agents never call each other; they coordinate by reading and writing the brain. So any agent is disposable: kill it, swap it, rewrite it — nothing is lost.
+2. **Roles are the unit.** Organize the work the way a company does — by accountable **role** ("Communications Manager"), not by task or tool. A role wraps the messy machinery (schedules, loops, skills) into one thing you can name and manage. *(Popularly a "virtual employee" — but treat it as a position, not a person.)*
+3. **Opinionated about mechanism, agnostic about policy.** The architecture fixes how things are wired; **you** choose the settings — above all, how much autonomy each role gets.
+
+---
+
+## The shape
+
+```
+                   YOU
+                    │   drive · oversee · observe
+                    ▼
+  ┌───────────────────────────────────┐
+  │  ROLES — do the work              │
+  │  each staffed by agents & loops   │
+  └───────────────────────────────────┘
+                    │   read · write
+                    ▼
+  ┌───────────────────────────────────┐
+  │  THE BRAIN — the shared bus       │
+  │  every durable thing lives here   │
+  └───────────────────────────────────┘
+```
+
+**You** drive, oversee, and observe. **Roles** do the work. **The brain** is the only thing they share.
+
+---
+
+## How it runs
+
+Most of the work happens on its own, in two rhythms — and you can jump in any time.
+
+```
+  Loops      all day   wake → read brain → do a task → write back → log it
+  Dreaming   nightly   organize · write the digest · propose improvements
+```
+
+- **Loops react** — a role wakes on a schedule and handles what's new in its area.
+- **Dreaming reflects** — one agent runs at night to tidy the brain and make the system smarter, not just busier.
+- **You, on demand** — any time, just ask: query the brain, hand a role a task, or steer one mid-run. (That's "driving," from the shape above.)
+
+And it **improves itself, auditably:**
+
+```
+  you step in
+     → saved as feedback
+     → dreaming spots the pattern
+     → proposes a diff to the role's charter
+     → you approve
+     → it needs you less next time
+```
+
+Every improvement is a readable git diff. Nothing changes behind your back.
+
+---
+
+## Autonomy is a dial — set per role
+
+```
+  Advisory     proposes only — you do everything
+  Supervised   acts on small things; gates the big moves
+  Delegated    acts; escalates only the judgment calls
+  Autonomous   acts within policy; you review outcomes
+
+  more oversight  ◄──────────────────────►  more throughput
+```
+
+You set it by taste and trust, and turn it up as a role earns it (its evals are its performance review). Low autonomy is safe but slow; the payoff comes from delegating more as confidence grows.
+
+---
+
+## Start small, grow without rebuilding
+
+```
+  Brain → 1 role → a few roles → + dreaming → + self-improving → business system
+```
+
+Each step (Stages 0 → 5 in the full doc) is a place you can stop and have something useful. Bigger is just **more of the same** — more roles on the same brain. Scaling is hiring, not migrating.
+
+---
+
+*The one test that keeps it simple: can you explain the whole system out loud in a few minutes, by pointing at files and naming roles? If not, something needs deleting — not documenting.*
