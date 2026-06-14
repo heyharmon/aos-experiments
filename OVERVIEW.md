@@ -2,7 +2,7 @@
 
 A way to put AI to work across your day — and scale it from one agent to a system that helps run a business — **without it becoming something you can't understand.**
 
-> The full docs: [`AGENT_ARCHITECTURE.md`](./AGENT_ARCHITECTURE.md) (the vision) and [`BRAIN_BRIEF.md`](./BRAIN_BRIEF.md) (how to build the foundation). This is the digest.
+> The full docs: [`AGENT_ARCHITECTURE.md`](./AGENT_ARCHITECTURE.md) (the system) and [`BRAIN_ARCHITECTURE.md`](./BRAIN_ARCHITECTURE.md) (the foundation it runs on). This is the digest.
 
 ---
 

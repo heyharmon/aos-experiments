@@ -1,32 +1,26 @@
 # Agent Architecture — document set
 
-A technology-agnostic vision for organizing AI work by **roles**, plus the buildable blueprint for its foundation. The docs are **layered by altitude** — each answers a different question, and you can read down only as far as you need.
+A technology-agnostic vision for organizing AI work by **roles**, and for the **brain** that work runs on. Two peer architecture docs — one for the system, one for its foundation — plus a digest and this index. Read only as far as you need.
 
-| Doc | Altitude | Answers | Status |
+| Doc | What it is | Answers | Status |
 |---|---|---|---|
 | [`OVERVIEW.md`](./OVERVIEW.md) | **The 2-minute digest** | The whole thing, distilled — start here. | Current |
-| [`AGENT_ARCHITECTURE.md`](./AGENT_ARCHITECTURE.md) | **Vision & invariants** | *What* the system is and *why* — the parts, the rules, the principles. Tech-agnostic. | Current |
-| [`BRAIN_BRIEF.md`](./BRAIN_BRIEF.md) | **Context-plane blueprint** | *How* to build the brain (the substrate every role reads and writes). Opinionated, buildable. | Current — aligned to roles + OKF |
+| [`AGENT_ARCHITECTURE.md`](./AGENT_ARCHITECTURE.md) | **Vision & invariants — the system** | *What* the agent system is and *why* — roles, loops, telemetry, autonomy, evaluation, improvement. | Current |
+| [`BRAIN_ARCHITECTURE.md`](./BRAIN_ARCHITECTURE.md) | **Vision & invariants — the brain** | *What* the context substrate is and *why* — the two layers, OKF, the conventions agents read and write through. | Current |
 
-## How the two relate
+## How the two architecture docs relate
 
-`AGENT_ARCHITECTURE.md` describes the *system around the brain*: roles, loops, telemetry, autonomy, evaluation, improvement. It treats the brain as a black box governed by invariants (e.g. "all durable state lives in the brain; it degrades to plain markdown").
+They are **peers at the same altitude** — each is a vision plus a set of invariants — and they are deliberately compatible:
 
-`BRAIN_BRIEF.md` opens that black box for the one plane deep enough to warrant it — the **Context plane** — and shows a concrete way to build it. The architecture is the contract; the brief is one compliant implementation of its foundation.
+- `AGENT_ARCHITECTURE.md` describes the *system around the brain*. It treats the brain as a substrate governed by invariants ("all durable state lives in the brain; it degrades to plain markdown").
+- `BRAIN_ARCHITECTURE.md` describes that *substrate itself* — the **Context plane** — at the same level of abstraction. It picks up exactly where the agent doc's invariants leave off.
 
-Most planes will never need their own doc. The Context plane does, because it's the foundation everything else writes to.
+Neither prescribes technology, with **one exception**: the brain commits to **OKF + git** as its storage format (see below). That single, deliberate commitment is the only thing that distinguishes the brain doc's stance from the agent doc's pure "fill-in-the-blank."
 
 ## On the Open Knowledge Format (OKF)
 
-[OKF](https://github.com/GoogleCloudPlatform/knowledge-catalog/tree/main/okf) is an external, vendor-neutral standard for curated knowledge as markdown + YAML frontmatter in git. It is **inspiration and a conformance target, not a doc we vendor here.**
+[OKF](https://github.com/GoogleCloudPlatform/knowledge-catalog/tree/main/okf) is an external, vendor-neutral standard for curated knowledge as markdown + YAML frontmatter in git. We **reference it, not vendor it.**
 
-- The brain's **knowledge layer** (entities, reference, decisions, role-charters) should **conform to OKF**, so our substrate is portable across the whole ecosystem, not just our own tools.
-- The brain's **operational layer** (work-queue, run-ledger/telemetry, feedback, eval-results) is **outside OKF's scope** — OKF is a knowledge format, not a coordination protocol.
-- OKF is therefore **not a replacement for the brain**: a format is not a system. We follow it for the knowledge layer and reference the real spec rather than copying it.
-
-## How BRAIN_BRIEF aligns (done)
-
-`BRAIN_BRIEF.md` has been brought in line with the architecture:
-1. **Roles** — role-charters are now first-class knowledge (`roles/<role>/charter.md`), holding the autonomy dial and consequence-tagged tools.
-2. **OKF conformance** — the knowledge layer follows OKF (required `type`, OKF-recommended fields, our extras as extension keys, cross-links as bundle-relative body links).
-3. **Two-layer split** — a curated **knowledge layer** (OKF) vs. an **operational layer** (`_queue/`, `_runs/`, `_feedback/`, `_evals/`) the architecture assumes lives in the brain.
+- The brain's **knowledge layer** (entities, reference, decisions, role-charters) **conforms to OKF**, so the substrate is portable across the whole ecosystem, not just our own tools.
+- The brain's **operational layer** (work-queue, run-ledger, feedback, eval-results) is **outside OKF's scope** — OKF is a knowledge format, not a coordination protocol.
+- OKF is **not a replacement for the brain**: a format is not a system. Committing to it is a *convention* (like "frontmatter is the schema"), not a technology choice — which is why the brain doc can adopt it without breaking the set's tech-agnostic ethos. Git is treated the same way: a brain must be versioned somehow, and git is the obvious choice, so it is barely a prescription.
