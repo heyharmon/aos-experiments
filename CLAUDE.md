@@ -10,11 +10,15 @@ A set of **documentation** that lays out an opinionated, technology-agnostic arc
 |---|---|
 | `OVERVIEW.md` | The 2-minute digest. Start here. |
 | `AGENT_ARCHITECTURE.md` | The system: roles, planes, activation/loops, telemetry, autonomy, human surfaces, evaluation, improvement, maturity path. |
-| `BRAIN_ARCHITECTURE.md` | The foundation: the "brain" — the shared context substrate, its two layers, and OKF. |
+| `BRAIN_ARCHITECTURE.md` | The foundation: the "brain" — the shared context substrate, its three areas (knowledge / agents / runtime), and OKF. |
 | `README.md` | Index explaining how the docs relate. |
 | `todos.md` | Working notes / backlog. |
 
 `AGENT_ARCHITECTURE.md` and `BRAIN_ARCHITECTURE.md` are **peer docs at the same altitude** — one for the system, one for its foundation.
+
+## Subdirectory: `recipes/`
+
+These docs are deliberately tech-agnostic. The **`recipes/`** subdirectory is the implementation layer that *does* prescribe a stack and a build plan — friendly specs a coding agent can execute. Three kinds: **brain recipes** (the foundation), **role recipes** (one role each, modular), and **kits** (a brain + role(s) combined). See `recipes/README.md`.
 
 ## The core thesis (so edits stay coherent)
 

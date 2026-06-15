@@ -6,7 +6,7 @@ A technology-agnostic vision for organizing AI work by **roles**, and for the **
 |---|---|---|---|
 | [`OVERVIEW.md`](./OVERVIEW.md) | **The 2-minute digest** | The whole thing, distilled — start here. | Current |
 | [`AGENT_ARCHITECTURE.md`](./AGENT_ARCHITECTURE.md) | **Vision & invariants — the system** | *What* the agent system is and *why* — roles, loops, telemetry, autonomy, evaluation, improvement. | Current |
-| [`BRAIN_ARCHITECTURE.md`](./BRAIN_ARCHITECTURE.md) | **Vision & invariants — the brain** | *What* the context substrate is and *why* — the two layers, OKF, the conventions agents read and write through. | Current |
+| [`BRAIN_ARCHITECTURE.md`](./BRAIN_ARCHITECTURE.md) | **Vision & invariants — the brain** | *What* the context substrate is and *why* — the three areas, OKF, the conventions agents read and write through. | Current |
 
 ## How the two architecture docs relate
 
@@ -22,5 +22,5 @@ Neither prescribes technology, with **one exception**: the brain commits to **OK
 [OKF](https://github.com/GoogleCloudPlatform/knowledge-catalog/tree/main/okf) is an external, vendor-neutral standard for curated knowledge as markdown + YAML frontmatter in git. We **reference it, not vendor it.**
 
 - The brain's **knowledge layer** (entities, reference, decisions, role-charters) **conforms to OKF**, so the substrate is portable across the whole ecosystem, not just our own tools.
-- The brain's **operational layer** (work-queue, run-ledger, feedback, eval-results) is **outside OKF's scope** — OKF is a knowledge format, not a coordination protocol.
+- The brain's **agents and runtime areas** (machinery; and work-queue, run-ledger, feedback, eval-results) are **outside OKF's scope** — OKF is a knowledge format, not a coordination protocol or a place for code.
 - OKF is **not a replacement for the brain**: a format is not a system. Committing to it is a *convention* (like "frontmatter is the schema"), not a technology choice — which is why the brain doc can adopt it without breaking the set's tech-agnostic ethos. Git is treated the same way: a brain must be versioned somehow, and git is the obvious choice, so it is barely a prescription.

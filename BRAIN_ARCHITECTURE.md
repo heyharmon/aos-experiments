@@ -27,12 +27,15 @@ Why commit to OKF and nothing else? Because the format is the one decision that 
 
 All the lasting information the agent system relies on lives here, and agents coordinate *through* it rather than by talking to each other (see `AGENT_ARCHITECTURE.md §1.1`). One home per fact; everything else links to it. This is what lets agents stay disposable: their memory and their desk are in the brain, not in them.
 
-### 1.2 Two layers: knowledge and operations
+### 1.2 Three areas: knowledge, agents, and runtime
 
-The brain holds two kinds of state, and keeping them distinct is its most important structural decision:
+The brain holds three kinds of file, and keeping them distinct is its most important structural decision:
 
-- **The knowledge layer** — curated, durable "what is true": entities, projects, decisions, reference, and the **role-charters** that define the agent org. This layer conforms to OKF.
-- **The operational layer** — the moment-to-moment state of work in progress: the work-queue (the to-do list), the run-ledger (the activity log), captured feedback, and evaluation results. These are short-lived working records, and they sit outside OKF (OKF describes knowledge, not the mechanics of who's doing what).
+- **The knowledge area** — curated, durable "what is true": entities, projects, decisions, reference, and the **role-charters** that define the agent org. Authored and durable; conforms to OKF.
+- **The agents area** — the durable **machinery** that staffs each role: system prompts, loop scripts, tool lists, skills. Authored and durable *like* knowledge, but it is code and config rather than curated facts, so it sits outside OKF.
+- **The runtime area** — the moment-to-moment **exhaust** of work in progress: the work-queue (the to-do list), the run-ledger (the activity log), captured feedback, and evaluation results. Mechanical not authored, regenerable, and safe to delete; outside OKF (OKF describes knowledge, not the mechanics of who's doing what).
+
+Two axes explain why it's three and not two: *OKF vs. not*, and *durable vs. transient*. Knowledge is OKF and durable; agents is durable but not OKF; runtime is neither. (Machinery is authored source you edit and version — not regenerable exhaust — so it earns a home of its own rather than being lumped in with runtime state.)
 
 ### 1.3 The AI organizes; the files just store
 
@@ -47,33 +50,37 @@ A brain is compliant if and only if it honors these. Everything else is free.
 1. **One source of truth.** Every fact lives in exactly one canonical file; everything else links to it.
 2. **Plain text in git, conforming to OKF.** The knowledge layer is markdown + YAML frontmatter in a versioned repo. This is the brain's one technology commitment; git history is its audit log and undo.
 3. **Frontmatter is the schema.** If a detail isn't in the frontmatter, nothing can reliably search or sort by it. Keep the set of fields small — resist any you won't actually use.
-4. **Two layers, never confused.** Curated knowledge (durable, OKF) and operational runtime state (transient, brain-specific) stay clearly separated.
+4. **Three areas, never confused.** Curated knowledge (durable, OKF), role machinery (durable, not OKF), and runtime state (transient, not OKF) stay clearly separated.
 5. **Writes go through a contract.** Agents add and update through one defined doorway, not by editing raw files however they like, so the brain stays consistent. (What that doorway looks like is yours to choose — see §6.)
 6. **Retrieval is earned complexity.** Begin with plain text search over frontmatter and content; add vectors or a graph only when that demonstrably falls short.
-7. **Degrade gracefully.** Delete the index, the tooling, and the entire operational layer, and the knowledge layer is still a valid OKF bundle a human can read.
+7. **Degrade gracefully.** Delete the index, the tooling, the agents area, and the entire runtime area, and the knowledge area is still a valid OKF bundle a human can read.
 8. **Sensitivity is explicit; secrets never live here.** Restricted material is marked as such; credentials go in a secret manager, never the brain.
 9. **Simplicity is the tiebreaker.** When two designs both work, choose the one you can still read in six months.
 
 ---
 
-## 3. The shape: two layers
+## 3. The shape: three areas
 
 ```
   THE BRAIN  ·  one git repo, plain text
   │
-  ├─ Knowledge layer    curated · durable · OKF-conformant
-  │     roles · entities · projects · decisions · reference
+  ├─ knowledge/   curated · durable · OKF-conformant
+  │     roles (charters) · entities · projects · decisions · reference
   │
-  └─ Operational layer  runtime state · transient or append-only
+  ├─ agents/      role machinery · durable · NOT OKF
+  │     one folder per role: system-prompt · loop · tools · skills
+  │
+  └─ runtime/     exhaust of running · transient or append-only · NOT OKF
         work-queue · run-ledger · feedback · eval-results
 ```
 
-Directory names are conventional, not mandated — what matters is the two-layer split and that the knowledge layer is an OKF bundle. The two layers map onto the agent architecture's planes: the knowledge layer *is* the Context plane; the operational layer is where the Work, Telemetry, and Learning planes persist their state.
+Directory names are conventional, not mandated — what matters is the three-way split and that the knowledge area is an OKF bundle. The areas map onto the agent architecture's planes: knowledge *is* the Context plane; **agents** holds the machinery of the Work and Activation planes (a role's staff and its schedules); **runtime** is where the Work, Telemetry, and Learning planes persist their transient state.
 
-| Layer | Holds | Shape | OKF? |
+| Area | Holds | Shape | OKF? |
 |---|---|---|---|
-| **Knowledge** | what is true: roles, entities, projects, decisions, reference | documents that link to each other | yes |
-| **Operational** | work in progress: queue, run-ledger, feedback, evals | short-lived working records | no |
+| **Knowledge** | what is true: charters, entities, projects, decisions, reference | documents that link to each other | yes |
+| **Agents** | each role's machinery: prompts, loops, tools, skills | authored code/config, one folder per role | no |
+| **Runtime** | work in progress: queue, run-ledger, feedback, evals | short-lived working records | no |
 
 ---
 
@@ -100,14 +107,22 @@ status: active                    # an extension field
 
 ---
 
-## 5. The operational layer
+## 5. The agents and runtime areas
 
-The runtime state of work, kept deliberately separate from curated knowledge because it is mechanical, not authored. Four conventional collections:
+Two non-OKF areas sit beside the knowledge layer.
+
+### The agents area — durable machinery
+
+Each role's **staff** lives here, one folder per role: the system prompt, the loop/heartbeat script, the tool list, any skills. This is authored code and config — durable, versioned, and edited deliberately (the improvement loop opens diffs against it, just as it does against charters, `AGENT_ARCHITECTURE.md §11`). It is not OKF (it isn't curated facts) and it is not exhaust (you can't regenerate it by replaying history). A role's **charter** — the durable contract — lives in the knowledge area (`knowledge/roles/`); its **machinery** — the current implementation of that contract — lives here. That split is exactly why agents stay disposable while the role persists: kill the machinery and rebuild it; the charter and the brain are untouched.
+
+### The runtime area — transient exhaust
+
+The runtime state of work, kept deliberately separate from both curated knowledge and machinery because it is mechanical, not authored. Four conventional collections:
 
 - **Work-queue** — the tasks roles claim and complete (the inbound side of coordination).
 - **Run-ledger** — an append-only record of every agent run: tokens, cost, actions, outcome (`AGENT_ARCHITECTURE.md §7`).
-- **Feedback** — captured human interventions, the labeled examples the improvement loop learns from (`§11`).
-- **Eval results** — per-role acceptance checks and dated scorecards (`§10`).
+- **Feedback** — captured human interventions, the labeled examples the improvement loop learns from (`AGENT_ARCHITECTURE.md §11`).
+- **Eval results** — per-role acceptance checks and dated scorecards (`AGENT_ARCHITECTURE.md §10`).
 
 These are files too, but they are not OKF and not curated: they can be regenerated or replayed, you only ever add to them, and they are safe to delete. Deleting them loses history but never corrupts knowledge — which is the whole point of the split.
 
@@ -124,11 +139,11 @@ Two components sit over the files. The architecture fixes the *pattern*; you cho
 
 ## 7. Curation: ingestion and dreaming
 
-A brain stays useful only if something keeps it current — and that something is a scheduled agent, not a pipeline. This is the **dreaming** job of `AGENT_ARCHITECTURE.md §6`, run when things are quiet:
+A brain stays useful only if something keeps it current — and that something is a scheduled agent, not a pipeline. This is the **dreaming** job of `AGENT_ARCHITECTURE.md §6` (owned by the System role), run when things are quiet:
 
 1. **Ingest.** Pull new raw material (mail, transcripts, exports) into a staging area, then file each item into the right place in the knowledge layer — extracting durable facts, updating frontmatter, appending to history. **Flag, don't guess:** ambiguous or sensitive items wait for a human.
 2. **Consolidate.** Reconcile contradictions, add links, prune, and generate the digest.
-3. **Improve.** Cluster the feedback against the eval scorecards and open diffs against role-charters (`§11`).
+3. **Improve.** Cluster the feedback against the eval scorecards and open diffs against role-charters (`AGENT_ARCHITECTURE.md §11`).
 
 The whole operation is one agent session, fully inspectable in git — the format makes the curation auditable.
 
@@ -140,7 +155,7 @@ The brain is the same thing at every size; you grow it by adding files, never by
 
 - **A handful of notes** — a personal brain you and a chat agent use by hand. Already useful (the agent architecture's Stage 0).
 - **A structured knowledge layer** — entities, projects, decisions seeded from real work; retrievable.
-- **Roles + the operational layer** — charters and the queue/ledger, so agents do real work and report it.
+- **Roles + the agents and runtime areas** — charters, machinery, and the queue/ledger, so agents do real work and report it.
 - **A maintained, self-improving brain** — the dreaming job keeps it current and proposes charter improvements.
 
 Scaling is addition, not migration — the same reason the agent architecture scales. **When to reach past plain files:** questions that hop across many connected facts ("what led to this decision?"), many agents writing at once and colliding, or non-technical teammates who need a point-and-click interface. Then add a heavier search or graph layer *over the same files* — and because the knowledge layer is OKF, the wider OKF ecosystem (catalogs, visualizers) works with zero migration. The OKF files are the export format; nothing is trapped.
@@ -167,7 +182,7 @@ Both honor §2. Both are readable raw. Swap any cell without touching the others
 
 - **A database as the source of truth.** The moment the real, canonical state lives somewhere you can't just open and read, you've lost the brain's core properties. The files are the truth; everything else is just an index over them.
 - **Prescribing technology the format doesn't require.** Pinning a specific index, language, or harness re-creates the lock-in the OKF commitment exists to prevent. Commit to the format; stay loose on the rest.
-- **Confusing the two layers.** Telemetry and queue items are not curated knowledge; forcing them into OKF documents adds friction, and letting them sprawl into the knowledge layer rots it.
+- **Confusing the three areas.** Telemetry, queue items, and role machinery are not curated knowledge; forcing them into OKF documents adds friction, and letting runtime state or scripts sprawl into the knowledge area rots it.
 - **A retrieval stack ahead of need.** Vectors and graphs before plain search has demonstrably failed is complexity you can't eyeball, paid for up front.
 - **Manual upkeep as the plan.** If keeping the brain current depends on human discipline, it will rot. Curation is the dreaming agent's job; humans clear flags, they don't file everything.
 - **Secrets in the brain.** Ever. Use a secret manager.
@@ -180,8 +195,9 @@ Both honor §2. Both are readable raw. Swap any cell without touching the others
 
 - **Brain** — the durable, shared store an agent system reads, writes, and coordinates through; the Context plane.
 - **OKF (Open Knowledge Format)** — the open standard the knowledge layer conforms to: markdown + YAML frontmatter in git.
-- **Knowledge layer** — curated, durable, OKF-conformant documents (roles, entities, projects, decisions, reference).
-- **Operational layer** — transient runtime state (work-queue, run-ledger, feedback, eval results); not OKF.
+- **Knowledge area** — curated, durable, OKF-conformant documents (charters, entities, projects, decisions, reference).
+- **Agents area** — each role's durable machinery (system prompt, loop, tools, skills); authored config, not OKF.
+- **Runtime area** — transient runtime state (work-queue, run-ledger, feedback, eval results); not OKF.
 - **Role-charter** — the knowledge document that defines a role (`AGENT_ARCHITECTURE.md §5`).
 - **Write contract** — the defined interface agents write through, in place of editing raw files.
 - **Dreaming** — the scheduled curation agent that keeps the brain current and improving (`AGENT_ARCHITECTURE.md §6`).

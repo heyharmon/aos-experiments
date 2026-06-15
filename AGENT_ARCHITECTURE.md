@@ -136,8 +136,8 @@ The spine is just three layers: **you** drive/oversee/observe, **roles** do the 
 | Plane | Responsibility | Stored as | Adopt when |
 |---|---|---|---|
 | **Context** | Single source of truth | brain files (`BRAIN_ARCHITECTURE.md`) | Day one |
-| **Work** | Roles that own outcomes, staffed by agents | role-charters + a work queue | Day one (one role) |
-| **Activation** | What wakes agents — loops, events, dreaming | schedule/trigger config | When you want hands-off running |
+| **Work** | Roles that own outcomes, staffed by agents | charters (`knowledge/`) + machinery (`agents/`) + a work queue (`runtime/`) | Day one (one role) |
+| **Activation** | What wakes agents — loops, events, dreaming | schedule/trigger config in `agents/` | When you want hands-off running |
 | **Telemetry** | A record of every run: tokens, cost, actions, outcome | append-only run-ledger | As soon as you have >1 loop |
 | **Learning** | Review roles; turn feedback into improvement | eval-results + feedback files | Once a role does steady work |
 | **Interface** | How you drive, oversee, and observe | surfaces you choose (§9) | As soon as roles act on their own |
@@ -152,8 +152,8 @@ A **role** is the unit of work and the unit of understanding. It is defined enti
 
 | Part | What it is | Why it lives in the brain |
 |---|---|---|
-| **Charter** | Its responsibilities, scope, and **authority level** (§8), written as a plain policy file — like a job description | So improvement and promotion are just edits to this file (§11) |
-| **Staff** | The agents, loops, and skills that execute the work | So capability is explicit and owned, never orphaned (invariant #4) |
+| **Charter** | Its responsibilities, scope, and **authority level** (§8), written as a plain policy file — like a job description; stored in the brain's knowledge area (`knowledge/roles/<role>/`) | So improvement and promotion are just edits to this file (§11) |
+| **Staff** | The agents, loops, and skills that execute the work — the role's *machinery*, stored in the brain's `agents/<role>/` area (`BRAIN_ARCHITECTURE.md §5`) | So capability is explicit and owned, never orphaned (invariant #4) |
 | **Tools** | The actions its staff may take, each tagged by consequence (#6) | So autonomy is governed by data, not buried in code |
 | **Schedule** | When its agents wake (§7) | So activation is inspectable config |
 | **Reporting** | Its run records, scorecard, and digest contributions | So the role is observable and reviewable like an employee |
@@ -164,7 +164,7 @@ Memory is conspicuously absent: a role keeps **no state of its own** — it borr
 1. **Wakes** on a trigger (a schedule, an event, or you).
 2. **Reads** the brain to load only the context its task needs.
 3. **Does bounded work** using its role's tools, against its role's charter.
-4. **Writes back** results to the brain — and always a **run record** (#5).
+4. **Writes back** results to the brain through its write contract (`BRAIN_ARCHITECTURE.md §6`), not by editing raw files — and always a **run record** (#5).
 5. **Stops.** It holds no state between runs.
 
 When the shift ends, the agent is gone; the role — the durable, accountable seat — persists, and the next shift reloads what it needs from the brain. That is why an agent can be thrown away without loss.
@@ -181,7 +181,10 @@ A role does work without you because something **wakes** its agents. Three trigg
 
 2. **Event triggers (optional).** A webhook or watcher wakes an agent on a specific event (a deploy finished, a high-priority ticket opened) instead of waiting for the next tick. Use only where latency genuinely matters; otherwise a slightly faster heartbeat is simpler and has fewer moving parts.
 
-3. **Dreaming (the nightly consolidation).** One agent runs when the day is quiet and does the work that belongs to no single role: read everything new in the brain, organize and file it, reconcile contradictions, surface cross-role patterns, prune and link, and prepare tomorrow's digest. This is the nightly ingestion/triage job in `BRAIN_ARCHITECTURE.md §7`, generalized — and the natural home for the improvement pass (§11).
+3. **Dreaming (the nightly consolidation).** When the day is quiet, dreaming does the reflective work the loops never get to. It splits in two by *nature of the work*:
+
+   - **Cross-cutting consolidation** — read everything new in the brain, organize and file it, reconcile contradictions across roles, surface cross-role patterns, prune and link, and prepare tomorrow's digest. This work belongs to *every* role and to *none* in particular — a role reflecting in its own silo structurally can't see across the others — so it is owned by a dedicated **System role**: the nightly ingestion/triage job in `BRAIN_ARCHITECTURE.md §7`, generalized. That keeps invariant #4 absolute: dreaming, too, rolls up to a role.
+   - **Per-role reflection** — reviewing a role's own runs, clustering its own feedback, and proposing diffs to its own charter (the improvement pass, §11). This is sharper with the role's own context loaded — but it is an *earned* split, not a starting cost: begin with the System role doing it for everyone, and hand a role its own reflection only once the global pass is too coarse to review it well (the same earned-complexity rule as everywhere else, #10).
 
 > **Loops react. Dreaming reflects.** A system with only loops is busy but never gets smarter. Dreaming turns a day of activity into organized knowledge and a better system tomorrow.
 
@@ -189,7 +192,7 @@ A role does work without you because something **wakes** its agents. Three trigg
 
 ## 7. Telemetry: knowing where the work and the tokens go
 
-Invariant #5 says every run writes a record. The **run-ledger** is the append-only collection of those records — *just more files in the brain*, so you get observability without a separate monitoring stack. In role terms, this is each role's **activity report.**
+Invariant #5 says every run writes a record. The **run-ledger** is the append-only collection of those records — *just more files in the brain* (runtime-area files, not OKF knowledge; see `BRAIN_ARCHITECTURE.md §5`), so you get observability without a separate monitoring stack. The format below is illustrative — the runtime area is not bound to any. In role terms, this is each role's **activity report.**
 
 **Every run record carries, at minimum:**
 
@@ -216,7 +219,7 @@ From this one stream you get:
 - **Debuggability** — a bad outcome links straight to the run that caused it.
 - **The denominator for evaluation** — you can't measure work-done-per-dollar without recording the dollar.
 
-Two rules keep it honest: the record is written by the harness around the agent, not by the agent's own say-so (so it can't be flattered); and it is append-only (runs are history, never edited).
+Two rules keep it honest: the record is written by the harness around the agent, not by the agent's own say-so (so it can't be flattered); and it is append-only (runs are history, never edited). One practical corollary: **tokens and cost must be read from the agent runtime's own usage report** — most harnesses expose this in a structured/JSON output mode — never estimated. A run record without a real cost is a broken record; *work-done-per-dollar* (§10) has no denominator without it.
 
 ---
 
@@ -356,7 +359,7 @@ The architecture is the same at every size. You grow by **hiring roles and addin
 | **0 — Brain** | Just the brain (`BRAIN_ARCHITECTURE.md`), no roles | A durable, queryable context store you and a chat agent use by hand |
 | **1 — One role** | Brain + one role on a heartbeat loop + run records | Hands-off work in your highest-value area; telemetry from day one |
 | **2 — A few roles** | Several roles, all coordinating via the brain | A small org of specialists; your chosen surfaces (§9) become the control room |
-| **3 — Dreaming** | A nightly consolidation/improvement agent | The system organizes itself and starts getting smarter, not just busier |
+| **3 — Dreaming** | A **System role** running nightly consolidation/improvement | The system organizes itself and starts getting smarter, not just busier |
 | **4 — Self-improving** | Evals + feedback + the improvement loop running | Measured roles that need you less over time, provably — and earn promotions |
 | **5 — Business system** | Many roles spanning operations, mostly autonomous | A system that helps operate the business, still readable as plain files |
 
@@ -374,7 +377,7 @@ Every box above is a contract with an open implementation. Two compliant builds,
 |---|---|---|
 | Agent harness | Claude Code sessions | Codex / custom agent SDK |
 | Language | Python | Node.js / TypeScript |
-| Brain substrate | Markdown + git + SQLite FTS index | Markdown + git + Postgres |
+| Brain substrate | Markdown + git (OKF) + SQLite FTS index | Markdown + git (OKF) + Postgres index |
 | Work queue | Files in a `queue/` dir | A hosted queue service |
 | Activation | `cron` on a Mac mini | A managed scheduler + webhooks |
 | Telemetry store | Append-only files in the brain | Same files, mirrored to a dashboard |
@@ -389,7 +392,7 @@ Both honor §3. Both can read this document and recognize their own system. **If
 
 The architecture's worst enemy is well-meant complexity. Resist:
 
-- **A central orchestrator that "coordinates" roles.** It becomes the bottleneck, the single point of failure, and the thing you can no longer understand. The brain coordinates; roles are peers. (A thin *planner* that only writes a "today's priorities" file is fine — it commands no one.)
+- **A central orchestrator that "coordinates" roles.** It becomes the bottleneck, the single point of failure, and the thing you can no longer understand. The brain coordinates; roles are peers. (A thin *planner* that only writes a "today's priorities" file is fine — it commands no one, and is naturally a System-role capability alongside dreaming, §6.)
 - **Agents that call agents.** The moment A awaits B, you've rebuilt a distributed system with no observability. A writes a file; B reads it on its own schedule.
 - **Personifying roles — and worse, personifying agents.** Names and personalities invite misplaced trust and obscure the only thing that matters: what the role is accountable for and what it may do. The "virtual employee" is the *role* (the durable seat), never the agent (a disposable shift of work). Keep roles structural and agents anonymous.
 - **One surface for everything.** Drive, oversee, and observe are different jobs (§9); forcing them through a single approval queue caps your system at human throughput. Match the oversee-surface to each role's autonomy.
@@ -415,7 +418,8 @@ The architecture's worst enemy is well-meant complexity. Resist:
 - **Plane** — a builder's-view layer of capability over the brain (context, work, activation, telemetry, learning, interface).
 - **Mechanism vs. policy** — what the architecture fixes (capabilities, wiring) vs. what the operator chooses (autonomy, surfaces).
 - **Heartbeat loop** — an agent waking on a schedule to handle what's new in its role's area.
-- **Dreaming** — the nightly job that consolidates, organizes, and improves rather than reacts.
+- **Dreaming** — the nightly job that consolidates, organizes, and improves rather than reacts; owned by the System role, it splits into cross-cutting consolidation (always global) and per-role reflection (an earned split).
+- **System role** — the dedicated role that owns the cross-cutting work belonging to every role and to none in particular: dreaming (§6), ingestion, and the thin planner. Keeps invariant #4 absolute.
 - **Run record / run-ledger** — the per-run telemetry entry / the append-only collection of them; a role's activity report.
 - **Consequence tag** — reversible vs. consequential label on an action; the raw material of autonomy.
 - **Drive / oversee / observe** — the three distinct human↔system surfaces.
