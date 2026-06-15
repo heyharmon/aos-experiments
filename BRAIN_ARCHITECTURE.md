@@ -25,7 +25,7 @@ Why commit to OKF and nothing else? Because the format is the one decision that 
 
 ### 1.1 The brain is the single source of truth — and the bus
 
-All the lasting information the agent system relies on lives here, and agents coordinate *through* it rather than by talking to each other (see `AGENT_ARCHITECTURE.md §1.1`). One home per fact; everything else links to it. This is what lets agents stay disposable: their memory and their desk are in the brain, not in them.
+All the lasting information the agent system relies on lives here, and agents coordinate *through* it rather than by talking to each other (see `AGENT_ARCHITECTURE.md §1.1`). One home per fact; everything else links to it. This is what lets agents stay swappable: their memory and their desk are in the brain, not in them.
 
 ### 1.2 Three areas: knowledge, agents, and runtime
 
@@ -113,7 +113,7 @@ Two non-OKF areas sit beside the knowledge layer.
 
 ### The agents area — durable machinery
 
-Each role's **staff** lives here, one folder per role: the system prompt, the loop/heartbeat script, the tool list, any skills. This is authored code and config — durable, versioned, and edited deliberately (the improvement loop opens diffs against it, just as it does against charters, `AGENT_ARCHITECTURE.md §11`). It is not OKF (it isn't curated facts) and it is not exhaust (you can't regenerate it by replaying history). A role's **charter** — the durable contract — lives in the knowledge area (`knowledge/roles/`); its **machinery** — the current implementation of that contract — lives here. That split is exactly why agents stay disposable while the role persists: kill the machinery and rebuild it; the charter and the brain are untouched.
+Each role's **agent** lives here, one folder per role: the system prompt, the loop/heartbeat script, the tool list, any skills — the machinery that fills the role. This is authored code and config — durable, versioned, and edited deliberately (the improvement loop opens diffs against it, just as it does against charters, `AGENT_ARCHITECTURE.md §11`). It is not OKF (it isn't curated facts) and it is not exhaust (you can't regenerate it by replaying history). A role's **charter** — the durable contract — lives in the knowledge area (`knowledge/roles/`); its **agent** — the current implementation of that contract — lives here. That split is exactly why agents stay swappable while the role persists: rebuild the agent or swap the provider behind it; the charter and the brain are untouched.
 
 ### The runtime area — transient exhaust
 

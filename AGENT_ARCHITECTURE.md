@@ -1,6 +1,6 @@
 # An Architecture for Agentic Work
 
-### A technology-agnostic vision for organizing AI work by **roles** — from a single agent to a whole-business system
+### A technology-agnostic vision for putting AI agents to work in well-defined **roles** — from a single agent to a whole-business system
 
 **Audience:** the operator who wants AI to do real work across their day, and any builder (in any stack) who will implement it.
 **Companion document:** [`BRAIN_ARCHITECTURE.md`](./BRAIN_ARCHITECTURE.md) is the peer architecture for the **Context plane** (the brain) referenced throughout. This document describes the *system around the brain* — how work is organized, run, observed, governed, and improved.
@@ -27,34 +27,32 @@ The architecture is firm about *what capabilities must exist and how they are wi
 
 Everything in this document descends from three ideas. Hold these and the rest is elaboration.
 
-### 1.1 The brain is the bus. Agents are disposable.
+### 1.1 The brain is the bus. Agents are swappable.
 
 All durable state — context, work to do, what was done, how well it went, how to improve — lives in **one place: the brain** (plain files in a git repo, per `BRAIN_ARCHITECTURE.md`). Agents never call each other. They coordinate *only* by reading and writing the brain.
 
 This single rule keeps the system simple at one agent and still simple at fifty:
 
-- **Agents are stateless and replaceable.** Kill one, restart it, rewrite it in another language, swap the model — nothing is lost, because the agent held nothing. The brain held everything.
+- **Agents are stateless and swappable.** Kill a run, restart it, rewrite it in another language, or swap the **provider** behind it (Anthropic, OpenAI, an open-source model) — nothing is lost, because the agent held nothing. The brain held everything.
 - **Coordination needs no special machinery.** No extra plumbing wiring the agents together. "Agent A tells Agent B something" is just "Agent A writes a file, and Agent B reads it."
 - **The whole system is inspectable.** Its entire state is human-readable files under version control. You can understand it at any time by reading it.
 
-### 1.2 Roles are the unit of understanding
+### 1.2 Agents take on roles
 
-How we organize agentic work has progressed with one underlying driver: **the task horizon a model can sustain on its own.** Each generation reliably handles a longer, more complex task than the last — and every jump unlocks a new way of organizing the work:
+How we organize agentic work has advanced with one underlying driver: **the task horizon an agent can sustain on its own.** Each model generation reliably handles a longer, more complex task than the last — and every jump unlocks a new way of organizing the work:
 
-| As models sustain longer tasks… | A representative task | We organize the work as… |
+| As agents sustain longer tasks… | A representative task | We organize the work as… |
 |---|---|---|
 | **seconds** — a single answer | answer a question | a **prompt** |
 | **a session** — a dialogue | draft, brainstorm, look something up | a **chatbot / assistant** |
-| **minutes to hours** — a task loop | write & test a component; debug a flaky test suite | an **agent** |
-| **days, then continuous** | clear the backlog overnight; run a pipeline end-to-end | a **role** *(a.k.a. "virtual employee")* |
+| **minutes to hours** — a task loop | write & test a component; debug a flaky test suite | an **agent on a task** |
+| **days, then continuous** | clear the backlog nightly; run a pipeline end to end | an **agent holding a role** |
 
-The left column is the engine. When a model can only hold a thought for seconds, a **prompt** is all you can organize around; a **role** becomes possible only once it can carry *ongoing responsibility across many tasks*, not just finish one. That's the threshold we're crossing now — and it's why roles, not tasks, are the right thing to build around. Most systems today still organize around the one-off task; organizing around a durable, accountable owner instead is what captures the new capability.
+The left column is the engine. A one-off **agent on a task** finishes and is done; an **agent holding a role** carries *ongoing responsibility across many tasks*. That second thing becomes possible only once the horizon stretches from *finishing a task* to *holding a job* — the threshold we're crossing now. Most systems still organize around the one-off task; organizing instead around durable, accountable **roles that agents hold** is what captures the new capability.
 
-A **role** is a contract of **responsibility + authority** — "Communications Manager," "Product Development Lead," "Scheduler." It **wraps up the technical machinery** — schedules, loops, skills, prompts, tools, training — into one thing you can name, reason about, and relate to other roles. You manage the role; you never have to think about the machinery inside it. In short, **a role hides its agents.**
+A **role** is a job: a contract of **responsibility + authority** — "Communications Manager," "Scheduler," "Product Development Lead" — bundled with the tools and knowledge to do it. It is durable and well-defined, and it **outlives any particular agent.** An agent is *hired into* a role the way a person is hired into a job: the role fixes what the work is and what the agent may do; the agent does it. This is deliberately how we already think about work — humanity spent centuries building the job/org-chart idea to make large-scale work understandable, and adopting it hands the architecture a vocabulary you already have intuitions for (see §2): hiring an agent into a role, reviewing its performance, coaching it, promoting it, reorganizing.
 
-**The virtual employee is the *role*, not the agent.** This cuts against the common convention — people say "my research agent," "my coding agent," as if the agent were the employee — but here the durable, accountable unit is deliberately the role. The reason is the one property that makes an employee an employee: *continuity.* A real employee persists — they carry memory, relationships, and accumulated skill, and the org backfills them when they leave. This architecture's agents are the exact opposite by design: stateless, disposable, kill-and-replace, holding nothing between runs (invariant #3). So the agent is the one component you should *not* map onto "person" — it lacks the continuity that defines one. The agent is a **pair of hands** the role uses to get a shift of work done; the role is the seat that persists across them. That is precisely why the agent *can* be disposable — its memory and desk live in the brain, not in the agent.
-
-This matters because humanity already spent centuries building the "role" idea to make large-scale work understandable — the org chart. Adopting it gives the whole architecture a vocabulary you already have intuitions for (see §2): every employee-like action — hiring, performance review, coaching, promotion, reorg — attaches to the role.
+**Humanizing the agent doesn't make it precious.** Picture an agent as a worker — it holds a job, a bounded context, its own tools and knowledge — but it keeps **no state of its own**: its memory lives in the brain, its job lives in the role. So you can end a session and resume later, or swap the **provider** behind it (Anthropic, OpenAI, an open-source model), and the work continues — exactly as a job and a company's records outlast whoever does the work today (§1.1, invariant #3). The role and the brain persist; the agent is how the work gets done right now.
 
 ### 1.3 Opinionated about mechanism, agnostic about policy
 
@@ -85,9 +83,9 @@ Roles are what make the system *relatable*. Everything technical contextualizes 
 
 Three guardrails keep this abstraction honest:
 
-1. **A role is a responsibility, not a personality.** Its popular name — "virtual employee" — is convenient, but treat a role as a *position*, not a *person*: what matters is what it's accountable for and what it may do, not a name and a character. Naming the *agents* ("Sam from Comms") is the worse habit — it invites trust a disposable work-session hasn't earned. Keep roles structural and agents anonymous.
-2. **A role is not one-to-one with an agent.** A role is the unit of *understanding*; an agent is a unit of *execution* — a single shift of bounded work, not a little employee in its own right. A role may be staffed by several agents, loops, and skills — just as a human job is done with many tools and routines. The role is the interface; the agents are the implementation.
-3. **Roles coordinate brain-as-bus.** Employees don't read each other's minds; they coordinate through shared systems and documents. Roles inherit §1.1 unchanged.
+1. **A role is a job, not a personality.** Keep the role *structural* — defined by what it's accountable for and what it may do, not a name and a character. You can picture the *agent* that fills it as a worker (it holds a job, a context, its tools) — useful intuition — but don't let a friendly name ("Sam from Comms") buy trust the agent hasn't earned; trust comes from its track record (§10), not its persona.
+2. **The role is the job; the agent is the worker that fills it.** Normally one agent fills one role: the role is the durable *interface* (what the work is), the agent the *implementation* (who does it right now). A simple role is one agent on a schedule; a complex one may let that agent call helper agents. Swap the agent — a new session or a different provider — and the role is untouched.
+3. **Roles coordinate brain-as-bus.** Workers don't read each other's minds; they coordinate through shared systems and records. Roles inherit §1.1 unchanged.
 
 **Taxonomy is not fixed.** Start with one role. Split a role when its charter is trying to be good at two different jobs at once. Merge two when they never act without each other. The org serves the work.
 
@@ -99,7 +97,7 @@ An implementation is compliant if and only if it honors these. Everything else i
 
 1. **Everything lives in the brain.** All durable state lives there. If it isn't in the brain, it doesn't survive a restart and doesn't exist to the rest of the system.
 2. **The brain is the bus.** No direct agent-to-agent calls. Agents coordinate exclusively through the brain. Coupling stays at zero.
-3. **Agents are disposable.** Any agent may be killed or replaced at any time with no loss of state and no coordination required.
+3. **Agents are swappable.** Any agent — a running session, or the provider behind it — may be replaced at any time with no loss of state and no coordination required, because the agent holds none.
 4. **Every capability rolls up to a role.** No orphan automation. Every schedule, loop, and skill is owned by a named, accountable role, so responsibility is always clear.
 5. **Every run is recorded.** No agent does work without writing a run record (who, when, why, what it touched, tokens, cost, outcome). Observability is not optional and not bolted on later.
 6. **Every action declares its consequence.** Each action a role can take is tagged by reversibility/impact. This tag is the raw material of autonomy (§8) — mechanism, not policy.
@@ -119,9 +117,9 @@ Six **planes**, each a thin layer over the same brain. You adopt them in order; 
     │   drive · oversee · observe
     ▼
   ┌─────────────────────────────────────────────┐
-  │  ROLES                                       │
+  │  ROLES  (jobs)                               │
   │  Comms · Tasks · Scheduler · Product-Dev · … │
-  │  each staffed by agents, loops & skills      │
+  │  each filled by an agent (loops · skills)    │
   └─────────────────────────────────────────────┘
     │   read · write
     ▼
@@ -131,12 +129,12 @@ Six **planes**, each a thin layer over the same brain. You adopt them in order; 
   └─────────────────────────────────────────────┘
 ```
 
-The spine is just three layers: **you** drive/oversee/observe, **roles** do the work, and **the brain** is the only thing they share. The six planes below are how a *builder* decomposes that spine — the diagram is the *operator's* view.
+The spine is just three layers: **you** drive/oversee/observe, **agents — each in a role** — do the work, and **the brain** is the only thing they share. The six planes below are how a *builder* decomposes that spine — the diagram is the *operator's* view.
 
 | Plane | Responsibility | Stored as | Adopt when |
 |---|---|---|---|
 | **Context** | Single source of truth | brain files (`BRAIN_ARCHITECTURE.md`) | Day one |
-| **Work** | Roles that own outcomes, staffed by agents | charters (`knowledge/`) + machinery (`agents/`) + a work queue (`runtime/`) | Day one (one role) |
+| **Work** | Roles (jobs) that own outcomes, each filled by an agent | charters (`knowledge/`) + machinery (`agents/`) + a work queue (`runtime/`) | Day one (one role) |
 | **Activation** | What wakes agents — loops, events, dreaming | schedule/trigger config in `agents/` | When you want hands-off running |
 | **Telemetry** | A record of every run: tokens, cost, actions, outcome | append-only run-ledger | As soon as you have >1 loop |
 | **Learning** | Review roles; turn feedback into improvement | eval-results + feedback files | Once a role does steady work |
@@ -144,32 +142,32 @@ The spine is just three layers: **you** drive/oversee/observe, **roles** do the 
 
 ---
 
-## 5. Anatomy of a role (and the agents that staff it)
+## 5. Anatomy of a role (and the agent that fills it)
 
-A **role** is the unit of work and the unit of understanding. It is defined entirely by files in the brain, so it stays inspectable and improvable.
+A **role** is a job — the unit of work and of accountability. It is defined entirely by files in the brain, so it stays inspectable and improvable.
 
 **A role is defined by:**
 
 | Part | What it is | Why it lives in the brain |
 |---|---|---|
 | **Charter** | Its responsibilities, scope, and **authority level** (§8), written as a plain policy file — like a job description; stored in the brain's knowledge area (`knowledge/roles/<role>/`) | So improvement and promotion are just edits to this file (§11) |
-| **Staff** | The agents, loops, and skills that execute the work — the role's *machinery*, stored in the brain's `agents/<role>/` area (`BRAIN_ARCHITECTURE.md §5`) | So capability is explicit and owned, never orphaned (invariant #4) |
-| **Tools** | The actions its staff may take, each tagged by consequence (#6) | So autonomy is governed by data, not buried in code |
-| **Schedule** | When its agents wake (§7) | So activation is inspectable config |
+| **Agent** | The worker that fills the role — its prompt, loops, and skills (its *machinery*), stored in the brain's `agents/<role>/` area (`BRAIN_ARCHITECTURE.md §5`) | So capability is explicit and owned, never orphaned (invariant #4) |
+| **Tools** | The actions the agent may take, each tagged by consequence (#6) | So autonomy is governed by data, not buried in code |
+| **Schedule** | When the agent wakes (§7) | So activation is inspectable config |
 | **Reporting** | Its run records, scorecard, and digest contributions | So the role is observable and reviewable like an employee |
 
-Memory is conspicuously absent: a role keeps **no state of its own** — it borrows the brain. That is what keeps agents disposable.
+Memory is conspicuously absent: a role keeps **no state of its own** — it borrows the brain. That is what keeps agents swappable.
 
-**An agent — the execution unit that staffs a role — is best read as a single *shift of work*, a pair of hands the role puts to a task, not a miniature employee. It is anything that:**
+**The agent is the worker that fills the role.** Picture it as an employee in that job: it has the role's bounded context, its tools, and its knowledge. But it keeps no state of its own, so each **run** is a clean instance that:
 1. **Wakes** on a trigger (a schedule, an event, or you).
-2. **Reads** the brain to load only the context its task needs.
-3. **Does bounded work** using its role's tools, against its role's charter.
+2. **Reads** the brain to load only the context the task needs.
+3. **Does bounded work** using the role's tools, against the role's charter.
 4. **Writes back** results to the brain through its write contract (`BRAIN_ARCHITECTURE.md §6`), not by editing raw files — and always a **run record** (#5).
-5. **Stops.** It holds no state between runs.
+5. **Stops**, holding no state.
 
-When the shift ends, the agent is gone; the role — the durable, accountable seat — persists, and the next shift reloads what it needs from the brain. That is why an agent can be thrown away without loss.
+Because a run keeps nothing, you can end one and resume later, or swap the provider behind the agent, and lose nothing — the role and the brain hold everything (#1, #3).
 
-That contract is satisfied equally by a Claude Code session, a Codex script, a cron'd Python process, or a hosted function. **Why roles get multiple agents rather than one do-everything agent:** smaller context, sharper charters, independent schedules, independent review, and independent failure. A bug in the Communications role never touches Product Development. You add a specialist — a new agent or a new role — only when the work earns it.
+That contract is satisfied equally by a Claude Code session, a Codex script, a cron'd Python process, or a hosted function — the **agent provider is a fill-in-the-blank** (§13). **Why split work across roles rather than pile it on one do-everything agent:** smaller context, sharper charters, independent schedules, independent review, and independent failure. A bug in the Communications role never touches Product Development. You add a specialist — a new role — only when the work earns it.
 
 ---
 
@@ -375,7 +373,7 @@ Every box above is a contract with an open implementation. Two compliant builds,
 
 | Component | Person A (local/DIY) | Person B (cloud/SaaS) |
 |---|---|---|
-| Agent harness | Claude Code sessions | Codex / custom agent SDK |
+| Agent provider (model + harness) | Claude / Claude Code | OpenAI / Codex / a custom SDK |
 | Language | Python | Node.js / TypeScript |
 | Brain substrate | Markdown + git (OKF) + SQLite FTS index | Markdown + git (OKF) + Postgres index |
 | Work queue | Files in a `queue/` dir | A hosted queue service |
@@ -394,7 +392,7 @@ The architecture's worst enemy is well-meant complexity. Resist:
 
 - **A central orchestrator that "coordinates" roles.** It becomes the bottleneck, the single point of failure, and the thing you can no longer understand. The brain coordinates; roles are peers. (A thin *planner* that only writes a "today's priorities" file is fine — it commands no one, and is naturally a System-role capability alongside dreaming, §6.)
 - **Agents that call agents.** The moment A awaits B, you've rebuilt a distributed system with no observability. A writes a file; B reads it on its own schedule.
-- **Personifying roles — and worse, personifying agents.** Names and personalities invite misplaced trust and obscure the only thing that matters: what the role is accountable for and what it may do. The "virtual employee" is the *role* (the durable seat), never the agent (a disposable shift of work). Keep roles structural and agents anonymous.
+- **Letting a persona buy unearned trust.** Picturing an agent as a worker aids reasoning; letting a name or personality stand in for a track record does not. Keep roles structural — defined by accountability and authority — and judge an agent by its evals (§10), not its persona.
 - **One surface for everything.** Drive, oversee, and observe are different jobs (§9); forcing them through a single approval queue caps your system at human throughput. Match the oversee-surface to each role's autonomy.
 - **Treating autonomy as a global switch.** It's a per-role dial set by policy and earned by evidence (§8), not one setting for the whole system.
 - **State outside the brain.** A cache, a hidden memory, a side database an agent relies on — anything that breaks "kill the agent, lose nothing." If it matters, it goes in the brain.
@@ -411,8 +409,9 @@ The architecture's worst enemy is well-meant complexity. Resist:
 
 - **Brain** — the single durable substrate; all state lives here (`BRAIN_ARCHITECTURE.md`).
 - **Bus** — the role the brain plays: the only channel agents use to coordinate.
-- **Role** — a contract of responsibility + authority; the unit of *understanding* and the system's **"virtual employee"** (the durable, accountable seat), staffed by one or more agents. Encapsulates schedules/loops/skills.
-- **Agent** — a disposable execution unit that staffs a role; a single *shift of work* / pair of hands, **not** a little employee: wake → read → bounded work → write back → stop. It holds no state between runs.
+- **Role** — a job: a contract of responsibility + authority bundled with the tools and knowledge to do it. Durable and well-defined; it outlives the agents that fill it. The unit of organization and accountability.
+- **Agent** — the worker that fills a role: it holds the role's context, tools, and knowledge and does the job. Each run is stateless (wake → read → work → write → stop) and swappable — its memory lives in the brain, its job in the role.
+- **Agent provider** — the model + harness powering an agent (e.g. Anthropic, OpenAI, an open-source model). Swappable without touching the role or the brain.
 - **Charter** — a role's policy file: its responsibilities and authority level; the thing improvement and promotion edit.
 - **Authority level** — where a role sits on the autonomy dial (advisory → supervised → delegated → autonomous).
 - **Plane** — a builder's-view layer of capability over the brain (context, work, activation, telemetry, learning, interface).

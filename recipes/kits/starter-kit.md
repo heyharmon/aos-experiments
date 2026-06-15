@@ -51,7 +51,7 @@ Everything the kit deploys lives in **one git repo**. Three areas, one role, one
 And how it runs — a quiet loop you can step into any time. Everything reads from and writes to the brain; nothing else holds state:
 
 ```
-   cron ──► loop.sh ──► claude -p ──┐   a disposable agent: reads charter + queue,
+   cron ──► loop.sh ──► claude -p ──┐   the agent (swappable): reads charter + queue,
   (7am/hr) (harness)                │   writes facts / drafts / approvals via bin/brain
               │                     │
               │ writes run record   │ reads & writes
@@ -65,7 +65,7 @@ And how it runs — a quiet loop you can step into any time. Everything reads fr
                          YOU
 ```
 
-**The one thing to internalize:** the agent holds nothing. Kill it mid-run and the next wake-up reloads everything from the brain. The brain *is* the system; the agent is just a pair of hands for one shift.
+**The one thing to internalize:** the agent holds nothing. Kill it mid-run and the next wake-up reloads everything from the brain. The brain *is* the system; the agent is the worker filling the role — swap the session or the provider and nothing is lost.
 
 ## Prerequisites
 

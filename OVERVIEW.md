@@ -8,8 +8,8 @@ A way to put AI to work across your day — and scale it from one agent to a sys
 
 ## Three ideas hold the whole thing up
 
-1. **The brain is the bus.** All durable state lives in one place — plain files in git. Agents never call each other; they coordinate by reading and writing the brain. So any agent is disposable: kill it, swap it, rewrite it — nothing is lost.
-2. **Roles are the unit.** Organize the work the way a company does — by accountable **role** ("Communications Manager"), not by task or tool. A role wraps the messy machinery (schedules, loops, skills) into one thing you can name and manage. *(Popularly a "virtual employee" — but treat it as a position, not a person.)*
+1. **The brain is the bus.** All durable state lives in one place — plain files in git. Agents never call each other; they coordinate by reading and writing the brain. So any agent is swappable: kill a run, swap the provider — nothing is lost.
+2. **Agents take on roles.** Organize work the way a company does — each agent is hired into an accountable **role** (a job, like "Communications Manager"), not piled onto one do-everything bot. The role is durable and holds the tools and knowledge for the job; the agent that fills it is swappable.
 3. **Opinionated about mechanism, agnostic about policy.** The architecture fixes how things are wired; **you** choose the settings — above all, how much autonomy each role gets.
 
 ---
@@ -21,8 +21,8 @@ A way to put AI to work across your day — and scale it from one agent to a sys
                     │   drive · oversee · observe
                     ▼
   ┌───────────────────────────────────┐
-  │  ROLES — do the work              │
-  │  each staffed by agents & loops   │
+  │  ROLES (jobs) — the work          │
+  │  each filled by an agent          │
   └───────────────────────────────────┘
                     │   read · write
                     ▼
@@ -32,7 +32,7 @@ A way to put AI to work across your day — and scale it from one agent to a sys
   └───────────────────────────────────┘
 ```
 
-**You** drive, oversee, and observe. **Roles** do the work. **The brain** is the only thing they share.
+**You** drive, oversee, and observe. **Agents**, each in a role, do the work. **The brain** is the only thing they share.
 
 ---
 

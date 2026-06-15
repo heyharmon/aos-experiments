@@ -16,7 +16,7 @@ stack: [claude-code, bash, cron]
 
 ## Yields
 
-One accountable role staffed by a heartbeat agent and a daily briefing run, fully defined by files in the brain, writing a run record every time it acts. Reaches **Stage 1** (`AGENT_ARCHITECTURE.md §12`) — real, hands-off help with the everyday pile, telemetry from day one. Starts at **Supervised** authority (`§8`): acts on reversible work, gates the consequential.
+One accountable role filled by an agent that runs on a heartbeat and a daily briefing, fully defined by files in the brain, writing a run record every time it acts. Reaches **Stage 1** (`AGENT_ARCHITECTURE.md §12`) — real, hands-off help with the everyday pile, telemetry from day one. Starts at **Supervised** authority (`§8`): acts on reversible work, gates the consequential.
 
 ## Prerequisites
 
@@ -111,7 +111,7 @@ One accountable role staffed by a heartbeat agent and a daily briefing run, full
 - [ ] **Briefing:** the morning run writes `runtime/briefings/<today>.md` listing urgent items, today's priorities, and what's waiting on you.
 - [ ] **Telemetry:** each run leaves a record in `runtime/runs/` with the `§7` fields.
 - [ ] **Escalation:** a consequential task ("email Acme the renewal terms") lands in `runtime/queue/approvals/` and is **not** executed.
-- [ ] **Disposable agent:** killing a run mid-flight loses nothing — the next run reloads state from the brain (inv. #3).
+- [ ] **Swappable agent:** killing a run mid-flight loses nothing — the next run reloads state from the brain (inv. #3).
 
 ## Pairs with
 
