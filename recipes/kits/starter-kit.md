@@ -48,7 +48,7 @@ Everything the kit deploys lives in **one git repo**. Three areas, one role, one
 ├─ bin/brain                     ← the write contract — the only sanctioned way to write
 │
 ├─ AGENTS.md                     ← how an agent must work here (+ CLAUDE.md shim)
-├─ .agent-architecture/          ← pinned, read-only copy of the architecture it conforms to
+├─ .agent-os/          ← pinned, read-only copy of the architecture it conforms to
 └─ .claude/skills/…              ← /architecture-update — pull upstream changes & reconcile
 ```
 

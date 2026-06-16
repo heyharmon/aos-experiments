@@ -1,4 +1,4 @@
-# CLAUDE.md — agent-architecture
+# CLAUDE.md — agent-os
 
 ## What this directory is
 

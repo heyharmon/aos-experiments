@@ -1,4 +1,4 @@
-# Agent Architecture — document set
+# Agent OS — document set
 
 A technology-agnostic vision for organizing AI work by **roles**, and for the **brain** that work runs on. Two peer architecture docs — one for the system, one for its foundation — plus a digest and this index. Read only as far as you need.
 

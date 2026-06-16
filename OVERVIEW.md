@@ -1,4 +1,4 @@
-# Agent Architecture — the 2-minute version
+# Agent OS — the 2-minute version
 
 A way to put AI to work across your day — and scale it from one agent to a system that helps run a business — **without it becoming something you can't understand.**
 
