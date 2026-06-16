@@ -57,6 +57,10 @@ A git repo that *is* your brain: a curated **knowledge** area (OKF-conformant ma
      bin/
        brain           # the write-contract CLI (below)
      README.md         # explains the three areas; this file
+     AGENTS.md         # how an agent must work here: invariants, how to extend, how to update
+     CLAUDE.md         # one-line shim → AGENTS.md
+     .agent-architecture/                  # pinned, read-only vendored copy of the architecture (managed)
+     .claude/skills/architecture-update/   # the /architecture-update skill
    ```
    `git init`. Add a `.gitignore` (ignore `.DS_Store`, editor cruft). Commit the skeleton.
 
@@ -91,6 +95,12 @@ A git repo that *is* your brain: a curated **knowledge** area (OKF-conformant ma
 
 4. **Write `README.md`** at the repo root: state the three areas (`knowledge/` · `agents/` · `runtime/`), that `bin/brain` is the only write path, that `runtime/` is disposable, and that **secrets never live here** (use a secret manager) — inv. #8.
 
+5. **Install the architecture reference.** This is what keeps a brain faithful to the architecture as it grows — an agent working here can read the vision and invariants, extend the brain the supported way, and pull updates. Three parts:
+   - **Vendor a pinned snapshot.** Clone the architecture ([github.com/heyharmon/agent-architecture](https://github.com/heyharmon/agent-architecture)) at a specific commit/tag and copy `OVERVIEW.md`, `AGENT_ARCHITECTURE.md`, `BRAIN_ARCHITECTURE.md`, `CHANGELOG.md`, `VERSION`, and `recipes/` into `.agent-architecture/` (drop the `.git`). Add `.agent-architecture/README.md` recording the **pin** (version + commit + upstream URL) and that it is read-only/managed. Committing it keeps the brain self-contained and durable offline.
+   - **Write `AGENTS.md`** at the repo root: what this system is; the invariants it must keep (three areas; write only through `bin/brain`; brain-as-bus; every run recorded; agents take on roles); the **supported way to extend it** (add a role via a role recipe — never bolt features onto an agent ad hoc); a "This brain's roles" list (role recipes append themselves here); and how to update (the skill below). Add a one-line `CLAUDE.md` pointing to `AGENTS.md` (the cross-tool standard; Claude Code reads `CLAUDE.md`).
+   - **Install the update skill** at `.claude/skills/architecture-update/SKILL.md`: it fetches the latest upstream, diffs `CHANGELOG.md` from the pinned version, applies each entry's **Impact** note to reconcile this brain, then re-pins.
+   Commit. (Both `.agent-architecture/` and `.claude/` are hidden, so `brain search` — ripgrep — won't conflate the framework with your brain's content; `AGENTS.md` points agents to them.)
+
 ## Doneness
 
 - [ ] `git log` shows the brain is versioned; every `brain` write produced a commit.
@@ -99,6 +109,7 @@ A git repo that *is* your brain: a curated **knowledge** area (OKF-conformant ma
 - [ ] `brain search Acme` returns the file.
 - [ ] **Degrades gracefully (inv. #7):** delete `bin/`, `agents/`, and `runtime/` and the `knowledge/` tree is still a valid, readable OKF bundle — open it in any markdown viewer and it makes sense.
 - [ ] No secrets anywhere in the repo.
+- [ ] **Self-references the architecture:** `AGENTS.md` exists at the root and a fresh Claude Code session in the brain reads it and can state the invariants and how to add a role; `.agent-architecture/README.md` records a version pin; `/architecture-update` is installed.
 
 ## Pairs with
 

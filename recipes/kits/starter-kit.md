@@ -45,8 +45,14 @@ Everything the kit deploys lives in **one git repo**. Three areas, one role, one
 │   ├─ briefings/                · the daily brief
 │   └─ feedback/ evals/          · fuel for later self-improvement
 │
-└─ bin/brain                     ← the write contract — the only sanctioned way to write
+├─ bin/brain                     ← the write contract — the only sanctioned way to write
+│
+├─ AGENTS.md                     ← how an agent must work here (+ CLAUDE.md shim)
+├─ .agent-architecture/          ← pinned, read-only copy of the architecture it conforms to
+└─ .claude/skills/…              ← /architecture-update — pull upstream changes & reconcile
 ```
+
+That last block is what keeps the brain honest as it grows: an agent opening this repo reads `AGENTS.md`, learns the invariants and the supported way to extend it, and can run `/architecture-update` to pull the latest architecture and apply its changelog. The brain references the framework it was built from — and can update itself.
 
 And how it runs — a quiet loop you can step into any time. Everything reads from and writes to the brain; nothing else holds state:
 

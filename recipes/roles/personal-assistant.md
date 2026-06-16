@@ -104,6 +104,10 @@ One accountable role filled by an agent that runs on a heartbeat and a daily bri
 
    **Permissions note (headless runs):** a cron run is unattended — no human is there to approve tool prompts. The agent writes through `bin/brain` and the shell (not an interactive editor tool), and Claude Code must be allowed to run those without prompting (e.g. run with permissions skipped, or an allowlist for `bin/brain` + file writes under `runtime/`). In testing, a permission-gated editor tool simply made the agent fall back to the shell — but don't rely on that; configure it.
 
+7. **Register the role in `AGENTS.md`.** Add a line under the brain's **"This brain's roles"** list (created by the `local-brain` recipe) so any agent working here knows this role exists and where it lives:
+   `- **personal-assistant** — charter: \`knowledge/roles/personal-assistant/index.md\`; machinery: \`agents/personal-assistant/\`.`
+   This is how each role recipe stays modular: it appends itself to the reference rather than rewriting it.
+
 ## Doneness
 
 - [ ] **Capture & triage:** `brain queue add "call dentist; also note that Acme renewed for 12 months"` → the next heartbeat files the durable fact (Acme) into `knowledge/`, keeps the task, and tags its priority.
