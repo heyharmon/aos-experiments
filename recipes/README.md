@@ -26,16 +26,7 @@ This is the whole point of splitting them — it mirrors the architecture (the b
 
 ## Anatomy of a recipe
 
-Every recipe inherits the skeleton in [`TEMPLATE.md`](./TEMPLATE.md):
-
-- **Frontmatter** — machine-resolvable metadata (`type`, `requires`, `pairs-with`, `provides`, `stage`, `stack`).
-- **Yields** — what you end up with, in a line.
-- **Prerequisites** — required brain recipe, accounts, runtimes.
-- **Ingredients** — the prescriptive tech stack. *This is what makes it a recipe and not the architecture doc.*
-- **Steps** — the ordered build plan a coding agent executes.
-- **Doneness** — acceptance checks that prove it works. (These double as the role's first evals — `AGENT_ARCHITECTURE.md §10`.)
-- **Pairs with** — compatible recipes.
-- **Substitutions** — swap-outs and earned upgrades. Where the architecture's optionality lives: the base stays maximally simple, upgrades are spelled out but never imposed.
+Every recipe inherits the skeleton in [`TEMPLATE.md`](./TEMPLATE.md), which carries the section-by-section guidance. Two sections are what make a recipe a recipe rather than an architecture doc: **Ingredients** (the prescriptive stack it commits to) and **Substitutions** (where the architecture's optionality lives, so the base stays maximally simple and upgrades are spelled out but never imposed). One detail worth knowing: a recipe's **Doneness** checks double as the role's first evals (`AGENT_ARCHITECTURE.md §10`).
 
 ## Design rules for writing recipes
 

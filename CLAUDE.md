@@ -33,15 +33,11 @@ These docs are deliberately tech-agnostic. The **`recipes/`** subdirectory is th
 
 Commit progress and maintain `CHANGELOG.md` **proactively** — but only at a **meaningful stopping point**, never on every edit. The judgment of "meaningful" is yours; this is guidance you act on, not an automated hook.
 
-**When to commit + log.** A scope of work is done: a section reworked, a contradiction resolved across both docs, a new role/recipe added, an invariant changed. A burst of typo fixes or mid-thought edits is *not* a stopping point — let it ride until the work coheres.
+**When.** Commit when a scope of work coheres (a section reworked, a contradiction resolved, a role/recipe or invariant changed), not on every edit; let a burst of typos or mid-thought edits ride until it settles.
 
-**How:**
-1. **Commit directly to `main`** (this is a solo docs repo; the changelog + git history are the record — no branch/PR ceremony). Stage only the architecture files involved; never sweep in unrelated working files.
-2. **Update `CHANGELOG.md` in the same commit** so history and changelog never drift.
+**How.** Commit directly to `main` (solo docs repo, no branch/PR ceremony), staging only the architecture files involved, and update `CHANGELOG.md` in the *same* commit so the two never drift. Follow the existing Keep a Changelog format (newest first; Added/Changed/Fixed; dated); add a dated section per stopping point or extend today's.
 
-**Changelog altitude — this is the important part.** The audience is *consuming users and their coding agents* who will update their own projects from these entries. So write what changed in the **architecture / invariants / conventions** and what an implementer should **do about it** — not "fixed cross-ref in §5." Every entry that asks something of downstream projects gets an **Impact:** line. Follow the format already in `CHANGELOG.md` (Keep a Changelog: newest first, Added/Changed/Fixed, dated). Add a new dated section per stopping point, or extend today's if one exists.
-
-**What's changelog-worthy:** changes to invariants, the brain's areas/shape, role/dreaming/autonomy model, the recipes layer, or anything that changes how a consumer would build. **What's not:** typos, internal phrasing, formatting — commit those, but don't log them.
+**At what altitude.** The audience is consuming users and their coding agents who update their own projects from these entries, so log changes to *architecture, invariants, or conventions* and what an implementer should do about them (every downstream-affecting entry gets an **Impact:** line), never "fixed cross-ref in §5." Typos, phrasing, and formatting are committed but not logged.
 
 ## Conventions & voice
 

@@ -29,13 +29,9 @@ All the lasting information the agent system relies on lives here, and agents co
 
 ### 1.2 Three areas: knowledge, agents, and runtime
 
-The brain holds three kinds of file, and keeping them distinct is its most important structural decision:
+The brain holds three kinds of file, and keeping them distinct is its most important structural decision: the **knowledge area** (curated, durable "what is true": entities, projects, decisions, reference, and the **role-charters** that define the agent org; conforms to OKF), the **agents area** (each role's durable **machinery**: system prompts, loops, tool lists, skills; code and config rather than curated facts, so outside OKF), and the **runtime area** (the transient **exhaust** of work in progress: work-queue, run-ledger, feedback, eval results; regenerable and safe to delete, outside OKF). §3 gives the shape; §4 and §5 detail each.
 
-- **The knowledge area** — curated, durable "what is true": entities, projects, decisions, reference, and the **role-charters** that define the agent org. Authored and durable; conforms to OKF.
-- **The agents area** — the durable **machinery** that staffs each role: system prompts, loop scripts, tool lists, skills. Authored and durable *like* knowledge, but it is code and config rather than curated facts, so it sits outside OKF.
-- **The runtime area** — the moment-to-moment **exhaust** of work in progress: the work-queue (the to-do list), the run-ledger (the activity log), captured feedback, and evaluation results. Mechanical not authored, regenerable, and safe to delete; outside OKF (OKF describes knowledge, not the mechanics of who's doing what).
-
-Two axes explain why it's three and not two: *OKF vs. not*, and *durable vs. transient*. Knowledge is OKF and durable; agents is durable but not OKF; runtime is neither. (Machinery is authored source you edit and version — not regenerable exhaust — so it earns a home of its own rather than being lumped in with runtime state.)
+Why three and not two: two axes separate them, *OKF vs. not* and *durable vs. transient*. Knowledge is both; agents is durable but not OKF (authored source you can't regenerate by replaying history, so it earns its own home rather than being lumped in with runtime); runtime is neither.
 
 ### 1.3 The AI organizes; the files just store
 
@@ -75,12 +71,6 @@ A brain is compliant if and only if it honors these. Everything else is free.
 ```
 
 Directory names are conventional, not mandated — what matters is the three-way split and that the knowledge area is an OKF bundle. The areas map onto the agent architecture's planes: knowledge *is* the Context plane; **agents** holds the machinery of the Work and Activation planes (a role's staff and its schedules); **runtime** is where the Work, Telemetry, and Learning planes persist their transient state.
-
-| Area | Holds | Shape | OKF? |
-|---|---|---|---|
-| **Knowledge** | what is true: charters, entities, projects, decisions, reference | documents that link to each other | yes |
-| **Agents** | each role's machinery: prompts, loops, tools, skills | authored code/config, one folder per role | no |
-| **Runtime** | work in progress: queue, run-ledger, feedback, evals | short-lived working records | no |
 
 ---
 
@@ -158,7 +148,7 @@ The brain is the same thing at every size; you grow it by adding files, never by
 - **Roles + the agents and runtime areas** — charters, machinery, and the queue/ledger, so agents do real work and report it.
 - **A maintained, self-improving brain** — the dreaming job keeps it current and proposes charter improvements.
 
-Scaling is addition, not migration — the same reason the agent architecture scales. **When to reach past plain files:** questions that hop across many connected facts ("what led to this decision?"), many agents writing at once and colliding, or non-technical teammates who need a point-and-click interface. Then add a heavier search or graph layer *over the same files* — and because the knowledge layer is OKF, the wider OKF ecosystem (catalogs, visualizers) works with zero migration. The OKF files are the export format; nothing is trapped.
+Scaling is addition, not migration — the same reason the agent architecture scales. **When to reach past plain files:** questions that hop across many connected facts ("what led to this decision?"), many agents writing at once and colliding, or non-technical teammates who need a point-and-click interface. Then add a heavier search or graph layer *over the same files*, and because the knowledge layer is OKF, the wider ecosystem (catalogs, visualizers) works with zero migration (the portability §0 is built on).
 
 ---
 
@@ -193,14 +183,11 @@ Both honor §2. Both are readable raw. Swap any cell without touching the others
 
 ## 11. Glossary
 
-- **Brain** — the durable, shared store an agent system reads, writes, and coordinates through; the Context plane.
+The brain and its three areas are defined in §1–§3; this lists only terms a reader might jump to.
+
 - **OKF (Open Knowledge Format)** — the open standard the knowledge layer conforms to: markdown + YAML frontmatter in git.
-- **Knowledge area** — curated, durable, OKF-conformant documents (charters, entities, projects, decisions, reference).
-- **Agents area** — each role's durable machinery (system prompt, loop, tools, skills); authored config, not OKF.
-- **Runtime area** — transient runtime state (work-queue, run-ledger, feedback, eval results); not OKF.
-- **Role-charter** — the knowledge document that defines a role (`AGENT_ARCHITECTURE.md §5`).
-- **Write contract** — the defined interface agents write through, in place of editing raw files.
-- **Dreaming** — the scheduled curation agent that keeps the brain current and improving (`AGENT_ARCHITECTURE.md §6`).
+- **Write contract** — the defined interface agents write through, in place of editing raw files (§6).
+- **Dreaming** — the scheduled curation agent that keeps the brain current and improving (§7; `AGENT_ARCHITECTURE.md §6`).
 
 ---
 

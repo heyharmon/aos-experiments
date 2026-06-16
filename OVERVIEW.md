@@ -16,23 +16,7 @@ A way to put AI to work across your day — and scale it from one agent to a sys
 
 ## The shape
 
-```
-                   YOU
-                    │   drive · oversee · observe
-                    ▼
-  ┌───────────────────────────────────┐
-  │  ROLES (jobs) — the work          │
-  │  each filled by an agent          │
-  └───────────────────────────────────┘
-                    │   read · write
-                    ▼
-  ┌───────────────────────────────────┐
-  │  THE BRAIN — the shared bus       │
-  │  every durable thing lives here   │
-  └───────────────────────────────────┘
-```
-
-**You** drive, oversee, and observe. **Agents**, each in a role, do the work. **The brain** is the only thing they share.
+In one line: **you** drive, oversee, and observe; **agents**, each in a role, do the work; **the brain** is the only thing they share. (The full doc draws this as a stack, `AGENT_ARCHITECTURE.md §4`.)
 
 ---
 

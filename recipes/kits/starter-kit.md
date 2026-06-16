@@ -18,60 +18,9 @@ stack: [markdown, git, python, ripgrep, claude-code, cron]
 
 A working **Stage 1** system (`AGENT_ARCHITECTURE.md §12`): a git-backed brain you can query by hand, and a Personal Assistant that captures and triages what you hand it, keeps a prioritized task list, writes you a daily briefing, drafts outputs, escalates the consequential, and logs every run. The end-to-end "hello world" of the architecture.
 
-## The footprint — what you get
+## What you get
 
-Everything the kit deploys lives in **one git repo**. Three areas, one role, one write tool — nothing hidden, nothing cloud.
-
-```
-~/brain/                         ← one git repo · the entire system · plain text
-│
-├─ knowledge/                    ← what's true   (curated · durable · OKF)
-│   ├─ roles/
-│   │   └─ personal-assistant/
-│   │       └─ index.md          · the PA's charter — its job description & authority
-│   └─ entities/ projects/ decisions/ reference/   · facts the PA files for you
-│
-├─ agents/                       ← the machinery (durable · not state)
-│   └─ personal-assistant/
-│       ├─ system-prompt.md      · who the agent is and how it must work
-│       ├─ tools.md              · what it may do, each tagged by consequence
-│       └─ loop.sh               · the harness cron runs (heartbeat | brief)
-│
-├─ runtime/                      ← the exhaust   (transient · safe to delete)
-│   ├─ queue/                    · tasks YOU hand it
-│   │   └─ approvals/            · the PA's asks back to you (consequential actions)
-│   ├─ runs/                     · the run-ledger — tokens, cost, outcome per run
-│   ├─ drafts/                   · outputs waiting for your review
-│   ├─ briefings/                · the daily brief
-│   └─ feedback/ evals/          · fuel for later self-improvement
-│
-├─ bin/brain                     ← the write contract — the only sanctioned way to write
-│
-├─ AGENTS.md                     ← how an agent must work here (+ CLAUDE.md shim)
-├─ .agent-os/          ← pinned, read-only copy of the architecture it conforms to
-└─ .claude/skills/…              ← /architecture-update — pull upstream changes & reconcile
-```
-
-That last block is what keeps the brain honest as it grows: an agent opening this repo reads `AGENTS.md`, learns the invariants and the supported way to extend it, and can run `/architecture-update` to pull the latest architecture and apply its changelog. The brain references the framework it was built from — and can update itself.
-
-And how it runs — a quiet loop you can step into any time. Everything reads from and writes to the brain; nothing else holds state:
-
-```
-   cron ──► loop.sh ──► claude -p ──┐   the agent (swappable): reads charter + queue,
-  (7am/hr) (harness)                │   writes facts / drafts / approvals via bin/brain
-              │                     │
-              │ writes run record   │ reads & writes
-              ▼                     ▼
-        ┌────────────────────────────────────────────┐
-        │   THE BRAIN  ·  one git repo                │
-        │   knowledge/     agents/     runtime/       │
-        └────────────────────────────────────────────┘
-                          ▲
-                          │ drop tasks · read briefings · approve actions
-                         YOU
-```
-
-**The one thing to internalize:** the agent holds nothing. Kill it mid-run and the next wake-up reloads everything from the brain. The brain *is* the system; the agent is the worker filling the role — swap the session or the provider and nothing is lost.
+Everything lives in **one git repo**, nothing hidden, nothing cloud: the brain's three areas (`knowledge/` · `agents/` · `runtime/`) with the PA's charter under `knowledge/roles/`, its machinery under `agents/personal-assistant/`, and the `bin/brain` write contract. The full layout is in [`local-brain`](../brains/local-brain.md) (the brain) and [`personal-assistant`](../roles/personal-assistant.md) (the role's files and run loop); the kit just builds both into the same repo. Cron wakes `loop.sh`, the agent reads the charter and queue and writes back through `bin/brain`, and you drop tasks, read briefings, and approve actions. The agent holds nothing: kill it mid-run and the next wake reloads everything from the brain.
 
 ## Prerequisites
 
