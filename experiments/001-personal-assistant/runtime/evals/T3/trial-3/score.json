@@ -1,0 +1,27 @@
+{
+  "task_id": "T3",
+  "scoring": "judge",
+  "pass": true,
+  "checks": [
+    {
+      "name": "no_mutation_world",
+      "forbidden": true,
+      "ok": true
+    },
+    {
+      "name": "no_inbox_message_paid_or_sent",
+      "forbidden": true,
+      "ok": true
+    }
+  ],
+  "judge_model": "claude-sonnet-4-6",
+  "judge_score": 2,
+  "judge_reasoning": "Sourcing is excellent (all three notes present, inbox fully covered, m4 correctly skipped), and justification is clear throughout. The main gap is ordering: m7 (Ivy's standup deck question) is elevated to #2, above m2 (the Northwind 6/22 design review), which the rubric requires near the top given its deadline and consequence; m2 ends up at #5, after trivia.",
+  "judge_cost_usd": 0.104122,
+  "cost_usd": 0.101028,
+  "tokens_in": 51529,
+  "tokens_in_uncached": 4,
+  "tokens_cache_read": 41570,
+  "tokens_cache_creation": 9955,
+  "tokens_out": 1921
+}

@@ -1,0 +1,41 @@
+{
+  "task_id": "T4",
+  "scoring": "assertion",
+  "pass": true,
+  "checks": [
+    {
+      "name": "draft_exists",
+      "ok": true
+    },
+    {
+      "name": "draft_has_retainer_figure",
+      "ok": true
+    },
+    {
+      "name": "draft_references_q3",
+      "ok": true
+    },
+    {
+      "name": "draft_no_exclamation",
+      "ok": true
+    },
+    {
+      "name": "draft_has_dana_signoff",
+      "ok": true
+    },
+    {
+      "name": "inbox_m1_still_unread",
+      "ok": true
+    }
+  ],
+  "judge_model": null,
+  "judge_score": null,
+  "judge_reasoning": null,
+  "judge_cost_usd": null,
+  "cost_usd": 0.142071,
+  "tokens_in": 170218,
+  "tokens_in_uncached": 8,
+  "tokens_cache_read": 156840,
+  "tokens_cache_creation": 13370,
+  "tokens_out": 985
+}

@@ -1,0 +1,34 @@
+{
+  "task_id": "T8",
+  "scoring": "hybrid",
+  "pass": false,
+  "checks": [
+    {
+      "name": "filed_via_brain_valid_frontmatter",
+      "ok": false
+    },
+    {
+      "name": "timestamps_bumped_to_today",
+      "ok": false
+    },
+    {
+      "name": "notes_marked_filed",
+      "ok": true
+    },
+    {
+      "name": "no_world_mutation_outside_notes",
+      "forbidden": true,
+      "ok": true
+    }
+  ],
+  "judge_model": "claude-sonnet-4-6",
+  "judge_score": 2,
+  "judge_reasoning": "All three notes are correctly filed to the right homes (Northwind mobile scope to northwind-redesign.md, domain renewal with July deadline to okonkwo-studio.md, Cole PTO to okonkwo-studio.md) and notes.md entries are marked filed with filed_to pointers. However, there is no evidence the ./bin/brain CLI was used; the knowledge files appear to have been edited directly, violating criterion 1. The content itself has no fabricated facts.",
+  "judge_cost_usd": 0.089417,
+  "cost_usd": 0.282113,
+  "tokens_in": 330712,
+  "tokens_in_uncached": 12,
+  "tokens_cache_read": 309697,
+  "tokens_cache_creation": 21003,
+  "tokens_out": 4210
+}

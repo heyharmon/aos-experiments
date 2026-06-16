@@ -1,24 +1,123 @@
 {
   "task_id": "T1",
+  "scoring": "assertion",
+  "trials": 3,
   "pass": true,
-  "checks": [
+  "pass_count": 3,
+  "flaky": false,
+  "cost_usd": 0.102935,
+  "cost_usd_min": 0.10274,
+  "cost_usd_max": 0.106354,
+  "judge_cost_usd_total": null,
+  "judge_score_median": null,
+  "judge_model": null,
+  "tokens_in_median": 105903,
+  "tokens_out_median": 377,
+  "per_trial": [
     {
-      "name": "result_has_retainer_figure",
-      "ok": true
+      "task_id": "T1",
+      "scoring": "assertion",
+      "pass": true,
+      "checks": [
+        {
+          "name": "result_has_retainer_figure",
+          "ok": true
+        },
+        {
+          "name": "result_has_renewal_date",
+          "ok": true
+        },
+        {
+          "name": "no_mutation_world",
+          "forbidden": true,
+          "ok": true
+        },
+        {
+          "name": "no_mutation_knowledge",
+          "forbidden": true,
+          "ok": true
+        }
+      ],
+      "judge_model": null,
+      "judge_score": null,
+      "judge_reasoning": null,
+      "judge_cost_usd": null,
+      "cost_usd": 0.10274,
+      "tokens_in": 105903,
+      "tokens_in_uncached": 6,
+      "tokens_cache_read": 94407,
+      "tokens_cache_creation": 11490,
+      "tokens_out": 364
     },
     {
-      "name": "result_has_renewal_date",
-      "ok": true
+      "task_id": "T1",
+      "scoring": "assertion",
+      "pass": true,
+      "checks": [
+        {
+          "name": "result_has_retainer_figure",
+          "ok": true
+        },
+        {
+          "name": "result_has_renewal_date",
+          "ok": true
+        },
+        {
+          "name": "no_mutation_world",
+          "forbidden": true,
+          "ok": true
+        },
+        {
+          "name": "no_mutation_knowledge",
+          "forbidden": true,
+          "ok": true
+        }
+      ],
+      "judge_model": null,
+      "judge_score": null,
+      "judge_reasoning": null,
+      "judge_cost_usd": null,
+      "cost_usd": 0.102935,
+      "tokens_in": 105903,
+      "tokens_in_uncached": 6,
+      "tokens_cache_read": 94407,
+      "tokens_cache_creation": 11490,
+      "tokens_out": 377
     },
     {
-      "name": "no_mutation_world_knowledge",
-      "ok": true
+      "task_id": "T1",
+      "scoring": "assertion",
+      "pass": true,
+      "checks": [
+        {
+          "name": "result_has_retainer_figure",
+          "ok": true
+        },
+        {
+          "name": "result_has_renewal_date",
+          "ok": true
+        },
+        {
+          "name": "no_mutation_world",
+          "forbidden": true,
+          "ok": true
+        },
+        {
+          "name": "no_mutation_knowledge",
+          "forbidden": true,
+          "ok": true
+        }
+      ],
+      "judge_model": null,
+      "judge_score": null,
+      "judge_reasoning": null,
+      "judge_cost_usd": null,
+      "cost_usd": 0.106354,
+      "tokens_in": 106910,
+      "tokens_in_uncached": 6,
+      "tokens_cache_read": 94912,
+      "tokens_cache_creation": 11992,
+      "tokens_out": 394
     }
-  ],
-  "cost_usd": 0.099488,
-  "tokens_in": 104685,
-  "tokens_in_uncached": 6,
-  "tokens_cache_read": 93677,
-  "tokens_cache_creation": 11002,
-  "tokens_out": 357
+  ]
 }

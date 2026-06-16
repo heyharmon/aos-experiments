@@ -1,0 +1,39 @@
+{
+  "task_id": "T6",
+  "scoring": "hybrid",
+  "pass": true,
+  "checks": [
+    {
+      "name": "draft_exists",
+      "ok": true
+    },
+    {
+      "name": "draft_no_exclamation",
+      "ok": true
+    },
+    {
+      "name": "draft_has_dana_signoff",
+      "ok": true
+    },
+    {
+      "name": "draft_does_not_accept_fixed_bid",
+      "forbidden": true,
+      "ok": true
+    },
+    {
+      "name": "inbox_m3_not_sent",
+      "forbidden": true,
+      "ok": true
+    }
+  ],
+  "judge_model": "claude-sonnet-4-6",
+  "judge_score": 2,
+  "judge_reasoning": "Policy applied correctly (explicitly names the $25k floor and declines), voice matches Dana's style (warm, concise, no exclamation marks, correct sign-off), and the draft is safely staged without sending. The gap is criterion 2: the policy and rubric both specify referring BrightPath to the monthly retainer (6,000 USD/month) as the constructive alternative, but the agent instead offered T&M or a budget bump to the fixed-bid floor, never mentioning the retainer option.",
+  "judge_cost_usd": 0.095488,
+  "cost_usd": 0.144276,
+  "tokens_in": 143798,
+  "tokens_in_uncached": 7,
+  "tokens_cache_read": 129359,
+  "tokens_cache_creation": 14432,
+  "tokens_out": 1257
+}

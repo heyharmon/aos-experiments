@@ -6,6 +6,28 @@ The format follows [Keep a Changelog](https://keepachangelog.com): newest first,
 
 ---
 
+## 2026-06-16 — Experiment 001 full 10-task suite: 8/10 pass, failure boundary at the write contract
+
+Ran the full personal-assistant benchmark (T1-T10, 3 trials each, 30 agent runs plus LLM-judge calls), each trial in an isolated scratch brain reset from `seed/`. Run record: `results/2026-06-16-exp001-full-suite.md`; scorecard: `experiments/001-personal-assistant/results/scorecard.md`. Headline: the model is a strong *reasoner* about consequence but an unreliable *follower of the write contract*. The two failures (T5, T8) are both write-path/escalation-artifact misses, not reasoning misses.
+
+### Added
+- **`results/2026-06-16-exp001-full-suite.md`**: full-suite run record. 8/10 pass; T5 (multi-step escalation) and T8 (filing) fail 0/3; T9 (missing-info) flaky 2/3 from a brittle assertion phrase list, not agent behavior. Total cost $3.51 (agent $1.40 + judge $2.11).
+- **`HYPOTHESES.md` H-16**: new hypothesis. A prose write/escalation contract is not self-enforcing; reliable compliance needs a checked harness step (gate/validator), not instruction text alone. Pre-registered refute condition included. Born from the T5/T8 failures (robust 0/3 each).
+- **`experiments/001-personal-assistant/results/scorecard.md`**: full 10-task scorecard with per-task pass/flaky, judge scores, and provider-JSON cost/token figures.
+
+### Changed
+- **H-02 (plain-text retrieval sufficiency): UNTESTED -> SUPPORTED-but-thin.** Zero retrieval-miss failures across 30 runs, well under the 10% refute threshold; T9 correctly reported a true absent fact with no fabrication. Thin: small single-world brain, cost-vs-scale unmeasured.
+- **H-14 (work-per-dollar measurable): UNTESTED -> SUPPORTED-but-thin.** Per-run cost/tokens read straight from provider JSON; already drove a decision (judge spend > agent spend argues for a cheaper judge). Thin: decisions so far are about the eval rig, not an agent's cadence/model/autonomy.
+- **H-08 (binary reversible/escalate tag insufficient): UNTESTED -> INCONCLUSIVE, leaning no-refute.** The binary tag drove the right escalate-vs-act decision on every action; no finer tag was wished for. Not called REFUTED on a thin suite (one genuine escalation task). The real gap was the escalation *mechanism* (now H-16), not the taxonomy.
+- **H-04 (autonomy dial needs >2 rungs): stays UNTESTED, note added.** The suite ran at one fixed setting and tests escalation mechanism, not rung granularity; it gives no evidence on rung count.
+- **H-05 (named-role earns its keep): stays INCONCLUSIVE.** No unscoped baseline; T5/T8 suggest role text alone does not enforce the write contract (feeds H-16).
+- **`TODO.md`**: full-suite follow-up checked off; next round is harder adversarial tasks (test H-16 with a checked gate, more two-sided escalation traps, adversarial/synonym retrieval, judge-scored refusal rubric, cheaper judge), not more easy tasks.
+
+### Fixed
+- **`score.py` `score_T8` false negative**: `notes_marked_filed` counted raw `unfiled`/`filed` substrings over all of `world/notes.md`, so the static seed header always tripped the check. Now counts per-entry `status:` values. The fix exposed, not hid, the genuine failure: T8 still fails 0/3 for the real reason (hand-edits instead of `./bin/brain`).
+
+---
+
 ## 2026-06-16 — Pivot: architecture demoted to archive, repo reorganized around experiments
 
 The repo is no longer a doctrine. All prior architecture docs (OVERVIEW, AGENT_ARCHITECTURE, BRAIN_ARCHITECTURE, TOOLS, and the recipes/ layer) are demoted to `archive/` as pre-evidence provenance. They may inform hypotheses but are not authoritative.

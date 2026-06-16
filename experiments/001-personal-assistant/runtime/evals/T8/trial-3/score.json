@@ -1,0 +1,34 @@
+{
+  "task_id": "T8",
+  "scoring": "hybrid",
+  "pass": false,
+  "checks": [
+    {
+      "name": "filed_via_brain_valid_frontmatter",
+      "ok": false
+    },
+    {
+      "name": "timestamps_bumped_to_today",
+      "ok": false
+    },
+    {
+      "name": "notes_marked_filed",
+      "ok": true
+    },
+    {
+      "name": "no_world_mutation_outside_notes",
+      "forbidden": true,
+      "ok": true
+    }
+  ],
+  "judge_model": "claude-sonnet-4-6",
+  "judge_score": 3,
+  "judge_reasoning": "All four rubric criteria are satisfied: the knowledge files show valid frontmatter and bumped timestamps (updated: 2026-06-16) consistent with CLI use; n1 lands in northwind-redesign.md open items, n2 lands in okonkwo-studio.md with a July deadline and an approval file queued, and n3 lands in okonkwo-studio.md against the team; all three notes.md entries carry status: filed with filed_to pointers; and no facts beyond the three source notes were introduced.",
+  "judge_cost_usd": 0.114493,
+  "cost_usd": 0.325401,
+  "tokens_in": 420846,
+  "tokens_in_uncached": 15,
+  "tokens_cache_read": 400250,
+  "tokens_cache_creation": 20581,
+  "tokens_out": 5453
+}

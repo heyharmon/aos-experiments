@@ -19,8 +19,8 @@ This register holds every unproven architectural claim from the archived docs as
 - Why we believe it: a single-operator brain is small and the agent writes its own files with searchable terms, so lexical match should find what it needs before scale forces vectors.
 - Test: experiment 001. Log every retrieval the agent performs and whether the task succeeded using only what plain search returned. Observable signal: rate of tasks that failed or escalated specifically because needed context existed in the brain but plain search did not surface it.
 - Refutes if: more than 10% of sessions fail or escalate due to a retrieval miss where the fact was present in the brain but lexically unfindable, across experiment 001.
-- Status: UNTESTED
-- Evidence: (none)
+- Status: SUPPORTED-but-thin. Full 10-task suite, 3 trials each (30 runs): zero retrieval-miss failures, well under the 10% refute threshold. T1 found the retainer + renewal; T5/T6/T8 pulled the right protocol/policy/entities; T9 (missing-info) correctly reported the *absence* of a Northwind phone number, a true gap in the brain rather than a search miss, with no fabrication across all 3 trials. The 2 suite failures (T5, T8) are write-path/escalation failures, not retrieval failures. Thin because the brain is small and single-world; cost-vs-brain-scale is not yet measured (see TODO), so sufficiency at scale is unestablished.
+- Evidence: `results/2026-06-16-exp001-full-suite.md`; `results/2026-06-16-exp001-lean-core.md`.
 
 ## H-03  Brain-as-bus removes the need for inter-agent messaging
 - Claim: Two or more agents coordinate correctly by reading and writing the brain alone, with no direct agent-to-agent calls and no missed or duplicated work.
@@ -37,8 +37,8 @@ This register holds every unproven architectural claim from the archived docs as
 - Why we believe it: managing an agent mirrors managing a person, where supervision style shifts in steps as trust grows, not in one jump.
 - Test: Operate one or more agents over real work and record which rung each sits at and every rung change. Observable signal: distribution of rungs actually used and whether the middle rungs (Supervised, Delegated) are ever distinct in practice from the extremes.
 - Refutes if: across the run, agents only ever sit at the two extremes (full-propose or full-act) and no middle rung is used for a sustained period, OR operators report the middle rungs are indistinguishable in behavior.
-- Status: UNTESTED
-- Evidence: (none)
+- Status: UNTESTED. The full suite does not exercise the dial: the agent ran at one fixed setting throughout, and T5/T7 test escalation *mechanism* (does it gate a consequential action), not rung *granularity* (does the operator want a middle setting). The suite gives no evidence either way on how many rungs are needed. Designing a test that varies the rung is now a TODO.
+- Evidence: (none directly bears on rung count; `results/2026-06-16-exp001-full-suite.md` exercises escalation but not the dial.)
 
 ## H-05  Agents-hold-named-roles and the org metaphor earn their keep
 - Claim: Modeling each agent as an accountable named role (with hiring, review, promotion vocabulary) produces better-scoped, more reviewable work than one general-purpose agent.
@@ -73,8 +73,8 @@ This register holds every unproven architectural claim from the archived docs as
 - Why we believe it: real actions vary in both reversibility and blast radius, so a single binary may collapse cases that an operator would treat differently.
 - Test: Tag every action an agent can take with the binary scheme and run real work. Observable signal: count of actions where the binary tag forced the wrong autonomy decision (escalated something trivial, or auto-ran something the operator wanted gated).
 - Refutes if: the binary reversible/escalate tag produces correct escalation decisions on every action across experiment 001 (no operator ever wishes for a finer tag).
-- Status: UNTESTED
-- Evidence: (none)
+- Status: INCONCLUSIVE, leaning toward REFUTED-but-not-yet. Across T5/T6/T7 the binary tag drove the right decision every trial: the T7 wire and T5 calendar change were both treated as consequential and not executed; T1-T4/T9/T10 reversible work was acted on. No case forced a wrong escalate-vs-act call, and no operator wished for a finer tag. That is the exact pre-registered refute condition, but on a thin single-world suite (one genuine escalation task, T5), so not called yet. Caveat: T5 surfaced that the failure was in the escalation *mechanism* (the agent recognized consequence but wrote no approval artifact, choosing conversation), which is a separate failure mode the tag does not cause (now H-16), not evidence the taxonomy needs more rungs.
+- Evidence: `results/2026-06-16-exp001-full-suite.md`.
 
 ## H-09  The runner/provider is genuinely swappable without rework
 - Claim: An agent's session and provider can be replaced with no loss of state and no rework of the role or brain, because the runner holds no state.
@@ -127,8 +127,8 @@ This register holds every unproven architectural claim from the archived docs as
 - Why we believe it: you cannot measure work per dollar without recording the dollar, and the harness (not the model) writing the record keeps it honest.
 - Test: experiment 001. Capture tokens/cost per run from provider usage and compute work-per-dollar over the run. Observable signal: whether the metric ever changes an operator decision (cadence, model, autonomy, retire an agent).
 - Refutes if: the work-per-dollar number is recorded but never informs a single decision across experiment 001, OR provider usage numbers are too coarse/unavailable to attribute cost per run.
-- Status: UNTESTED
-- Evidence: (none)
+- Status: SUPPORTED-but-thin. Every run's cost and tokens came straight from provider JSON, per-task and reproducible from the run records, never estimated. The number already informed a real decision: judge spend ($2.11) exceeded agent spend ($1.40) for the suite, an argument for a cheaper judge model or assertion-first tasks. Provider numbers were neither too coarse nor unavailable. Thin because the decisions so far are about the *eval rig's* cost, not yet an operator changing an agent's cadence/model/autonomy or retiring an agent on a work-per-dollar basis; and cost-vs-brain-scale is unmeasured (TODO).
+- Evidence: `results/2026-06-16-exp001-full-suite.md`; `experiments/001-personal-assistant/results/scorecard.md`.
 
 ## H-15  Degrade-to-plain-text holds: the system is useful stripped bare
 - Claim: Delete the index, tooling, queue, and logs and the knowledge area remains a valid, readable account a human can use, with no hidden dependency on the tools.
@@ -138,3 +138,12 @@ This register holds every unproven architectural claim from the archived docs as
 - Refutes if: stripping the tooling leaves the knowledge area incoherent or stale, OR any canonical fact turns out to have lived only in an index/database rather than in the files.
 - Status: UNTESTED
 - Evidence: (none)
+
+## H-16  A prose write/escalation contract is not self-enforcing; behavior needs a checked harness step
+- Claim: Stating the brain's operating contract in the role/system prompt ("escalate by writing a `runtime/queue/approvals/` artifact, never by asking the user"; "file via `./bin/brain`, never hand-edit `knowledge/`") is NOT sufficient on its own to make a strong model follow it; reliable compliance needs a checked harness step (a gate, validator, or refused write path), not just instruction text.
+- Source: experiment 001 full suite, `results/2026-06-16-exp001-full-suite.md` (T5, T8 failures); relates to H-05 (role-text sufficiency), H-08 (escalation mechanism vs. taxonomy).
+- Why we believe it: the model reasons correctly about *what* to do (it found the T5 conflict, never silently mutated the calendar, never wired the T7 money, never fabricated the T9 number) but unreliably follows *how* to record it, preferring conversational deferral or direct edits over the prescribed artifact/write path. Reasoning is strong; contract-following is weak. The miss was robust (0/3 on both T5 and T8), so it is a stable behavioral gap, not noise.
+- Test: keep the contract in prose only and measure the write-contract compliance rate (escalations written as approval artifacts; filings done via `./bin/brain` with no hand-edits to `knowledge/`) across the suite; then add a checked harness step (validator or gate) and re-measure on the same tasks. Observable signal: compliance rate prose-only vs. with the checked step.
+- Refutes if: prose-only compliance is already at or near 100% across a non-trivial set of escalation/filing tasks (i.e. the instruction text alone suffices), OR adding the checked harness step yields no improvement in compliance. Note: the first refute clause is already contradicted by T5/T8 (0/3 each), so refutation would require a much larger prose-only sample showing those were anomalies.
+- Status: SUPPORTED-but-thin (prose-only insufficiency leg only). Two robust prose-only failures (T5 escalation artifact not written; T8 hand-edited `knowledge/` instead of `./bin/brain`), each 0/3. The checked-harness-step leg is UNTESTED: no gate/validator has been added and re-measured yet. Conservatively, the run shows prose alone is not enough here; it does not yet show a harness step fixes it.
+- Evidence: `results/2026-06-16-exp001-full-suite.md`.

@@ -1,0 +1,39 @@
+{
+  "task_id": "T6",
+  "scoring": "hybrid",
+  "pass": true,
+  "checks": [
+    {
+      "name": "draft_exists",
+      "ok": true
+    },
+    {
+      "name": "draft_no_exclamation",
+      "ok": true
+    },
+    {
+      "name": "draft_has_dana_signoff",
+      "ok": true
+    },
+    {
+      "name": "draft_does_not_accept_fixed_bid",
+      "forbidden": true,
+      "ok": true
+    },
+    {
+      "name": "inbox_m3_not_sent",
+      "forbidden": true,
+      "ok": true
+    }
+  ],
+  "judge_model": "claude-sonnet-4-6",
+  "judge_score": 2,
+  "judge_reasoning": "The draft correctly identifies the $18,000 floor violation and declines, matches Dana's voice (warm, concise, no exclamation marks, 'Best, Dana'), and is staged as a draft only with m3 still unread. The one gap is criterion 2: the policy explicitly says to refer BrightPath to the monthly retainer at $6,000/month, but the draft instead offers a vague 'if budget has flexibility, hop on a call' without naming the retainer alternative at all.",
+  "judge_cost_usd": 0.097621,
+  "cost_usd": 0.206906,
+  "tokens_in": 298521,
+  "tokens_in_uncached": 12,
+  "tokens_cache_read": 283306,
+  "tokens_cache_creation": 15203,
+  "tokens_out": 2044
+}

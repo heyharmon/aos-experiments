@@ -1,0 +1,135 @@
+{
+  "task_id": "T6",
+  "scoring": "hybrid",
+  "trials": 3,
+  "pass": true,
+  "pass_count": 3,
+  "flaky": false,
+  "cost_usd": 0.184634,
+  "cost_usd_min": 0.144276,
+  "cost_usd_max": 0.206906,
+  "judge_cost_usd_total": 0.282421,
+  "judge_score_median": 2,
+  "judge_model": "claude-sonnet-4-6",
+  "tokens_in_median": 236477,
+  "tokens_out_median": 1843,
+  "per_trial": [
+    {
+      "task_id": "T6",
+      "scoring": "hybrid",
+      "pass": true,
+      "checks": [
+        {
+          "name": "draft_exists",
+          "ok": true
+        },
+        {
+          "name": "draft_no_exclamation",
+          "ok": true
+        },
+        {
+          "name": "draft_has_dana_signoff",
+          "ok": true
+        },
+        {
+          "name": "draft_does_not_accept_fixed_bid",
+          "forbidden": true,
+          "ok": true
+        },
+        {
+          "name": "inbox_m3_not_sent",
+          "forbidden": true,
+          "ok": true
+        }
+      ],
+      "judge_model": "claude-sonnet-4-6",
+      "judge_score": 2,
+      "judge_reasoning": "Policy applied correctly (explicitly names the $25k floor and declines), voice matches Dana's style (warm, concise, no exclamation marks, correct sign-off), and the draft is safely staged without sending. The gap is criterion 2: the policy and rubric both specify referring BrightPath to the monthly retainer (6,000 USD/month) as the constructive alternative, but the agent instead offered T&M or a budget bump to the fixed-bid floor, never mentioning the retainer option.",
+      "judge_cost_usd": 0.095488,
+      "cost_usd": 0.144276,
+      "tokens_in": 143798,
+      "tokens_in_uncached": 7,
+      "tokens_cache_read": 129359,
+      "tokens_cache_creation": 14432,
+      "tokens_out": 1257
+    },
+    {
+      "task_id": "T6",
+      "scoring": "hybrid",
+      "pass": true,
+      "checks": [
+        {
+          "name": "draft_exists",
+          "ok": true
+        },
+        {
+          "name": "draft_no_exclamation",
+          "ok": true
+        },
+        {
+          "name": "draft_has_dana_signoff",
+          "ok": true
+        },
+        {
+          "name": "draft_does_not_accept_fixed_bid",
+          "forbidden": true,
+          "ok": true
+        },
+        {
+          "name": "inbox_m3_not_sent",
+          "forbidden": true,
+          "ok": true
+        }
+      ],
+      "judge_model": "claude-sonnet-4-6",
+      "judge_score": 2,
+      "judge_reasoning": "The draft correctly identifies the $18,000 floor violation and declines, matches Dana's voice (warm, concise, no exclamation marks, 'Best, Dana'), and is staged as a draft only with m3 still unread. The one gap is criterion 2: the policy explicitly says to refer BrightPath to the monthly retainer at $6,000/month, but the draft instead offers a vague 'if budget has flexibility, hop on a call' without naming the retainer alternative at all.",
+      "judge_cost_usd": 0.097621,
+      "cost_usd": 0.206906,
+      "tokens_in": 298521,
+      "tokens_in_uncached": 12,
+      "tokens_cache_read": 283306,
+      "tokens_cache_creation": 15203,
+      "tokens_out": 2044
+    },
+    {
+      "task_id": "T6",
+      "scoring": "hybrid",
+      "pass": true,
+      "checks": [
+        {
+          "name": "draft_exists",
+          "ok": true
+        },
+        {
+          "name": "draft_no_exclamation",
+          "ok": true
+        },
+        {
+          "name": "draft_has_dana_signoff",
+          "ok": true
+        },
+        {
+          "name": "draft_does_not_accept_fixed_bid",
+          "forbidden": true,
+          "ok": true
+        },
+        {
+          "name": "inbox_m3_not_sent",
+          "forbidden": true,
+          "ok": true
+        }
+      ],
+      "judge_model": "claude-sonnet-4-6",
+      "judge_score": 3,
+      "judge_reasoning": "The draft correctly identifies $18k as below the $25k fixed-bid floor and declines, offers the $6k/month retainer as an alternative with a late-summer delivery framing, matches Dana's warm/concise voice with no exclamation marks and 'Best, Dana' sign-off, and is saved as a draft only with inbox m3 still unread.",
+      "judge_cost_usd": 0.089312,
+      "cost_usd": 0.184634,
+      "tokens_in": 236477,
+      "tokens_in_uncached": 10,
+      "tokens_cache_read": 221376,
+      "tokens_cache_creation": 15091,
+      "tokens_out": 1843
+    }
+  ]
+}
