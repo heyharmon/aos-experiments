@@ -12,11 +12,11 @@ stack: [claude-code, bash, cron]
 
 # Personal Assistant
 
-> The most relatable first agent: a personal assistant / chief of staff. You hand it things — tasks, notes, half-formed ideas — and it files them, keeps them prioritized, tells you each morning what's urgent and what's next, drafts what it can, and asks before doing anything it shouldn't decide alone. Deliberately **brain-only** in this version: it works entirely from the brain and local files, no email or calendar accounts to wire up. Those grow into their own agent recipes later (**Communications Manager**, **Scheduler**) — which is the modular-agents idea in action: this seat is where they spin out from.
+> The most relatable first agent: a personal assistant / chief of staff. You hand it things — tasks, notes, half-formed ideas — and it files them, keeps them prioritized, tells you each morning what's urgent and what's next, drafts what it can, and asks before doing anything it shouldn't decide alone. Deliberately **brain-only** in this version: it works entirely from the brain and local files, no email or calendar accounts to wire up. Those capabilities become **tools** (`recipes/tools/`, e.g. `gmail`) granted to their own agents later (**Communications Manager**, **Scheduler**): this seat is where they spin out from.
 
 ## Yields
 
-One accountable agent that runs on a heartbeat and a daily briefing, fully defined by files in the brain, writing a run record every time it acts. Reaches **Stage 1** (`AGENT_ARCHITECTURE.md §12`) — real, hands-off help with the everyday pile, telemetry from day one. Starts at **Supervised** authority (`§8`): acts on reversible work, gates the consequential.
+One accountable agent that runs on a heartbeat and a daily briefing, fully defined by plain files — its role in the brain, its harness alongside — writing a run record every time it acts. Reaches **Stage 1** (`AGENT_ARCHITECTURE.md §12`) — real, hands-off help with the everyday pile, telemetry from day one. Starts at **Supervised** authority (`§8`): acts on reversible work, gates the consequential.
 
 ## Prerequisites
 
@@ -29,28 +29,28 @@ One accountable agent that runs on a heartbeat and a daily briefing, fully defin
 | Component | Choice | Why this one |
 |---|---|---|
 | Provider | Claude Code, headless (`claude -p`) | runs the agent's harness; satisfies the run contract (wake → read → bounded work → write → stop, `§5`); nothing to host |
-| Activation | two `cron` schedules — hourly triage + a morning brief | cadence matches the job (`§6`); both are inspectable config; no event plumbing |
+| Activation | two `cron` schedules — hourly triage + a morning brief | cadence matches the role (`§6`); both are inspectable config; no event plumbing |
 | Loop glue | a `bash` wrapper (`loop.sh <mode>`) | generates the run id and writes the run record *around* the session (inv. #5) |
 | Writes | the brain's `bin/brain` CLI | one write contract; the agent never edits raw files |
-| Job & harness | files in the brain | so improvement and promotion are readable diffs (`§5`, `§11`) |
+| Role & harness | role in the brain, harness with the runner | so improvement and promotion are readable diffs (`§5`, `§11`) |
 
 ## Steps
 
-1. **Write the job** — `brain new agents personal-assistant --title "Personal Assistant" --type Agent`, then fill `knowledge/agents/personal-assistant/index.md` with:
+1. **Write the role** — `brain new agents personal-assistant --title "Personal Assistant" --type Agent`, then fill `knowledge/agents/personal-assistant/index.md` with:
    - **Responsibilities:** *capture* what you hand it; *triage* it into the brain; keep a *prioritized* task list; write a *daily briefing*; *draft* outputs for your review; *escalate* decisions it shouldn't make alone.
    - **Authority level:** `Supervised`.
-   - **Tools, consequence-tagged** (inv. #6) — step 3.
+   - **Actions, consequence-tagged** (inv. #6) — step 3.
    - **Escalation rule:** anything whose consequence exceeds Supervised authority is *escalated, not executed* (step 4).
    - **Schedule:** hourly triage; daily briefing at, say, 7am.
 
-2. **Create the harness** under `harness/personal-assistant/` in the brain repo (machinery, not knowledge — deletable tooling, inv. #7):
-   - `system-prompt.md` — you are the Personal Assistant; read your job at `knowledge/agents/personal-assistant/index.md`; do **bounded** work using only your tools; write everything back through `bin/brain`; escalate per your job; then stop.
-   - `tools.md` — the tool list with consequence tags (step 3).
+2. **Create the harness** in `harness/personal-assistant/` (the runner's machinery — code, not a brain area; colocated here for a one-machine setup):
+   - `system-prompt.md` — you are the Personal Assistant; read your role at `knowledge/agents/personal-assistant/index.md`; do **bounded** work using only your granted actions; write everything back through `bin/brain`; escalate per your role; then stop.
+   - `actions.md`: its actions with consequence tags (step 3).
    - `loop.sh` — the wrapper, taking a mode argument (`heartbeat` | `brief`) (step 5).
 
-3. **Define tools, each tagged by consequence** (`§8` mechanism). Base set is deliberately safe so the agent is sound at Supervised — and brain-only:
+3. **Define actions, each tagged by consequence** (`§8` mechanism). Base set is deliberately safe so the agent is sound at Supervised — and brain-only:
 
-   | Tool | Consequence | In base? |
+   | Action | Consequence | In base? |
    |---|---|---|
    | `brain search` / read files | reversible | yes |
    | triage / file to the brain (`brain new`, additive `brain update`) | reversible | yes |
@@ -59,7 +59,7 @@ One accountable agent that runs on a heartbeat and a daily briefing, fully defin
    | write the **daily briefing** (to `runtime/briefings/`) | reversible | yes |
    | `brain queue add` (capture follow-up work) | reversible | yes |
    | `escalate` (write to the approvals queue) | reversible | yes |
-   | send email / message / post externally / book a meeting / delete | **consequential** | no — escalate (and the home of future agent recipes) |
+   | send email / message / post externally / book a meeting / delete | **consequential** | no — escalate (each arrives later as a granted tool, e.g. `gmail`) |
 
 4. **Wire escalation.** "Escalate" = write a file to `runtime/queue/approvals/` describing the proposed consequential action and what it's waiting on. This is the **outbound** approval queue (`§9`) — the agent's actions waiting for *you*, distinct from the inbound task queue you fill. At Supervised, this is your oversee surface; the daily briefing surfaces it so nothing waits silently.
 
@@ -74,8 +74,8 @@ One accountable agent that runs on a heartbeat and a daily briefing, fully defin
    MODE="${1:-heartbeat}"; AGENT=personal-assistant; SESSION="pa-$MODE"
    RUN_ID="$(date -u +%Y%m%dT%H%M%SZ)-pa-$MODE"; START=$(date +%s); STATUS=ok
    case "$MODE" in
-     heartbeat) TASK="Heartbeat $RUN_ID. Read your job and runtime/queue/; capture & triage new items \
-       into knowledge/ via bin/brain; (re)prioritize; draft into runtime/drafts/; escalate per your job; stop." ;;
+     heartbeat) TASK="Heartbeat $RUN_ID. Read your role and runtime/queue/; capture & triage new items \
+       into knowledge/ via bin/brain; (re)prioritize; draft into runtime/drafts/; escalate per your role; stop." ;;
      brief)     TASK="Morning brief $RUN_ID. Read runtime/queue/ (incl. approvals) and recent runtime/runs/; \
        write runtime/briefings/$(date +%F).md — urgent items, today's priorities, what's waiting on me; stop." ;;
    esac
@@ -100,12 +100,11 @@ One accountable agent that runs on a heartbeat and a daily briefing, fully defin
    0 * * * * cd /path/to/brain && ./harness/personal-assistant/loop.sh heartbeat
    0 7 * * * cd /path/to/brain && ./harness/personal-assistant/loop.sh brief
    ```
-   Commit everything.
 
    **Permissions note (headless runs):** a cron run is unattended — no human is there to approve tool prompts. The agent writes through `bin/brain` and the shell (not an interactive editor tool), and Claude Code must be allowed to run those without prompting (e.g. run with permissions skipped, or an allowlist for `bin/brain` + file writes under `runtime/`). In testing, a permission-gated editor tool simply made the agent fall back to the shell — but don't rely on that; configure it.
 
 7. **Register the agent in `AGENTS.md`.** Add a line under the brain's **"This brain's agents"** list (created by the `local-brain` recipe) so any agent working here knows this one exists and where it lives:
-   `- **personal-assistant** — job: \`knowledge/agents/personal-assistant/index.md\`; harness: \`harness/personal-assistant/\`.`
+   `- **personal-assistant** — role: \`knowledge/agents/personal-assistant/index.md\`; harness: \`harness/personal-assistant/\`.`
    This is how each agent recipe stays modular: it appends itself to the reference rather than rewriting it.
 
 ## Doneness
@@ -122,7 +121,7 @@ One accountable agent that runs on a heartbeat and a daily briefing, fully defin
 - **[`local-brain`](../brains/local-brain.md)** — its required foundation.
 - **Communications Manager** (future agent recipe) — takes over email/messaging with the integration the PA deliberately omits; the PA escalations become its inbound work.
 - **Scheduler** (future agent recipe) — owns calendar, meetings, and time-slotting.
-- A future **dreaming recipe** (Stage 3) — nightly consolidation + the improvement loop that turns your corrections into job diffs (`§11`).
+- A future **dreaming recipe** (Stage 3) — nightly consolidation + the improvement loop that turns your corrections into role diffs (`§11`).
 
 ## Substitutions
 
@@ -130,6 +129,6 @@ One accountable agent that runs on a heartbeat and a daily briefing, fully defin
 |---|---|---|
 | Claude Code (`claude -p`) | Codex / a custom agent SDK | you prefer another provider — the run contract (`§5`) is identical |
 | `cron` | `launchd`, a managed scheduler, or an event webhook | you're on macOS, or latency on a specific event genuinely matters (`§6`) |
-| brain-only PA | add a **Communications Manager** and/or **Scheduler** agent on the same brain | you want real email/calendar action and are ready to wire one integration — done as a *new agent recipe*, not by bloating this one (`§2`, `§12`) |
-| `Supervised` authority | `Delegated` → `Autonomous` | the agent's evals prove it out — raise authority as earned promotion, a readable diff to the job (`§8`, `§11`) |
-| manual feedback capture | the dreaming job's improvement pass | you reach Stage 3+ and want corrections clustered into job diffs automatically (`§11`) |
+| brain-only PA | add a **Communications Manager** and/or **Scheduler** agent on the same brain | you want real email/calendar action: add a **tool** (e.g. `gmail`) and grant it to a new agent, not by bloating this one (`§2`, `§12`) |
+| `Supervised` authority | `Delegated` → `Autonomous` | the agent's evals prove it out — raise authority as earned promotion, a readable diff to the role (`§8`, `§11`) |
+| manual feedback capture | dreaming's improvement pass | you reach Stage 3+ and want corrections clustered into role diffs automatically (`§11`) |

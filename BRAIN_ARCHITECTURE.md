@@ -1,23 +1,23 @@
 # An Architecture for a Brain
 
-### A technology-agnostic vision for the shared memory an agent system reads, writes, and coordinates through — from a personal notes store to the working memory of a whole agent organization
+### A technology-agnostic vision for the shared memory an agent system reads, writes, and coordinates through — from a personal notes store to a whole organization's working memory
+
+One place that holds everything your agents know and produce: plain files you can open and read, durable enough to outlive any tool, and the only thing the agents share.
 
 **Audience:** the operator who wants a durable, understandable memory for their agent system, and any builder (in any stack) who will implement it.
-**Companion document:** [`AGENT_ARCHITECTURE.md`](./AGENT_ARCHITECTURE.md) describes the *system around the brain* — the agents, loops, and learning that read and write it. This document describes the **brain itself**: the Context plane. See [`README.md`](./README.md) for how the docs relate.
+**Companion:** [`AGENT_ARCHITECTURE.md`](./AGENT_ARCHITECTURE.md) describes the *system around the brain* — the agents, loops, and learning that read and write it. This document describes the **brain itself**: the Context plane. See [`README.md`](./README.md) for how the docs relate.
 
 ---
 
 ## 0. What this is, and what it is not
 
-This is a **vision and a set of invariants** — the rules that don't bend — not an implementation, the same contract as the agent architecture doc applied to its foundation. It fixes the *structure, strategy, and conventions* of the brain and says nothing about which search tool, write tool, scheduler, or agent you use.
+This is a **vision and a set of invariants**, not an implementation. It fixes the brain's *structure, strategy, and conventions* and says nothing about which search tool, scheduler, or agent runs it.
 
-> **It is opinionated about structure and convention, and agnostic about technology — with one deliberate exception.**
+> **Opinionated about structure and convention, agnostic about technology — with one deliberate exception.**
 
-That exception is the **storage format**: the brain's knowledge layer follows the [Open Knowledge Format (OKF)](https://github.com/GoogleCloudPlatform/knowledge-catalog/tree/main/okf), plain-text markdown with a small structured header (YAML frontmatter). A format is a *convention*, the kind of thing the architecture is free to fix (like "frontmatter is the schema"), and it is the only thing the brain pins down. Note what is *not* on that list: the architecture also requires the brain to keep a **version history** (so every change has an audit trail and an undo), but that is a required *capability*, not a named tool. Git is the obvious way to provide it and what the recipes use, yet a brain on any system that tracks changes reversibly is compliant. Everything built on top of the files, how they're searched, written to, and kept current, and the agents themselves, stays fill-in-the-blank.
+That exception is the **storage format**: the knowledge layer follows the [Open Knowledge Format (OKF)](https://github.com/GoogleCloudPlatform/knowledge-catalog/tree/main/okf) — plain-text markdown with a small YAML frontmatter header, the *only* thing the brain pins down. The format is pinned because it alone determines **portability and longevity** — anything that speaks OKF can read and write the brain, so it outlives every tool.
 
-Why commit to the format and nothing else? Because the format is the one decision that determines **portability and longevity**. Get it right and the brain outlives every tool that touches it: any agent, any model, any vendor that speaks OKF can read and write it. Get it wrong and you rebuild your whole setup every time your tools change. Versioning is the other non-negotiable, but since any version-control tool serves, pinning the *format* is the only place a specific commitment earns its keep.
-
-**Read it as a compass, not a checklist.** Start with a handful of files. Add structure only when the work demands it.
+**Read it as a compass, not a checklist:** start with a handful of files, add structure only when the work demands it.
 
 ---
 
@@ -25,17 +25,20 @@ Why commit to the format and nothing else? Because the format is the one decisio
 
 ### 1.1 The brain is the single source of truth — and the bus
 
-All the lasting information the agent system relies on lives here, and agents coordinate *through* it rather than by talking to each other (see `AGENT_ARCHITECTURE.md §1.1`). One home per fact; everything else links to it. This is what keeps the runner swappable: an agent's memory and its desk are in the brain, not in the session.
+All the system's lasting information lives here, and agents coordinate *through* it rather than calling each other (`AGENT_ARCHITECTURE.md §1.1`). One home per fact; everything else links to it. Because an agent's memory lives in the brain, not the session, the runner stays swappable.
 
-### 1.2 Three areas: knowledge, harness, and runtime
+### 1.2 Two areas: knowledge and runtime
 
-The brain holds three kinds of file, and keeping them distinct is its most important structural decision: the **knowledge area** (curated, durable "what is true": entities, projects, decisions, reference, and the **agent jobs** that define the org; conforms to OKF), the **harness area** (each agent's durable **machinery**: system prompts, loops, tool lists, skills, model binding; code and config rather than curated facts, so outside OKF), and the **runtime area** (the transient **exhaust** of work in progress: work-queue, run-ledger, feedback, eval results; regenerable and safe to delete, outside OKF). §3 gives the shape; §4 and §5 detail each.
+Keeping two kinds of file distinct is the brain's most important structural decision (§3 shows the shape; §4–§5 detail each):
 
-Why three and not two: two axes separate them, *OKF vs. not* and *durable vs. transient*. Knowledge is both; harness is durable but not OKF (authored source you can't regenerate by replaying history, so it earns its own home rather than being lumped in with runtime); runtime is neither.
+- **Knowledge** — curated, durable "what is true," including the **agent roles** that define the org. OKF.
+- **Runtime** — the transient **exhaust** of work in progress: regenerable, safe to delete, outside OKF.
+
+An agent's **harness** — its prompts, loops, tools, and model binding — is machinery, not data, so it lives with the runner, not the brain (`AGENT_ARCHITECTURE.md §5`).
 
 ### 1.3 The AI organizes; the files just store
 
-The brain is kept current by *agents doing the tidying* — filing, linking, reconciling — not by some rigid import system. Keeping the knowledge organized is itself agent work (the dreaming job, §7). This is the bet that makes plain files work at scale: the thing that made wikis rot — the tedium of upkeep — is exactly what an AI doesn't mind.
+The brain is kept current by *agents tidying* — filing, linking, reconciling — not a rigid pipeline (dreaming, §7). That bet is what makes plain files work at scale: the upkeep tedium that rotted wikis is what an AI doesn't mind.
 
 ---
 
@@ -43,43 +46,44 @@ The brain is kept current by *agents doing the tidying* — filing, linking, rec
 
 A brain is compliant if and only if it honors these. Everything else is free.
 
+No need to memorize them here — skim, and you'll meet each again in context below.
+
 1. **One source of truth.** Every fact lives in exactly one canonical file; everything else links to it.
-2. **Plain text, conforming to OKF, under version control.** The knowledge layer is markdown + YAML frontmatter (OKF, the brain's one *format* commitment), kept in something that tracks every change reversibly so its history is the audit log and undo. Version control is a required *capability*, not a prescribed tool: git is the obvious implementation and what the recipes use, but any system that versions the files reversibly complies.
-3. **Frontmatter is the schema.** If a detail isn't in the frontmatter, nothing can reliably search or sort by it. Keep the set of fields small — resist any you won't actually use.
-4. **Three areas, never confused.** Curated knowledge (durable, OKF), agent harness (durable, not OKF), and runtime state (transient, not OKF) stay clearly separated.
-5. **Writes go through a contract.** Agents add and update through one defined doorway, not by editing raw files however they like, so the brain stays consistent. (What that doorway looks like is yours to choose — see §6.)
+2. **Plain text, conforming to OKF.** Markdown + YAML frontmatter, readable raw with no database behind it.
+3. **Frontmatter is the schema.** If a detail isn't in the frontmatter, nothing can reliably search or sort by it. Keep the field set small.
+4. **Two areas, never confused.** Curated knowledge (OKF) and runtime state (transient, not OKF) stay clearly separated (§1.2); machinery — the harness — lives with the runner, not the brain.
+5. **Writes go through a contract.** Agents add and update through one defined doorway, not by editing raw files freely (§6).
 6. **Retrieval is earned complexity.** Begin with plain text search over frontmatter and content; add vectors or a graph only when that demonstrably falls short.
-7. **Degrade gracefully.** Delete the index, the tooling, the harness area, and the entire runtime area, and the knowledge area is still a valid OKF bundle a human can read.
-8. **Sensitivity is explicit; secrets never live here.** Restricted material is marked as such; credentials go in a secret manager, never the brain.
-9. **Simplicity is the tiebreaker.** When two designs both work, choose the one you can still read in six months.
+7. **Degrade gracefully.** Delete the index, the tooling, and the runtime area, and the knowledge area is still a valid OKF bundle a human can read.
+8. **Sensitivity is explicit; secrets never live here.** Restricted material is marked as such; credentials go in a secret manager.
+9. **Simplicity is the tiebreaker.** When two designs both work, pick the one you can still read in six months.
 
 ---
 
-## 3. The shape: three areas
+## 3. The shape: two areas
 
 ```
-  THE BRAIN  ·  one versioned repo, plain text
+  THE BRAIN  ·  plain text in one place
   │
   ├─ knowledge/   curated · durable · OKF-conformant
-  │     agents (jobs) · entities · projects · decisions · reference
-  │
-  ├─ harness/     agent machinery · durable · NOT OKF
-  │     one folder per agent: system-prompt · loop · tools · model
+  │     agents (roles) · entities · projects · decisions · reference
   │
   └─ runtime/     exhaust of running · transient or append-only · NOT OKF
         work-queue · run-ledger · feedback · eval-results
+
+  each agent's harness (system-prompt · loop · tools · model) lives with the runner, not here
 ```
 
-Directory names are conventional, not mandated — what matters is the three-way split and that the knowledge area is an OKF bundle. The areas map onto the agent architecture's planes: knowledge *is* the Context plane; **harness** holds the machinery of the Work and Activation planes (an agent's wiring and its schedules); **runtime** is where the Work, Telemetry, and Learning planes persist their transient state.
+Directory names are conventional. The two areas map onto the agent architecture's planes: knowledge *is* the Context plane, runtime persists the Work, Telemetry, and Learning state. The Work and Activation *machinery* — the harness — lives with the runner (`AGENT_ARCHITECTURE.md §5`).
 
 ---
 
 ## 4. The knowledge layer
 
-Curated, durable, OKF-conformant. The conventions:
+Conventions:
 
-- **One canonical document per concept**, identified by its path. Dated history lives beside it (OKF's `log.md`); a directory's `index.md` is its table of contents.
-- **Frontmatter is the schema, and it follows OKF** — a required `type`, OKF's recommended fields, and any extra fields you need as OKF extension keys (conformant tools preserve them). Lightly:
+- **One canonical document per concept**, identified by its path. Dated history lives beside it (OKF's `log.md`); a directory's `index.md` is its contents.
+- **Frontmatter is the schema, following OKF** — a required `type`, OKF's recommended fields, extras as extension keys (conformant tools preserve them):
 
 ```yaml
 ---
@@ -92,104 +96,97 @@ status: active                    # an extension field
 ---
 ```
 
-- **Documents link to each other** with ordinary links in the text — a web of connected knowledge with no special database behind it. Broken links are fine; they simply mark knowledge you haven't filled in yet.
-- **Agent jobs are first-class knowledge.** An agent (per `AGENT_ARCHITECTURE.md §2`) is defined by a **job** document (`type: Agent`) holding its responsibilities, its authority level, and its consequence-tagged tools. Because it's a knowledge file, improving or promoting an agent is a readable diff to it.
+- **Documents link to each other** with ordinary text links — no database behind it. Broken links are fine; they mark knowledge you haven't filled in yet.
+- **Agent roles are first-class knowledge.** An agent (`AGENT_ARCHITECTURE.md §2`) is defined by a **role** document (`type: Agent`) holding its responsibilities, authority level, and consequence-tagged tools — so improving or promoting an agent is a readable diff.
 
 ---
 
-## 5. The harness and runtime areas
+## 5. The runtime area, and where the harness lives
 
-Two non-OKF areas sit beside the knowledge layer.
+One non-OKF area sits beside the knowledge layer — **runtime** — and one piece of each agent deliberately sits *outside* the brain: its **harness**.
 
-### The harness area — durable machinery
+### Harness — machinery, with the runner
 
-Each agent's **harness** lives here, one folder per agent: the system prompt, the loop/heartbeat script, the tool list, any skills, the model binding — the machinery that runs it. This is authored code and config — durable, versioned, and edited deliberately (the improvement loop opens diffs against it, just as it does against jobs, `AGENT_ARCHITECTURE.md §11`). It is not OKF (it isn't curated facts) and it is not exhaust (you can't regenerate it by replaying history). An agent's **job** — the durable contract — lives in the knowledge area (`knowledge/agents/`); its **harness** — how that contract is run — lives here. That split is exactly why the runner stays swappable while the agent persists: rebuild the harness or swap the provider behind it; the job and the brain are untouched.
+Each agent's **harness** — system prompt, loop/heartbeat script, tool wiring, skills, model binding — is authored code and config, not curated data, so it lives with the runner that executes it, not in the brain (`AGENT_ARCHITECTURE.md §5`). The agent's **role** — the durable contract — lives in the brain (`knowledge/agents/`); its **harness** — how that contract is run — travels with the session and provider. Rebuild the harness or swap the provider and the role and brain are untouched. (The improvement loop diffs the harness like it diffs the role, `AGENT_ARCHITECTURE.md §11`.)
 
-### The runtime area — transient exhaust
+### Runtime — transient exhaust
 
-The runtime state of work, kept deliberately separate from both curated knowledge and machinery because it is mechanical, not authored. Four conventional collections:
+Mechanical state of work. Four conventional collections:
 
-- **Work-queue** — the tasks agents claim and complete (the inbound side of coordination).
+- **Work-queue** — the tasks agents claim and complete.
 - **Run-ledger** — an append-only record of every agent run: tokens, cost, actions, outcome (`AGENT_ARCHITECTURE.md §7`).
 - **Feedback** — captured human interventions, the labeled examples the improvement loop learns from (`AGENT_ARCHITECTURE.md §11`).
 - **Eval results** — per-agent acceptance checks and dated scorecards (`AGENT_ARCHITECTURE.md §10`).
 
-These are files too, but they are not OKF and not curated: they can be regenerated or replayed, you only ever add to them, and they are safe to delete. Deleting them loses history but never corrupts knowledge — which is the whole point of the split.
+Regenerable, append-only, safe to delete: losing them loses history but never corrupts knowledge.
 
 ---
 
 ## 6. The write contract and retrieval
 
-Two components sit over the files. The architecture fixes the *pattern*; you choose the technology.
+Two components sit over the files; fix the *pattern*, choose the technology.
 
-- **A write contract.** Agents create and update through a small, defined interface rather than editing raw files at will — so frontmatter stays valid, links stay consistent, and the change timestamp always bumps. *One way:* a tiny `brain` CLI; equally valid: a library, an API, or an MCP server. The contract is the invariant; its form is not.
-- **A retrieval path, kept as simple as the work allows.** Agents are excellent at search; lean on it. *Start* with plain text search over the files — for example a lightweight full-text index — and treat fancier approaches (embeddings, a knowledge graph) as an upgrade you earn only when plain search visibly fails (invariant #6).
+- **A write contract.** Agents create and update through a small, defined interface rather than editing raw files at will — so frontmatter stays valid, links stay consistent, and timestamps bump. A `brain` CLI, a library, an API, or an MCP server all qualify; the contract is the invariant, not its form.
+- **A retrieval path, as simple as possible.** *Start* with plain text search (e.g. a full-text index); add embeddings or a graph only when it visibly fails (invariant #6).
 
 ---
 
 ## 7. Curation: ingestion and dreaming
 
-A brain stays useful only if something keeps it current — and that something is a scheduled agent, not a pipeline. This is the **dreaming** job of `AGENT_ARCHITECTURE.md §6` (owned by the System agent), run when things are quiet:
+A brain stays current only if something keeps it so. Two distinct functions do that, and they're worth keeping apart: **ingestion** lands raw material; **dreaming** makes sense of it.
 
-1. **Ingest.** Pull new raw material (mail, transcripts, exports) into a staging area, then file each item into the right place in the knowledge layer — extracting durable facts, updating frontmatter, appending to history. **Flag, don't guess:** ambiguous or sensitive items wait for a human.
-2. **Consolidate.** Reconcile contradictions, add links, prune, and generate the digest.
-3. **Improve.** Cluster the feedback against the eval scorecards and open diffs against agent jobs (`AGENT_ARCHITECTURE.md §11`).
+**Ingestion — getting raw material in.** Pull new material (mail, transcripts, exports) into a staging area. This is mechanical intake, no judgment about what's true: it can be a plain pipeline (a cron firing an API call, a webhook, a sync script), or an agent when fetching the source takes reasoning. Keep it dumb on purpose — it lands raw material in staging, it doesn't decide what to keep. Like every capability it rolls up to an owner (the System agent, `AGENT_ARCHITECTURE.md §6`), but ownership here is accountability, not a requirement that an LLM do the work.
 
-The whole operation is one agent session, fully inspectable in the version history: the format makes the curation auditable.
+**Dreaming — making sense of it.** A scheduled *agent* pass, run when things are quiet (`AGENT_ARCHITECTURE.md §6`, owned by the System agent), doing the thinking ingestion can't:
+
+1. **File.** Process staged items — extract durable facts, update frontmatter, append to history. **Flag, don't guess:** ambiguous or sensitive items wait for a human.
+2. **Consolidate.** Reconcile contradictions, add links, prune, generate the digest.
+3. **Improve.** Cluster feedback against the eval scorecards and open diffs against agent roles (`AGENT_ARCHITECTURE.md §11`).
+
+Ingestion can be a pipeline; dreaming is an agent. Each dreaming run is one agent session, recorded in the run-ledger and each doc's `log.md` — fully inspectable.
 
 ---
 
 ## 8. The growth path
 
-The brain is the same thing at every size; you grow it by adding files, never by changing its nature.
+The brain is the same at every size; you grow it by adding files, not by changing its nature.
 
-- **A handful of notes** — a personal brain you and a chat agent use by hand. Already useful (the agent architecture's Stage 0).
+- **A handful of notes** — a personal brain you and a chat agent use by hand (the agent architecture's Stage 0).
 - **A structured knowledge layer** — entities, projects, decisions seeded from real work; retrievable.
-- **Agents + the harness and runtime areas** — jobs, machinery, and the queue/ledger, so agents do real work and report it.
-- **A maintained, self-improving brain** — the dreaming job keeps it current and proposes job improvements.
+- **Agents + runtime** — roles in the brain, harnesses with their runners, and the queue/ledger, so agents work and report.
+- **A maintained, self-improving brain** — dreaming keeps it current and proposes role improvements.
 
-Scaling is addition, not migration — the same reason the agent architecture scales. **When to reach past plain files:** questions that hop across many connected facts ("what led to this decision?"), many agents writing at once and colliding, or non-technical teammates who need a point-and-click interface. Then add a heavier search or graph layer *over the same files*, and because the knowledge layer is OKF, the wider ecosystem (catalogs, visualizers) works with zero migration (the portability §0 is built on).
+**When to reach past plain files:** questions that hop across many connected facts, many agents writing at once and colliding, or non-technical teammates needing a point-and-click interface. Add a heavier search or graph layer *over the same files* — and because the layer is OKF, the wider ecosystem (catalogs, visualizers) works with zero migration.
 
 ---
 
 ## 9. Filling in the blanks
 
-The OKF format is fixed and so is keeping a version history; everything else, including *which* tool versions the files, is a choice. Two compliant brains that share a format but no code:
+The OKF format is fixed; everything else is a choice. Two compliant brains, same format, no shared code:
 
 | Component | Example A (local) | Example B (hosted) |
 |---|---|---|
 | Storage format | markdown + YAML, OKF | markdown + YAML, OKF |
-| Version control | local git | hosted git (or another VCS) |
 | Write contract | a small CLI | an API or MCP server |
 | Retrieval | local full-text index | a managed search service |
 | Curation schedule | cron on an always-on machine | a managed scheduler |
 | Curating agent | a headless coding agent | any agent runtime |
 
-Both honor §2. Both are readable raw. Swap any cell without touching the others — that is what the format-only commitment buys.
+Both honor §2 and are readable raw; swap any cell without touching the others.
 
 ---
 
 ## 10. Anti-patterns
 
-- **A database as the source of truth.** The moment the real, canonical state lives somewhere you can't just open and read, you've lost the brain's core properties. The files are the truth; everything else is just an index over them.
-- **Prescribing technology the format doesn't require.** Pinning a specific index, language, or harness re-creates the lock-in the OKF commitment exists to prevent. Commit to the format; stay loose on the rest.
-- **Confusing the three areas.** Telemetry, queue items, and agent harness are not curated knowledge; forcing them into OKF documents adds friction, and letting runtime state or scripts sprawl into the knowledge area rots it.
-- **A retrieval stack ahead of need.** Vectors and graphs before plain search has demonstrably failed is complexity you can't eyeball, paid for up front.
-- **Manual upkeep as the plan.** If keeping the brain current depends on human discipline, it will rot. Curation is the dreaming agent's job; humans clear flags, they don't file everything.
+- **A database as the source of truth.** Once canonical state lives somewhere you can't just open and read, the brain's core properties are gone. The files are the truth; everything else indexes them.
+- **Prescribing technology the format doesn't require.** Pinning a specific index, language, or harness re-creates the lock-in OKF prevents.
+- **Confusing the areas.** Forcing telemetry or queue items into OKF adds friction; letting runtime state or harness code sprawl into the knowledge layer rots it.
+- **A retrieval stack ahead of need.** Vectors and graphs before plain search has failed is complexity you can't eyeball.
+- **Manual upkeep as the plan.** If staying current depends on human discipline, the brain rots. Curation is automated — ingestion as a pipeline or agent, sense-making as the dreaming agent's pass; humans only clear flags.
 - **Secrets in the brain.** Ever. Use a secret manager.
 
-> **The test, always:** delete the tooling and open the repo raw — is it still a clear, current account of what's true? If not, the problem is the content, not the tools.
+> **The test, always:** open the repo raw — is it still a clear, current account of what's true? If not, the problem is the content, not the tools.
 
 ---
 
-## 11. Glossary
-
-The brain and its three areas are defined in §1–§3; this lists only terms a reader might jump to.
-
-- **OKF (Open Knowledge Format)** — the open standard the knowledge layer conforms to: plain-text markdown + YAML frontmatter. The brain's one format commitment; kept under version control (git by default, not mandated).
-- **Write contract** — the defined interface agents write through, in place of editing raw files (§6).
-- **Dreaming** — the scheduled curation agent that keeps the brain current and improving (§7; `AGENT_ARCHITECTURE.md §6`).
-
----
-
-*Prime directive, restated: the brain is plain, versioned text you can understand at any time, structured so agents retrieve and update it reliably, and committed to one format so it outlives every tool that touches it. Opinionated about structure; agnostic about technology; loyal to OKF. When in doubt, keep it readable.*
+*Prime directive: plain text you can read at any time, structured so agents retrieve and update it reliably, committed to one format so it outlives every tool. Opinionated about structure, agnostic about technology, loyal to OKF.*

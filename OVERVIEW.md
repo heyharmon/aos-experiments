@@ -1,22 +1,20 @@
 # Agent OS — the 2-minute version
 
-A way to put AI to work across your day — and scale it from one agent to a system that helps run a business — **without it becoming something you can't understand.**
-
-> The full docs: [`AGENT_ARCHITECTURE.md`](./AGENT_ARCHITECTURE.md) (the system) and [`BRAIN_ARCHITECTURE.md`](./BRAIN_ARCHITECTURE.md) (the foundation it runs on). This is the digest.
+A way to put AI to work across your day — and scale it from one agent to a system that helps run a business.
 
 ---
 
 ## Three ideas hold the whole thing up
 
-1. **The brain is the bus.** All durable state lives in one place — plain files under version control. Agents never call each other; they coordinate by reading and writing the brain. So the runner is swappable: kill a run, swap the provider — nothing is lost, because the agent's job and memory were in the brain all along.
-2. **Agents hold jobs.** Organize work the way a company does — each agent has an accountable **job** (like "Communications Manager"), not piled onto one do-everything bot. The job is durable and holds the tools and knowledge; the agent that does it persists, while the session and provider running it are swappable.
+1. **The brain is the bus.** All durable state lives in one place — plain, human-readable files. Agents never call each other; they coordinate by reading and writing the brain. So the runner is swappable: kill a run, swap the provider — nothing is lost, because the agent's role and memory were in the brain all along.
+2. **Agents hold roles.** Organize work the way a company does — each agent has an accountable **role** (like "Communications Manager"), not piled onto one do-everything bot. The role lives in the brain and the agent that fills it persists, while the session and provider running it are swappable.
 3. **Opinionated about mechanism, agnostic about policy.** The architecture fixes how things are wired; **you** choose the settings — above all, how much autonomy each agent gets.
 
 ---
 
 ## The shape
 
-In one line: **you** drive, oversee, and observe; **agents**, each with a job, do the work; **the brain** is the only thing they share. (The full doc draws this as a stack, `AGENT_ARCHITECTURE.md §4`.)
+In one line: **you** drive, oversee, and observe; **agents**, each with a role, do the work; **the brain** is the only thing they share. (The full doc draws this as a stack, `AGENT_ARCHITECTURE.md §4`.)
 
 ---
 
@@ -24,7 +22,7 @@ In one line: **you** drive, oversee, and observe; **agents**, each with a job, d
 
 Most of the work happens on its own, in two rhythms — and you can jump in any time.
 
-```
+```markdown
   Loops      all day   wake → read brain → do a task → write back → log it
   Dreaming   nightly   organize · write the digest · propose improvements
 ```
@@ -35,12 +33,16 @@ Most of the work happens on its own, in two rhythms — and you can jump in any 
 
 And it **improves itself, auditably:**
 
-```mermaid
-flowchart LR
-    a["you step in"] --> b["saved as<br/>feedback"] --> c["dreaming spots<br/>the pattern"] --> d["proposes a diff to<br/>the agent's job"] --> e["you approve"] --> f["it needs you<br/>less next time"]
+```
+  you step in
+     → saved as feedback
+     → dreaming spots the pattern
+     → proposes a change to the agent's role
+     → you approve
+     → it needs you less next time
 ```
 
-Every improvement is a readable diff you can revert. Nothing changes behind your back.
+Every improvement is a readable diff you approve before it lands. Nothing changes behind your back.
 
 ---
 

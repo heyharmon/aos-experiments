@@ -8,6 +8,55 @@ The format follows [Keep a Changelog](https://keepachangelog.com): newest first,
 
 ---
 
+## 2026-06-16 — Tools: a building block for reaching beyond the brain
+
+Names how an agent reaches an external service (email, a data API) as a first-class **building block**, the **tool**, and adds a focused doc plus a new recipe kind. A tool is *not* a new plane or invariant: it rides on consequence tags (#6), autonomy (`§8`), escalation (`§9`), secrets (`BRAIN_ARCHITECTURE.md` inv. #8), and the runtime area. "Tool" is the AI-native, human-sized word ("my agent needs gmail"); within a tool, the consequence-tagged operations are **actions** (already invariant #6's word).
+
+### Added
+- **`TOOLS.md`** — a building-block doc (subordinate to the two peers). The model: a **tool** offers consequence-tagged **actions**; it separates into **tool / account / grant** (how many collapse is what makes one clean vs fiddly); **direction** (outbound actions, inbound events, or both); a **modular method** (reach = CLI/MCP/API/bash, data strategy = live or materialized) that is agnostic at the architecture level and pinned in the recipe, defaulting to **CLI-first** for token efficiency; two build principles (**power-user fidelity**, **token efficiency under intense use**); and **local materialization** (a cache in the runtime area) as an *earned* upgrade, never the base.
+- **New recipe kind: tool recipes** (`recipes/tools/`). `provides: tool:<capability>` (e.g. `tool:email`), consumed by an agent via `requires: [tool:<capability>]`. Added `recipes/tools/TEMPLATE.md` and a worked **`recipes/tools/gmail.md`** (CLI-first, multiple accounts, inbound poll, optional SQLite cache, shared-inbox claim guard).
+- **Per-kind recipe templates.** The single root `recipes/TEMPLATE.md` is replaced by a dead-simple `TEMPLATE.md` in each folder (`brains/`, `agents/`, `tools/`, `kits/`).
+
+### Changed
+- **`recipes/README.md`** now lists **four** recipe kinds (brain / agent / tool / kit), notes that an agent recipe may `requires: [tool:<x>]`, and indexes `tools/gmail.md`. The root `README.md` adds a `TOOLS.md` row (marked a building block, not a third peer). `recipes/agents/TEMPLATE.md` gains a **Tools** prerequisite line.
+  **Impact:** to give an agent an external capability, add a tool recipe under `recipes/tools/` and grant it in the agent's role (account handle + action subset, least-privilege); put the credential in your secret manager and the account **handle** in a `knowledge/tools/<name>/` registry, never the brain. Account count (shared inbox vs separate) is a deployment choice, not a different tool. Nothing in the two constitutions changed, so existing brains/agents need no migration; this only adds a building block. If you mirror the architecture's vocabulary, "an external integration/connection" is now "a **tool**," and the per-operation unit is an "**action**." `AGENT_ARCHITECTURE.md §5` and the personal-assistant recipe now use that split: an agent's **tools** are wired in the harness and granted in the role, and their consequence-tagged operations are **actions** (the PA's harness `tools.md` is renamed `actions.md`, and its step-3 table is now "Action | Consequence | In base?").
+
+The brain drops from three areas to two. An agent's **harness** — its system prompt, loop, tool wiring, and model binding — is machinery, code rather than data, so it now lives **with the runner** that executes it, not in the brain. The brain holds only **knowledge** (durable, OKF: facts + agent roles) and **runtime** (transient exhaust). This sharpens the brain-as-data / runner-as-code split and softens invariant #1: the brain holds all *state*, just not the harness *code*.
+
+### Changed
+- **Brain: three areas → two.** `BRAIN_ARCHITECTURE.md` §1.2/§3/§5 now describe **knowledge** and **runtime** only; the harness is explicitly the runner's, not a brain area. Invariant #4 "Three areas, never confused" → **"Two areas, never confused"**; invariant #7's degrade list drops `harness`; the §3 diagram drops the `harness/` branch (with a note that it lives with the runner).
+  **Impact:** update any "three areas (knowledge / harness / runtime)" wording in your own docs and `AGENTS.md` to **"two areas (knowledge / runtime)."** You need not physically move `harness/` — colocating it with the brain on one machine is fine — but it is no longer a *brain area*; it is the runner's code. In a split deployment, ship the harness with the runner.
+- **`AGENT_ARCHITECTURE.md` invariant #1 reworded.** "Everything lives in the brain" → **"All state lives in the brain"**: everything the system learns or produces lives there; the harness and runner are stateless code outside it. Invariant #3 now notes the runner "holds none (its harness is code, not state)." The §5 anatomy table's "Why it lives in the brain" column becomes **"Where it lives, and why"** (role and reporting in the brain; harness and schedule with the runner; tool *permissions* in the role, *wiring* in the harness). New glossary term **Harness**; §13 gains a Harness row. `OVERVIEW.md`, `README.md`, and `CLAUDE.md` follow.
+  **Impact:** wording in your own copies. If you cite invariant #1 as "everything lives in the brain," change it to "all *state* lives in the brain"; the harness is the carve-out.
+- **Recipes recategorize `harness/`.** `local-brain` presents the brain as two areas plus the runner's `harness/` (colocated for a one-machine build); `personal-assistant` and `starter-kit` reframe `harness/personal-assistant/` as the runner's machinery, not a brain area. The directory and every path, `loop.sh`, and cron line are unchanged.
+  **Impact:** none mechanical — only the framing changed. `harness/` is the runner's, not the brain's.
+
+---
+
+## 2026-06-16 — An agent's scope of work is its **role**, not its "job"
+
+Renames the everyday word for what an agent is accountable for: **"job" → "role"**, and dials back how hard the docs lean on the concept. "Job" reads too close to "task" (a single unit of work); a **role** is a bounded set of responsibilities plus the tools and knowledge for them — a personal assistant, QA testing, prospecting, marketing manager. This refines the *"'job' replaces 'charter'"* entry below: the **agent** is still the durable primitive, and "role" now names its scope of work. Note "role" here is *not* the pre-2026-06-15 sense (a swappable executor, which became "agent") — it means the job description, one level down.
+
+### Changed
+- **"Job" → "role" throughout** both architecture docs, `OVERVIEW.md`, `README.md`, `CLAUDE.md`, and the `recipes/` layer. An **agent has a role**: a well-defined scope of work, written as a file in the brain. The §5 anatomy field **"Job" → "Role"**, and "Agents hold jobs" → **"Agents hold roles."**
+  **Impact:** rename "job" → "role" in your own docs, prompts, and `AGENTS.md` (e.g. "agents hold jobs" → "agents hold roles"; an agent's registration line `job:` → `role:`). **No structural change:** the OKF type stays **`type: Agent`**, agent definitions stay in **`knowledge/agents/`**, and run-record keys (`agent:` / `session:`) are unchanged — this is wording only.
+- **The concept is dialed back.** The docs no longer over-explain it or equate "an agent *is* a job"; the point is simply that each agent has a **well-defined scope of work**. Recurring-task uses of "job" (e.g. "the dreaming job") are now just "dreaming" / "the nightly pass."
+  **Impact:** none required; cosmetic if you mirror the architecture's phrasing.
+
+---
+
+## 2026-06-16 — Version control dropped from the architecture
+
+The architecture no longer mentions version control at all. The earlier *"Git is no longer a prescribed technology"* entry demoted **git** to a recommended *capability* (version history); this removes the topic entirely. **OKF is the brain's sole hard commitment.** Version control is an implementation detail every builder already knows how to handle — the docs neither require, recommend, nor discuss it, so they stop cluttering the invariants and recipes with it.
+
+### Changed
+- **`BRAIN_ARCHITECTURE.md`** — invariant #2 is now just **"Plain text, conforming to OKF"** (no version-control clause). §0, the §3 diagram, §7, §9 (intro + the dropped "Version control" table row), and the glossary no longer mention version history, audit-via-version, or revert; auditability now rests on the run-ledger and each doc's OKF `log.md`.
+- **Cross-doc** — `OVERVIEW.md`, `AGENT_ARCHITECTURE.md` (including the example-stack table, now "Markdown (OKF)" rather than "Markdown + git (OKF)"), and `CLAUDE.md` drop their version-control lines.
+- **Recipes de-git'd** — `recipes/brains/local-brain.md` removes git from the stack, prerequisites, ingredients, the "init the repo" step, the `brain` CLI's `commit()` (the CLI just writes files now), the "commits" notes in the command table, the `git log` Doneness check, and both git substitution rows. `recipes/kits/starter-kit.md`, `recipes/README.md`, and `recipes/agents/personal-assistant.md` follow.
+  **Impact:** the architecture now asks **nothing** about version control — keep using git (or anything) for your brain exactly as before; it's simply no longer part of the spec, so nothing "complies" or "doesn't" on that axis. If your `AGENTS.md`, docs, or the local-brain `brain` CLI still tie writes to auto-commits or call version control an architectural requirement, you can leave them (harmless) or trim the mentions to match. OKF conformance of the knowledge layer is the only brain requirement. **Supersedes the "Git is no longer a prescribed technology" entry below.**
+
+---
+
 ## 2026-06-16 — Agents replace roles; "job" replaces "charter"; machinery area is now `harness/`
 
 A pervasive vocabulary and folder change across both architecture docs, `OVERVIEW.md`, `README.md`, `CLAUDE.md`, and the whole `recipes/` layer. It **reverses the 2026-06-15 "agents take on roles" framing**: the agent is now the single durable primitive, not a swappable executor that fills a role. People think in *agents*, not roles, and treat the model/provider as the swappable part — the architecture now matches that intuition. This is the largest single rename so far; the `/architecture-update` skill will walk a brain through it.

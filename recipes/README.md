@@ -6,14 +6,15 @@ The two architecture docs are deliberately *agnostic about technology* — they 
 
 > A recipe is a spec / PRD — but simple, friendly, and clear. Ingredients, steps, and a way to know when it's done.
 
-## The three kinds of recipe
+## The four kinds of recipe
 
 A cookbook isn't a flat list of dishes; it has stocks you build on and menus that combine them. Recipes work the same way.
 
 | Kind | Cooking analogy | Prescribes | Reaches |
 |---|---|---|---|
 | **Brain recipe** (`brains/`) | the stock / mother sauce | a concrete brain build: storage, write contract, retrieval, layout — the shared foundation everything runs on (`BRAIN_ARCHITECTURE.md`) | Stage 0 |
-| **Agent recipe** (`agents/`) | a dish | one agent: its job, harness, loops, tools, schedule — built to run on a brain (`AGENT_ARCHITECTURE.md §5`) | Stage 1+ |
+| **Agent recipe** (`agents/`) | a dish | one agent: its role, harness, loops, tools, schedule — built to run on a brain (`AGENT_ARCHITECTURE.md §5`) | Stage 1+ |
+| **Tool recipe** (`tools/`) | a utensil | one capability an agent reaches through (Gmail, a data API): its actions, accounts, and grants (`TOOLS.md`) | added when an agent needs it |
 | **Kit** (`kits/`) | a menu | a curated combination — one brain + one or more agents — for a use case | a working system |
 
 ## How they combine
@@ -21,12 +22,13 @@ A cookbook isn't a flat list of dishes; it has stocks you build on and menus tha
 This is the whole point of splitting them — it mirrors the architecture (the brain and the system are **peer** docs) and it matches the maturity path (`AGENT_ARCHITECTURE.md §12`): stand up the brain once, then add agents incrementally as need grows.
 
 - An **agent recipe depends on a brain.** It declares which brains it's compatible with and which is ideal, via frontmatter. A coding agent resolves the dependency: "this agent needs a brain you don't have yet — run the recommended brain recipe first."
+- An **agent recipe may also require tools.** A tool recipe (`tools/`) is a reusable capability (`provides: tool:<x>`) that any agent can declare via `requires: [tool:<x>]` and be granted; see `TOOLS.md`.
 - A **team is just several agent recipes sharing one brain.** Implement one agent now; add more later on the same foundation. Scaling is hiring, not migrating (`§12`).
 - A **kit is a shortcut** — a pre-picked brain + agent(s) so a newcomer has one thing to grab instead of assembling parts.
 
 ## Anatomy of a recipe
 
-Every recipe inherits the skeleton in [`TEMPLATE.md`](./TEMPLATE.md), which carries the section-by-section guidance. Two sections are what make a recipe a recipe rather than an architecture doc: **Ingredients** (the prescriptive stack it commits to) and **Substitutions** (where the architecture's optionality lives, so the base stays maximally simple and upgrades are spelled out but never imposed). One detail worth knowing: a recipe's **Doneness** checks double as the agent's first evals (`AGENT_ARCHITECTURE.md §10`).
+Every recipe follows a per-kind skeleton: the `TEMPLATE.md` in its own folder (`brains/`, `agents/`, `tools/`, `kits/`), which carries the section-by-section guidance. Two sections are what make a recipe a recipe rather than an architecture doc: **Ingredients** (the prescriptive stack it commits to) and **Substitutions** (where the architecture's optionality lives, so the base stays maximally simple and upgrades are spelled out but never imposed). One detail worth knowing: a recipe's **Doneness** checks double as the agent's first evals (`AGENT_ARCHITECTURE.md §10`).
 
 ## Design rules for writing recipes
 
@@ -40,6 +42,7 @@ Every recipe inherits the skeleton in [`TEMPLATE.md`](./TEMPLATE.md), which carr
 
 | Recipe | Kind | Stack | Stage |
 |---|---|---|---|
-| [`brains/local-brain.md`](./brains/local-brain.md) | brain | markdown + git + plain-text search | 0 |
+| [`brains/local-brain.md`](./brains/local-brain.md) | brain | markdown + plain-text search | 0 |
 | [`agents/personal-assistant.md`](./agents/personal-assistant.md) | agent | Claude Code + cron | 1 |
+| [`tools/gmail.md`](./tools/gmail.md) | tool | CLI + OAuth (+ SQLite cache) | 1+ |
 | [`kits/starter-kit.md`](./kits/starter-kit.md) | kit | the two above, combined | 1 |

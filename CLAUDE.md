@@ -2,15 +2,15 @@
 
 ## What this directory is
 
-A set of **documentation** that lays out an opinionated, technology-agnostic architecture for **building and using agents to do real work** — from a single agent up to a system that helps run a business. These are vision-and-invariants docs, not code. Your job here is to help write, edit, and expand them.
+A set of **documentation** that lays out an opinionated, technology-agnostic architecture for **building and using agents to do real work** — from a single agent up to a system that helps run a business. These are vision-and-invariants docs, not code. Your task here is to help write, edit, and expand them.
 
 ## The files
 
 | File | What it is |
 |---|---|
 | `OVERVIEW.md` | The 2-minute digest. Start here. |
-| `AGENT_ARCHITECTURE.md` | The system: agents, jobs, planes, activation/loops, telemetry, autonomy, human surfaces, evaluation, improvement, maturity path. |
-| `BRAIN_ARCHITECTURE.md` | The foundation: the "brain" — the shared context substrate, its three areas (knowledge / harness / runtime), and OKF. |
+| `AGENT_ARCHITECTURE.md` | The system: agents, roles, planes, activation/loops, telemetry, autonomy, human surfaces, evaluation, improvement, maturity path. |
+| `BRAIN_ARCHITECTURE.md` | The foundation: the "brain" — the shared context substrate, its two areas (knowledge / runtime), and OKF. The harness (each agent's machinery) lives with the runner, not the brain. |
 | `README.md` | Index explaining how the docs relate. |
 | `CHANGELOG.md` | Consumer-facing record of architecture changes. See "Committing & the changelog" below. |
 | `todos.md` | Working notes / backlog. |
@@ -23,11 +23,11 @@ These docs are deliberately tech-agnostic. The **`recipes/`** subdirectory is th
 
 ## The core thesis (so edits stay coherent)
 
-- **The brain is the bus.** All durable state lives in one place — plain markdown under version control. Agents coordinate only by reading/writing the brain, never by calling each other. So the **runner is swappable** (a new session, or a different provider) while the agent persists.
-- **Agents hold jobs.** Organize work by hiring each agent into an accountable **job** (like "Communications Manager") that holds the tools and knowledge for the work. The agent and its job persist; the session and provider running it are swappable.
+- **The brain is the bus.** All durable state lives in one place — plain markdown files. Agents coordinate only by reading/writing the brain, never by calling each other. So the **runner is swappable** (a new session, or a different provider) while the agent persists.
+- **Agents hold roles.** Organize work by hiring each agent into an accountable **role** (like "Communications Manager") that scopes its work. The role lives in the brain and the agent persists; its machinery (the harness) lives with the runner, and the session and provider running it are swappable.
 - **Opinionated about mechanism, agnostic about policy.** The architecture fixes how things are wired; the operator chooses the settings — above all, how much **autonomy** each agent gets (a per-agent dial) and which **surfaces** they use.
-- **Self-improving, auditably.** Interventions become feedback → dreaming clusters them → proposes a diff to an agent's job → human approves. Every change is a readable, revertible diff.
-- One deliberate commitment, and it's a *format* not a technology: the brain's knowledge layer uses **OKF** (the [Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/tree/main/okf)). The brain must also be version-controlled (git by default), but that is a required *capability*, not a prescribed tool. Everything else is fill-in-the-blank; technology is pinned only in `recipes/` and `kits/`.
+- **Self-improving, auditably.** Interventions become feedback → dreaming clusters them → proposes a diff to an agent's role → human approves. Every change is a readable diff you approve before it lands.
+- One deliberate commitment, and it's a *format* not a technology: the brain's knowledge layer uses **OKF** (the [Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/tree/main/okf)) — the brain's only hard commitment. Everything else is fill-in-the-blank; technology is pinned only in `recipes/` and `kits/`.
 
 ## Committing & the changelog
 
@@ -43,7 +43,7 @@ Commit progress and maintain `CHANGELOG.md` **proactively** — but only at a **
 
 - These are **vision + invariants** documents — opinionated, principle-first, tech-agnostic. Keep that register.
 - Prose is tight and declarative, leaning on tables, diagrams, and the org/employee vocabulary (hiring, performance review, promotion). Match it.
-- **Diagrams, by kind:** use a **Mermaid** `flowchart` for genuine flows/graphs (it renders on GitHub and stays diffable text); keep **ASCII** for directory trees (Mermaid can't draw them); keep **tables or a labeled ASCII spectrum** for progressions and dials (e.g. the autonomy dial, the maturity path). Don't use generated/raster images for load-bearing diagrams: they aren't diffable, agent-editable, or `brain search`-able, and they break the degrade-to-plain-text ethos.
+- **Diagrams: plain ASCII, always, kept extremely simple.** Use small ASCII for everything — flows, the spine, directory trees, and labeled spectrums (the autonomy dial, the maturity path) — so they read raw and stay diffable. No **Mermaid** (it doesn't render everywhere and reads worse as source) and no generated/raster images (not diffable, agent-editable, or `brain search`-able; they break the degrade-to-plain-text ethos). Prefer the fewest boxes and arrows that carry the idea.
 - Cross-reference between docs and sections (e.g. `AGENT_ARCHITECTURE.md §8`) as the existing text does.
 - The recurring litmus test: *can you explain the whole system out loud in a few minutes by pointing at files and naming agents?* If a change adds complexity that fails this test, push back.
 - When asked to add or change content, keep the two docs consistent with each other and with the invariants/glossaries.
