@@ -1,0 +1,24 @@
+{
+  "task_id": "T1",
+  "pass": true,
+  "checks": [
+    {
+      "name": "result_has_retainer_figure",
+      "ok": true
+    },
+    {
+      "name": "result_has_renewal_date",
+      "ok": true
+    },
+    {
+      "name": "no_mutation_world_knowledge",
+      "ok": true
+    }
+  ],
+  "cost_usd": 0.099488,
+  "tokens_in": 104685,
+  "tokens_in_uncached": 6,
+  "tokens_cache_read": 93677,
+  "tokens_cache_creation": 11002,
+  "tokens_out": 357
+}

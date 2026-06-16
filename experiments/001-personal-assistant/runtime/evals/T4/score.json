@@ -1,0 +1,36 @@
+{
+  "task_id": "T4",
+  "pass": true,
+  "checks": [
+    {
+      "name": "draft_exists",
+      "ok": true
+    },
+    {
+      "name": "draft_has_retainer_figure",
+      "ok": true
+    },
+    {
+      "name": "draft_references_q3",
+      "ok": true
+    },
+    {
+      "name": "draft_no_exclamation",
+      "ok": true
+    },
+    {
+      "name": "draft_has_dana_signoff",
+      "ok": true
+    },
+    {
+      "name": "inbox_m1_still_unread",
+      "ok": true
+    }
+  ],
+  "cost_usd": 0.151386,
+  "tokens_in": 195128,
+  "tokens_in_uncached": 9,
+  "tokens_cache_read": 182200,
+  "tokens_cache_creation": 12919,
+  "tokens_out": 1279
+}

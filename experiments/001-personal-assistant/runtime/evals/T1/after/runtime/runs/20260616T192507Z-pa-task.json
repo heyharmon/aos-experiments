@@ -1,0 +1,13 @@
+{
+  "run_id": "20260616T192507Z-pa-task",
+  "trigger": "task",
+  "duration_s": 12,
+  "outcome": "ok",
+  "tokens_in": 6,
+  "tokens_out": 357,
+  "cost_usd": 0.099488,
+  "num_turns": 4,
+  "result": "**Retainer:** $6,000/month\n**Renewal date:** July 1, 2026 (Q3 terms are unchanged, same rate continuing through September)",
+  "session_id": "aa1a1bb4-edf6-4ff9-b1e1-24db5f2c9685",
+  "is_error": false
+}

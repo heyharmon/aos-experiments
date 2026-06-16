@@ -1,29 +1,23 @@
-# Agent OS — document set
+# Agent OS — an experiment
 
-A technology-agnostic vision for organizing AI work by **agents**, and for the **brain** that work runs on. Two peer architecture docs.
+This repo is not a doctrine. It is an experiment to discover what actually works for putting agents to work.
 
-| Doc | What it is | Answers |
-| --- | --- | --- |
-| `OVERVIEW.md` | **The 2-minute digest** | The whole thing, distilled — start here. |
-| `AGENT_ARCHITECTURE.md` | **Vision & invariants — the system** | *What* the agent system is and *why* — agents, roles, loops, telemetry, autonomy, evaluation, improvement. |
-| `BRAIN_ARCHITECTURE.md` | **Vision & invariants — the brain** | *What* the context substrate is and *why* — the two areas, OKF, the conventions agents read and write through. |
-| `TOOLS.md` | **Building block: tools** | How an agent reaches beyond the brain (Gmail, a data API): the tool/account/grant model, consequence-tagged actions, CLI-first and caching. A part agents use, not a third peer. |
+We build small agent operating systems, give them realistic tasks, and measure outcome quality and token cost. Principles emerge from evidence, not assertion.
 
-## Get started
+## Structure
 
-You don't build from these docs by hand. A coding agent does it for you.
+| Path | What it is |
+| --- | --- |
+| `HYPOTHESES.md` | Every unproven claim as a falsifiable bet |
+| `experiments/` | Each experiment: a system-under-test, a benchmark, and the hypotheses it bears on |
+| `experiments/001-personal-assistant/` | First experiment: a personal assistant agent on a shared brain |
+| `results/` | The evidence log: run outputs, scores, costs |
+| `archive/` | Earlier architecture docs, kept for provenance only. Not authoritative. |
 
-1. Open a coding agent (Claude Code or similar) in an empty folder.
-2. Paste this:
+## The one operating principle
 
-   ```
-   Read recipes/kits/starter-kit.md from <this repo> and build it for me here.
-   ```
+For any claim in this repo, you should be able to point at a run in `results/` that supports it. If you cannot, it is a hypothesis, not a fact.
 
-3. Answer its questions. Done — you have a working brain plus a personal assistant.
+## How to contribute
 
-That's the [Starter Kit](./recipes/kits/starter-kit.md), the smallest end-to-end system. Grow it later by adding more agents onto the same brain. To pick different parts, see [`recipes/README.md`](./recipes/README.md).
-
-## On the Open Knowledge Format (OKF)
-
-The brain's one format commitment is [OKF](https://github.com/GoogleCloudPlatform/knowledge-catalog/tree/main/okf): the knowledge layer conforms to it (markdown + YAML frontmatter).
+Pick a hypothesis from `HYPOTHESES.md`, design an experiment, run it, and log the results. If the evidence contradicts the hypothesis, update or retire it.

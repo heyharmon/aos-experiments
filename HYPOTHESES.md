@@ -1,0 +1,140 @@
+# Hypotheses
+
+This register holds every unproven architectural claim from the archived docs as a falsifiable bet. A claim with no test does not belong here; nothing is asserted as fact until a run in `results/` supports it.
+
+---
+
+## H-01  Self-improvement loop produces net-positive role changes
+- Claim: An automated improvement pass (cluster interventions, propose a role diff, human approves) lowers an agent's intervention rate over time without degrading other quality metrics.
+- Source: `archive/AGENT_ARCHITECTURE.md` §11 (Improvement); §10 (Evaluation).
+- Why we believe it: a correction captured once as a labeled example should prevent the whole class of mistake, so attention compounds instead of repeating weekly.
+- Test: experiment 001 (lean personal-assistant run). Run the agent for N sessions, capture interventions as feedback, run one improvement pass, then replay the same case set and the next N sessions. Observable signal: intervention rate on the replay set after the diff vs. before.
+- Refutes if: post-diff intervention rate is not lower than pre-diff on the held-out replay set across 3 consecutive passes, OR any approved diff raises the failure rate on a previously-passing case (regression).
+- Status: UNTESTED
+- Evidence: (none)
+
+## H-02  Plain-text (ripgrep) search is sufficient retrieval
+- Claim: Plain-text search over frontmatter and content retrieves the right brain context for an agent's tasks, with no embeddings or graph layer needed.
+- Source: `archive/BRAIN_ARCHITECTURE.md` inv. #6, §6 (retrieval is earned complexity); `archive/AGENT_ARCHITECTURE.md` §4 (Context plane).
+- Why we believe it: a single-operator brain is small and the agent writes its own files with searchable terms, so lexical match should find what it needs before scale forces vectors.
+- Test: experiment 001. Log every retrieval the agent performs and whether the task succeeded using only what plain search returned. Observable signal: rate of tasks that failed or escalated specifically because needed context existed in the brain but plain search did not surface it.
+- Refutes if: more than 10% of sessions fail or escalate due to a retrieval miss where the fact was present in the brain but lexically unfindable, across experiment 001.
+- Status: UNTESTED
+- Evidence: (none)
+
+## H-03  Brain-as-bus removes the need for inter-agent messaging
+- Claim: Two or more agents coordinate correctly by reading and writing the brain alone, with no direct agent-to-agent calls and no missed or duplicated work.
+- Source: `archive/AGENT_ARCHITECTURE.md` §1.1, inv. #2; `archive/BRAIN_ARCHITECTURE.md` §1.1.
+- Why we believe it: "A tells B" reduces to "A writes a file, B reads it," which keeps coordination machinery-free and the whole system readable.
+- Test: BLOCKED, needs a 2nd agent. Run two agents whose work hands off through the brain (one produces, one consumes) over a shared workload. Observable signal: handoffs completed correctly via brain state alone, with no lost or double-processed items.
+- Refutes if: correct coordination requires any direct call or out-of-brain channel, OR brain-only handoff produces a lost/duplicated item rate above 0 that cannot be fixed by a claim/routing convention in `runtime/`.
+- Status: UNTESTED
+- Evidence: (none)
+
+## H-04  The autonomy dial needs more than two rungs
+- Claim: Operators meaningfully use more than two autonomy settings; the four-rung dial (Advisory / Supervised / Delegated / Autonomous) earns its granularity over a binary propose/act switch.
+- Source: `archive/AGENT_ARCHITECTURE.md` §8 (Autonomy: a dial, not a default).
+- Why we believe it: managing an agent mirrors managing a person, where supervision style shifts in steps as trust grows, not in one jump.
+- Test: Operate one or more agents over real work and record which rung each sits at and every rung change. Observable signal: distribution of rungs actually used and whether the middle rungs (Supervised, Delegated) are ever distinct in practice from the extremes.
+- Refutes if: across the run, agents only ever sit at the two extremes (full-propose or full-act) and no middle rung is used for a sustained period, OR operators report the middle rungs are indistinguishable in behavior.
+- Status: UNTESTED
+- Evidence: (none)
+
+## H-05  Agents-hold-named-roles and the org metaphor earn their keep
+- Claim: Modeling each agent as an accountable named role (with hiring, review, promotion vocabulary) produces better-scoped, more reviewable work than one general-purpose agent.
+- Source: `archive/AGENT_ARCHITECTURE.md` §1.2, §2, §5; `archive/OVERVIEW.md` (idea 2).
+- Why we believe it: smaller context and a sharp scope per role mean separate schedules, reviews, and failures, so a bug in one area never touches another.
+- Test: Compare a single role-scoped agent against an unscoped do-everything agent on the same task set. Observable signal: task success, escalation accuracy, and reviewer time-to-judge per approach.
+- Refutes if: the role-scoped agent shows no measurable advantage in success rate or reviewability over the unscoped agent on the same workload, OR the role file adds maintenance cost without changing behavior.
+- Status: UNTESTED
+- Evidence: (none)
+
+## H-06  Dreaming improves the brain without introducing errors
+- Claim: A nightly consolidation pass (file, reconcile contradictions, prune, link, write the digest) leaves the brain more correct and more useful than it found it, net of any errors it introduces.
+- Source: `archive/AGENT_ARCHITECTURE.md` §6 (Dreaming); `archive/BRAIN_ARCHITECTURE.md` §7 (Curation).
+- Why we believe it: the upkeep tedium that rots wikis is exactly what an AI does not mind, and flag-don't-guess keeps it from inventing on ambiguous items.
+- Test: Snapshot the brain, run a dreaming pass on a known set of staged items and contradictions, diff the result. Observable signal: count of correct consolidations vs. count of facts wrongly altered, dropped, or fabricated in the diff.
+- Refutes if: any dreaming pass introduces a factual error into `knowledge/` that a human would not have made, OR net correctness (correct edits minus harmful edits) is not positive across runs.
+- Status: UNTESTED
+- Evidence: (none)
+
+## H-07  OKF (a pinned external format) is worth its cost over plain frontmatter
+- Claim: Committing the knowledge layer to OKF buys enough portability and ecosystem leverage to justify its constraints versus ad-hoc markdown + YAML frontmatter.
+- Source: `archive/BRAIN_ARCHITECTURE.md` §0, inv. #2, §4, §8 (the brain's only hard commitment).
+- Why we believe it: format alone determines longevity, so anything that speaks OKF can read and write the brain, and it outlives every tool.
+- Test: Build the brain in OKF and attempt one concrete portability win (read/write the same brain with a second OKF-aware tool with zero migration). Observable signal: whether a second tool operates on the brain unmodified, and whether OKF's constraints ever block a needed field or structure.
+- Refutes if: no second tool ever reads the brain via OKF over the project's life, AND OKF's frontmatter rules force at least one workaround that plain frontmatter would not have, making it pure cost.
+- Status: UNTESTED
+- Evidence: (none)
+
+## H-08  A consequence-tag taxonomy beyond reversible/escalate is needed
+- Claim: Governing actions requires more than the binary reversible-vs-consequential tag; a richer consequence taxonomy is needed to make correct autonomy decisions.
+- Source: `archive/AGENT_ARCHITECTURE.md` inv. #6, §8; `archive/TOOLS.md` §0.
+- Why we believe it: real actions vary in both reversibility and blast radius, so a single binary may collapse cases that an operator would treat differently.
+- Test: Tag every action an agent can take with the binary scheme and run real work. Observable signal: count of actions where the binary tag forced the wrong autonomy decision (escalated something trivial, or auto-ran something the operator wanted gated).
+- Refutes if: the binary reversible/escalate tag produces correct escalation decisions on every action across experiment 001 (no operator ever wishes for a finer tag).
+- Status: UNTESTED
+- Evidence: (none)
+
+## H-09  The runner/provider is genuinely swappable without rework
+- Claim: An agent's session and provider can be replaced with no loss of state and no rework of the role or brain, because the runner holds no state.
+- Source: `archive/AGENT_ARCHITECTURE.md` §1.1, inv. #3, §5; `archive/BRAIN_ARCHITECTURE.md` §5.
+- Why we believe it: all durable state is in the brain and the harness is stateless code, so killing and restarting (or re-providering) reloads everything from files.
+- Test: Run the agent on one runner/provider, stop mid-workload, resume on a different runner or provider against the same brain. Observable signal: whether work continues correctly from brain state with no manual state transfer.
+- Refutes if: resuming on a different runner/provider requires reconstructing any state not held in the brain, OR the harness rewrite needed to swap providers is large enough that the role/brain in practice had to change too.
+- Status: UNTESTED
+- Evidence: (none)
+
+## H-10  Ingestion as a distinct staged function is needed
+- Claim: Separating mechanical intake (ingestion lands raw material in staging) from sense-making (dreaming) is worth the extra moving part versus letting the agent fetch and file in one step.
+- Source: `archive/BRAIN_ARCHITECTURE.md` §7 (ingestion vs. dreaming); `archive/AGENT_ARCHITECTURE.md` §6.
+- Why we believe it: keeping intake dumb and judgment-free isolates "what arrived" from "what is true," so a fetch failure never corrupts knowledge and dreaming has a clean staging area to reason over.
+- Test: Run a workflow with a separate staging step and compare against one where the agent fetches and files inline. Observable signal: error rate and recoverability when intake fails or floods, with vs. without staging.
+- Refutes if: inline fetch-and-file shows equal correctness and recoverability on real intake, making the separate staging area pure overhead, across experiment 001.
+- Status: UNTESTED
+- Evidence: (none)
+
+## H-11  The tool/account/grant three-layer model earns its complexity
+- Claim: Splitting a tool into tool, account, and grant layers is worth the structure versus a flatter model, because it cleanly handles identity-bearing and multi-account services.
+- Source: `archive/TOOLS.md` §1 (Three layers), §6 (Where the pieces live).
+- Why we believe it: a read-only key service collapses all three while an identity-bearing service (send as sales@ vs support@) genuinely needs them apart, with identical wiring either way.
+- Test: Wire one collapsed tool (single key) and one identity-bearing tool (multi-account) using the three-layer model. Observable signal: whether the split is ever load-bearing (a grant or account distinction that changes behavior) vs. always collapsed in practice.
+- Refutes if: across the tools actually wired, every case collapses to a single layer and the account/grant distinction never changes any behavior, making the model unused ceremony.
+- Status: UNTESTED
+- Evidence: (none)
+
+## H-12  The six planes are a useful decomposition that survives a running system
+- Claim: Decomposing the system into six planes (Context, Work, Activation, Telemetry, Learning, Interface) is a useful build order and mental model that holds up once a system is actually running.
+- Source: `archive/AGENT_ARCHITECTURE.md` §4 (the architecture at a glance).
+- Why we believe it: each plane is a thin layer over the brain, added in order and useful on its own, so it gives builders a staged path rather than a monolith.
+- Test: Build the lean system and map its real components back onto the six planes. Observable signal: whether each plane corresponds to a distinct implemented thing, or whether planes collapse, blur, or go unused.
+- Refutes if: in the running system two or more planes are indistinguishable or one is never implemented as a separate concern, such that the six-way split misleads more than it guides.
+- Status: UNTESTED
+- Evidence: (none)
+
+## H-13  Heartbeat loops are the right default activation
+- Claim: A scheduled heartbeat loop (wake, read brain, do bounded work, write back, stop) is sufficient for most agent work; event triggers are rarely needed.
+- Source: `archive/AGENT_ARCHITECTURE.md` §6 (Activation); `archive/OVERVIEW.md` (How it runs).
+- Why we believe it: most work is not latency-sensitive, so a faster heartbeat is simpler than wiring webhooks and exactly-once event handling.
+- Test: experiment 001. Run the agent on a heartbeat loop only and track tasks that suffered from polling latency. Observable signal: count of tasks where heartbeat latency caused a real miss or harm that an event trigger would have prevented.
+- Refutes if: more than a small share of tasks require sub-heartbeat latency such that event triggers become mandatory, not optional, for the agent to do its job acceptably.
+- Status: UNTESTED
+- Evidence: (none)
+
+## H-14  Provider usage numbers make work-per-dollar measurable and useful
+- Claim: Recording per-run tokens and cost from provider usage numbers in an append-only run-ledger yields a work-per-dollar metric that actually drives decisions.
+- Source: `archive/AGENT_ARCHITECTURE.md` §7 (Telemetry), inv. #5; §10 (Evaluation).
+- Why we believe it: you cannot measure work per dollar without recording the dollar, and the harness (not the model) writing the record keeps it honest.
+- Test: experiment 001. Capture tokens/cost per run from provider usage and compute work-per-dollar over the run. Observable signal: whether the metric ever changes an operator decision (cadence, model, autonomy, retire an agent).
+- Refutes if: the work-per-dollar number is recorded but never informs a single decision across experiment 001, OR provider usage numbers are too coarse/unavailable to attribute cost per run.
+- Status: UNTESTED
+- Evidence: (none)
+
+## H-15  Degrade-to-plain-text holds: the system is useful stripped bare
+- Claim: Delete the index, tooling, queue, and logs and the knowledge area remains a valid, readable account a human can use, with no hidden dependency on the tools.
+- Source: `archive/AGENT_ARCHITECTURE.md` inv. #9; `archive/BRAIN_ARCHITECTURE.md` inv. #7, §10.
+- Why we believe it: the files are the truth and tools only index them, so removing the tools should lose convenience, not correctness.
+- Test: Take a running brain, strip the index/tooling/runtime, open the knowledge area raw. Observable signal: whether it is still a coherent, current account a human can read and whether any canonical fact lived only inside a tool.
+- Refutes if: stripping the tooling leaves the knowledge area incoherent or stale, OR any canonical fact turns out to have lived only in an index/database rather than in the files.
+- Status: UNTESTED
+- Evidence: (none)

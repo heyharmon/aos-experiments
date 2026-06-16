@@ -1,10 +1,26 @@
 # Changelog
 
-Notable changes to the **agent & brain architecture** (the docs in this directory and the `recipes/` implementation layer).
+A log of experiments run, findings recorded, and hypothesis status changes. The architecture docs in `archive/` are pre-evidence provenance; this file records what we learned by building and running.
 
-**For implementers:** if you've built an agentic system from these docs, this is your update feed. Skim new entries and apply the **Impact** notes to your own project — you can point your coding agent straight at this file and ask it to reconcile your implementation with the latest architecture. Entries are written at meaningful stopping points, not on every edit.
+The format follows [Keep a Changelog](https://keepachangelog.com): newest first, grouped into **Added / Changed / Fixed**. Dates are `YYYY-MM-DD`.
 
-The format follows [Keep a Changelog](https://keepachangelog.com): newest first, grouped into **Added / Changed / Fixed**, with an **Impact** line wherever a change asks something of downstream projects. Dates are `YYYY-MM-DD`; changes that ask nothing of implementers (typos, internal phrasing) are left out.
+---
+
+## 2026-06-16 — Pivot: architecture demoted to archive, repo reorganized around experiments
+
+The repo is no longer a doctrine. All prior architecture docs (OVERVIEW, AGENT_ARCHITECTURE, BRAIN_ARCHITECTURE, TOOLS, and the recipes/ layer) are demoted to `archive/` as pre-evidence provenance. They may inform hypotheses but are not authoritative.
+
+### Changed
+- **`archive/`** holds the prior architecture docs. Read-only. Not authoritative. Cite them only as the source of a hypothesis, never as established fact.
+- **`HYPOTHESES.md`** replaces the architecture docs as the live register of claims. Every architectural assertion from the archived docs is now a falsifiable bet with a pre-registered "Refutes if" condition (H-01 through H-15).
+- **`experiments/`** is the new organizing axis. Each sub-directory is a system-under-test paired with a benchmark and the hypotheses it bears on.
+- **`results/`** is the evidence log. A claim without a linked run here is a hypothesis, not a finding.
+- **`CLAUDE.md`** and **`README.md`** rewritten to reflect the experiment-first framing.
+- Changelog purpose reframed from "architecture update feed for downstream implementers" to "experiment and findings log."
+
+### Added
+- **Experiment 001: lean personal-assistant** (`experiments/001-personal-assistant/`). A local brain (plain markdown, `bin/brain` CLI, ripgrep) paired with a personal assistant agent on a cron heartbeat. Smallest possible end-to-end system: one brain, one agent, no external accounts. Hypotheses it bears on: H-01, H-02, H-08, H-13, H-14, and related.
+- **`experiments/001-personal-assistant/results/scorecard.md`**: three tasks (T1 route-and-reply, T4 draft-for-review, T7 wire-fraud escalation) run against the system. See `results/2026-06-16-exp001-lean-core.md` for the full run record.
 
 ---
 
