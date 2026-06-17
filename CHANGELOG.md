@@ -6,6 +6,15 @@ The format follows [Keep a Changelog](https://keepachangelog.com): newest first,
 
 ---
 
+## 2026-06-17 — Experiment 006 CHARTERED: does separating validation from authoring earn its place? (the discriminating fight)
+
+Autonomous follow-on to 005 (operator delegated). 005's single-agent-wins verdict is only as strong as its benchmark, which was non-discriminating for the third straight time (H-18). 006 builds the benchmark we have failed to build three times: hard enough that the single agent can actually FAIL, targeted at the one axis where separation already showed an edge in 005 (the dev AMBIG fabrication-into-knowledge divergence). Three sharpened arms: A_single (one session) vs A_2pass (one agent, fresh-context validation pass) vs A_multi (scoped planner/builder/validator). The A_2pass arm is the confound-reducer: it isolates whether any win is from fresh context or from role-scoping. Two-sided tasks (convention absent → escalate, vs present → use; buried regression → fail, vs clean build → pass) so over-separation is penalized. New hypothesis H-21 registers the bet.
+
+### Added
+- **`HYPOTHESES.md` H-21** (separating validation from authoring prevents self-validation bias and fabrication-into-knowledge): NEW, from the 005 dev AMBIG divergence. Two-sided refute clause. UNTESTED; 006 chartered to settle it.
+- **`experiments/006-validation-separation/charter.md`:** goal, 3-arm tournament, two-sided fabrication/self-validation/conflict benchmark with a pre-registered discrimination check (the benchmark must be able to fail A_single or it is too easy), bar, stopping criteria, budget, operator delegation.
+  - **Impact:** none to builders yet (a bet, not a finding). The 005 single-agent recommendation stands until 006 produces held-out evidence.
+
 ## 2026-06-17 — Experiment 005 CONCLUDED: the SINGLE AGENT is the proven product-dev OS; the multi-agent machinery did not earn its place (benchmark non-discriminating)
 
 Ran the 4-arm ablation ladder (S=single, M=+agent-split, MI=+staged-ingestion, F=+heartbeat) x 7 tasks x 2 trials x dev + blind held-out worlds, hermetic scratch per trial, claude-sonnet-4-6 agents + judge, all costs from provider JSON, held-out run conclude-only and never inspected. Reused the prior rig (bin/brain, run-task/run-arch/tournament, score.py, compare.py); no gate. TAKEAWAY + metrics: `experiments/005-product-dev-os/results/run-log.md`; scorecard: `experiments/005-product-dev-os/results/scorecard-iter1.md`; findings: `FINDINGS/005-product-dev-os.md`.
