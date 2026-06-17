@@ -6,18 +6,15 @@ The format follows [Keep a Changelog](https://keepachangelog.com): newest first,
 
 ---
 
-## 2026-06-16 — Overnight automation hardened to a two-layer design; runaway smoke test thrown out
-
-A smoke test of the first night-runner exposed three real flaws before any real overnight run: (1) the budget/iteration cap was checked only between iterations, so a single free-form executor agent ran a multi-hour tournament inside one iteration; (2) that agent spawned DETACHED background processes (an out-of-repo tournament copy, a self-relaunching `unwedge.sh` watcher, `setsid`/double-fork runs orphaned to init) that survived the workflow stop and kept spending; (3) spend accounting summed all of `runtime/` including unrelated prior scratch, mis-reporting ~$33/$77 when real marginal spend was ~$6. Contained: stopped the workflow, killed all orphans, verified zero respawn.
+## 2026-06-16 — Repo hygiene: gitignore runtime scratch; drop provisional throwaway experiments
 
 ### Changed
-- **Automation is now two layers (`experiments/AUTOMATION.md`).** `experiments/bin/night-runner.mjs` is the OUTER self-steering shell (picks the next experiment from `BACKLOG.md`, enforces a hard nightly $ ceiling, audits, commits) and delegates each experiment to the INNER engine `.claude/workflows/run-experiment.js`, which is structurally bounded (fixed trials, fixed max-iterations, per-call wall timeouts, concurrency <=4, no commit). No single agent has unbounded scope anymore.
-- **First invariant of both drivers: NO detached/background processes.** No `&`-to-init, `setsid`, `nohup`, watchers, or out-of-repo run copies; every `claude -p` runs in the foreground under `loop.sh`'s timeout and a wedged trial is recorded as a FAILED trial. Baked into `NIGHT-RUNNER.md`, the outer driver, and the inner engine's GUARDRAILS.
-- **Marginal spend accounting.** The outer shell wipes `runtime/` at the start of the night, so summing `cost_usd` across runtime JSONs is tonight's spend only; the ceiling is checked after every experiment against that marginal sum.
-- **`runtime/` is now gitignored.** It had been getting committed (2625 scratch files); dropped from tracking and ignored going forward.
+- **`runtime/` is now gitignored.** It had been committing thousands of disposable scratch files; dropped from tracking and ignored going forward.
 
 ### Removed
-- **Threw out the smoke-test artifacts:** experiments `003b-gate-discriminate` and `004-enforcement-stress` (built and run outside the intended envelope, unaudited, on a wedging rig), their provisional `results/003b` + `results/004` + `results/NIGHT-2026-06-16.md`, and the smoke-era edits to `HYPOTHESES.md`/`BACKLOG.md`/`CHANGELOG.md` (reverted to the pre-smoke baseline). The H-18/H-20 gate-discrimination question they targeted is back on `BACKLOG.md` as anchored work for a real run.
+- **Provisional throwaway experiments `003b-gate-discriminate` and `004-enforcement-stress`** and their `results/` artifacts, built and run outside the experiment envelope on an unreliable rig and never audited. The H-18/H-20 gate-discrimination question they targeted remains OPEN (see the 003 takeaway below and `HYPOTHESES.md` H-20): the next experiment should reliably induce the in-place-mutation breach and run a divergent gate-predicate tournament to settle it.
+
+## 2026-06-16 — Experiment 003 (lean cut) CONCLUDED: basic blocks GENERALIZE PA -> coding; enforcement gate did NOT carry
 
 Ran the cross-domain generalization test: the PA-proven basic architecture ported to a single-agent coding assistant, as a two-architecture tournament (A_proven = ported architecture incl. the checked enforcement gate; A_null = same agent, prose-only, no gate) across a visible dev project (Tasklet, layered Python) and a blind, never-inspected held-out project (Plotline, TypeScript staged pipeline), 2 trials per task, hermetic scratch brain per trial, all costs from provider JSON. Run record + TAKEAWAY: `results/2026-06-16-exp003-lean.md`; scorecard: `experiments/003-coding-assistant/results/scorecard-003-lean.md`; findings: `FINDINGS/003-coding-assistant-lean.md`.
 
