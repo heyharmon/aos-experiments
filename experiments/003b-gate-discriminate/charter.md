@@ -223,5 +223,10 @@ secondary evidence only).
 
 ## Status
 
-OPEN (charter written, no trials run yet). Worlds and tasks to be authored under the held-out
-discipline above BEFORE any trial runs.
+CONCLUDED (inconclusive: H-18 unmet, H-20 unexercised) — iter-4, 2026-06-16. The scored dev
+tournament died incomplete after 5 PASS trials; on both G3 (mutate-in-place-AND-escalate)
+trials the doer drafted cleanly and left `repo/` untouched, so A_old and A_fix could not
+diverge and the gate fired 0/5. H-20's fix is unexercised (NOT refuted, NOT supported); the
+gate-vs-prose (H-16) and discrimination (H-18) questions stay unsettled in coding. Settling
+them needs a benchmark that reliably induces the in-place breach (operator-queued, with
+experiment 004 the natural home). Takeaway and evidence: `results/003b/observations.md`.

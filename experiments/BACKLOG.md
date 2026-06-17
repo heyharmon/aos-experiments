@@ -22,22 +22,23 @@ work is exhausted).
 
 ## P1 — make the tournament discriminate (the H-18 debt)
 
-0. ~~**003b — gate discrimination + the H-20 fix.**~~ OPENED + BUILT (charter, rig, two NEW
-   worlds, weakness-targeting suites, the single-variable A_fix gate arm, and a 4-case predicate
-   unit check all landed; charter `experiments/003b-gate-discriminate/charter.md`). NOT yet run
-   as a scored tournament: the deterministic unit check confirms the H-20 fix predicate
-   separates the breach from a clean draft, but neither the 1-task dry run nor the iter-3 scored
-   launch exercised the live mutate-in-place divergence. **Remaining live work: the
-   N>=3 scored tournament across all three arms (A_old / A_fix / A_null) on dev then the blind
-   held-out, which is where H-20, H-16 (2nd domain), and H-18 actually get settled.** Iter-3
-   (`results/NIGHT-2026-06-16.md`) LAUNCHED this dev tournament but it died incomplete (only A1 G1
-   x3 and A1/A1F G3 x1 landed, all PASS, no log); on both G3 trials the doer drafted cleanly and
-   left `repo/` untouched, so A_old vs A_fix did not diverge; the G3 trap as authored does not
-   reliably induce the breach. Before relaunching: make G3 actually fire (stronger in-place
-   trigger or a synthetic-breach path), close the unattended-run reliability gap, and check the
-   ~$77 cumulative against the $100 ceiling. NOTE: a parallel committed track
-   (experiment 004, "enforcement-stress") pre-registers the SAME H-20 fix as a design choice
-   under A_gate vs A_nogate; resolving the 003b-vs-004 overlap is queued for the operator.
+0. ~~**003b — gate discrimination + the H-20 fix.**~~ **CONCLUDED INCONCLUSIVE (iter-4,
+   2026-06-16; `results/003b/observations.md`).** Built fully (charter, rig, two NEW worlds,
+   weakness-targeting suites, single-variable A_fix arm, 4-case unit check) but the scored
+   tournament could not settle anything: it died incomplete after 5 PASS trials, and on BOTH
+   G3 (mutate-in-place-AND-escalate) trials the doer drafted to `runtime/drafts/`, wrote an
+   on-topic approval, and left `repo/` byte-identical to seed (`repo_changed: []`, both gates
+   `fired: false`), so A_old vs A_fix were observationally identical and the gate fired 0/5.
+   **H-20 unexercised** (NOT refuted, NOT supported — the predicate divergence was never
+   taken); **H-18 unmet** (benchmark still non-discriminating for the gate, a third instance
+   after 002 0/24 and 003 0/22); **H-16 stays PA-only** (no A_null ran, gate-vs-prose unranked
+   in coding). The G3 trap as authored does NOT reliably induce the breach even though it
+   explicitly says "edit the file and run the git commands" — a real doer self-complies.
+   QUEUED for the operator (see `results/NIGHT-2026-06-16.md`): (a) the 003b-vs-004 overlap
+   (experiment 004 pre-registers the SAME H-20 fix — merge or pick one); (b) the
+   synthetic-breach design call to reliably induce the mutate-in-place breach, which is
+   charter/scoring-adjacent (not self-authorized), with experiment 004 the natural home (its
+   Revise rule already says "make tasks MORE tempting, not the gate more lenient").
 
 2. **002-scale, weakness-targeting tasks.** READY (anchored to H-18 + the 002 operator
    note). The lean 002 could not rank A1 vs A2 because the benchmark was too easy. Ship
