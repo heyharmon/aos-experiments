@@ -3,12 +3,50 @@
 The self-steering contract for unattended overnight experimentation. The operator is
 asleep and unreachable. This document is the agent's authority and its leash: it says
 what the night-runner may decide alone, what it must never do, and how it avoids fooling
-itself with nobody watching. It is law. The Workflow driver (`bin/night-runner.mjs`)
-executes this doctrine; if the two disagree, this document wins and the driver is the bug.
+itself with nobody watching. It is law. The drivers execute this doctrine; if they
+disagree, this document wins and the driver is the bug.
 
 Read `PROCESS.md` first. This doctrine does not replace it; it operationalizes it for the
 no-operator case and removes the "stop and ask the operator" steps by replacing each one
 with a mechanical rule.
+
+## Two layers, one system
+
+The automation is split so no single agent has unbounded scope (the failure that burned a
+smoke test: one free-form executor ran a multi-hour tournament and detached runaway
+processes inside a single iteration).
+
+```
+  bin/night-runner.mjs   OUTER self-steering shell. Picks the next experiment from the
+                         backlog, enforces the nightly $ ceiling, delegates each
+                         experiment to the inner engine, audits the conclusion, commits.
+                         This is the thing you launch.
+        |
+        v  (one bounded experiment per outer slot, via workflow())
+  .claude/workflows/run-experiment.js   INNER engine. Runs ONE chartered experiment end
+                         to end: build dev -> blind-author held-out -> tournament ->
+                         iterate Decide/Revise up to a fixed cap -> publish the takeaway
+                         to files. Structurally bounded: fixed trials, fixed
+                         max-iterations, per-call wall timeouts, concurrency <=4, and it
+                         does NOT git commit (the outer auditor gates commits).
+```
+
+The outer shell never runs trials directly. The inner engine never self-steers across
+experiments and never commits. Each layer is small enough to reason about.
+
+## Hard invariants (mechanical, not vibes)
+
+1. **No detached processes, anywhere.** No `&`-to-init, no `setsid`/`nohup`/`disown`, no
+   self-relaunching watcher or unwedge scripts, no out-of-repo run copies. Every `claude -p`
+   runs in the foreground under `loop.sh`'s wall-clock timeout and dies with its parent. A
+   wedged trial is killed by the timeout and recorded as a FAILED trial. This is the rule a
+   smoke test violated; it is now the first invariant.
+2. **Marginal spend accounting.** `runtime/` is wiped at the start of the night, so the sum
+   of `cost_usd` across `runtime/**/*.json` is tonight's spend only. The ceiling is checked
+   after every experiment against that marginal sum, never against stale scratch.
+3. **One experiment per outer slot, bounded by the inner engine,** so a single slot can
+   never run away in time or money.
+4. **No conclusion is committed until the independent auditor clears it.**
 
 ## Mandate
 
@@ -56,22 +94,21 @@ Note one deliberate difference from `PROCESS.md`: a **safety-floor failure by th
 
 ## The constrained decision menu
 
-Every iteration begins with a **Director** that reads repo state and chooses exactly ONE
+Each outer slot begins with a **Director** that reads repo state and chooses exactly ONE
 action from this closed set. It may not act outside the menu; that is what keeps a 3am agent
-from wandering.
+from wandering. The Director does not run anything itself, it only decides which experiment
+the bounded inner engine runs next.
 
 | Action | When | Guard |
 |---|---|---|
-| `run` | An open charter needs more trials/data | Uses existing world+tasks; N≥3 trials |
-| `revise` | A diagnosed failure has a single-variable fix | Exactly one variable; recorded as an intervention |
-| `conclude` | A stopping criterion is met | Must pass the auditor gate before publish |
-| `open` | No open experiment has live work, or a divergent bet is ready | Requires a written `charter.md` with "Refutes if" first |
-| `furnish` | The benchmark is non-discriminating (H-18) | New tasks/worlds under held-out discipline |
-| `halt` | A hard-stop condition is met | Writes report, exits |
+| `delegate` | An anchored experiment is ready (or chartered-but-unfinished) | Hands one charter to the inner engine; writes the charter first if it does not exist (anchored + "Refutes if" pre-registered) |
+| `halt` | No anchored work remains, budget is nearly gone, or a hard-stop holds | Writes report, exits |
 
 The Director outputs its choice as structured data with a one-line rationale tied to a
-specific charter or hypothesis id. A choice it cannot anchor to one is invalid and becomes
-`halt` or a queued note.
+specific backlog item or hypothesis id. A choice it cannot anchor to one is invalid and
+becomes `halt` or a queued note. The single-variable revision, the conclude, and the
+benchmark-furnishing all happen *inside* the inner engine's bounded Decide/Revise loop, not
+as free outer actions.
 
 ## Anti-self-deception: the auditor gate
 
@@ -94,44 +131,47 @@ queue. The night never publishes over a failed audit.
 ## The loop
 
 ```
-   ┌─────────────────────────────────────────────────────────────┐
-   │ while  spend < $100  and  iters left  and  no hard-stop:     │
-   │                                                              │
-   │   Director  → pick ONE action from the menu (anchored to a   │
-   │               charter/hypothesis id)                         │
-   │      │                                                       │
-   │      ├─ run/revise/furnish/open → Executor does the work     │
-   │      │      via the existing rig (run-arch.sh, tournament,   │
-   │      │      score.py, brain CLI), writes results, returns    │
-   │      │      metrics + this-iteration spend                   │
-   │      │                                                       │
-   │      ├─ conclude → Executor assembles the takeaway →         │
-   │      │      Auditor (independent) refutes/clears →           │
-   │      │      publish only on pass                             │
-   │      │                                                       │
-   │      └─ Recorder → update HYPOTHESES/CHANGELOG, commit to    │
-   │             main, append one entry to the morning report     │
-   │                                                              │
-   │   accumulate spend; next iteration reads fresh repo state    │
-   └─────────────────────────────────────────────────────────────┘
+   ┌──────────────────────────────────────────────────────────────────┐
+   │ Reset: wipe runtime/ scratch (so spend is tonight-only)           │
+   │                                                                   │
+   │ while  spend < $CEILING  and  slots left  and  no hard-stop:      │
+   │                                                                   │
+   │   Director  → pick the ONE next experiment (anchored); write its  │
+   │               charter first if new                                │
+   │      │                                                            │
+   │      ▼  delegate (one bounded experiment)                         │
+   │   run-experiment.js  → build dev · blind held-out · tournament ·  │
+   │               iterate Decide/Revise (capped) · publish to files   │
+   │               (foreground only, no detached procs, no commit)     │
+   │      │                                                            │
+   │   Spend  → sum cost_usd across runtime JSONs (marginal)           │
+   │      │                                                            │
+   │   Auditor (independent) → refute the published conclusion;        │
+   │               fail ⇒ downgrade before anything is committed       │
+   │      │                                                            │
+   │   Recorder → commit the audited result to main, update backlog,   │
+   │               append one report block                             │
+   └──────────────────────────────────────────────────────────────────┘
 ```
 
-State passes through the **filesystem** (the repo), not through the driver. Each agent reads
-current repo state at the top of its turn, so the loop is resumable: re-running picks up
-from whatever is on disk and in git.
+State passes through the **filesystem** (the repo), not the driver. Each agent reads current
+repo state at the top of its turn, so the loop is resumable: re-running picks up from
+whatever is on disk and in git. Resume a killed run with
+`Workflow({ scriptPath, resumeFromRunId })`.
 
-## Spend accounting (why $100 is enforced by hand)
+## Spend accounting (why the ceiling is enforced by hand)
 
-There are two cost streams and the ceiling covers both:
+There are two cost streams and the ceiling covers the one that matters:
 
-1. **Experiment spend** — the agent-under-test runs as `claude -p` subprocesses (`harness/*/loop.sh`). Their cost lands in `runtime/runs/*.json` `cost_usd`, billed separately, and is **invisible** to the Workflow's own token budget. This is the large stream.
-2. **Orchestration spend** — the Director/Executor/Auditor/Recorder reasoning. Bounded by the Workflow `budget.total`, but it is the small stream.
+1. **Experiment spend** — the agent-under-test runs as `claude -p` subprocesses (`harness/*/loop.sh`). Their cost lands in `runtime/**/*.json` `cost_usd`, billed separately, and is **invisible** to the Workflow's own token budget. This is the large stream and the one the $ ceiling governs.
+2. **Orchestration spend** — the Director/Auditor/Recorder reasoning. Bounded by the Workflow `budget.total` token backstop; the small stream.
 
-The driver cannot read files, so each iteration's Executor sums `cost_usd` across the
-night's run JSONs and returns the cumulative figure. The loop halts when that figure plus an
-orchestration estimate reaches $100. `budget.total` is set as a backstop, not the primary
-gate. Cost is still a **signal, not a bar** (`PROCESS.md`): the ceiling bounds runaway, it
-never decides pass/fail and is never edited to make a result look better.
+`runtime/` is **wiped at the start of the night**, so summing `cost_usd` across the runtime
+JSONs gives tonight's *marginal* spend, not a meaningless total polluted by prior scratch
+(the bug that made a smoke test mis-report ~$33/$77 when its real marginal spend was ~$6).
+After every experiment the Spend step re-sums and the loop halts once the ceiling is reached.
+Cost is still a **signal, not a bar** (`PROCESS.md`): the ceiling bounds runaway, it never
+decides pass/fail and is never edited to make a result look better.
 
 ## Benchmark discipline when authoring worlds/tasks
 
@@ -143,21 +183,21 @@ without an operator to enforce them:
 
 ## The morning report
 
-Written to `results/NIGHT-<date>.md`, newest entry last, one block per iteration, plus a
-header the operator can read in 30 seconds:
+Written to `results/NIGHT-<date>.md`, one block per experiment, plus a header the operator
+can read in 30 seconds:
 
 ```
 # Night run <date>
 
 ## TL;DR
-- spend: $X.XX of $100   iterations: N   commits: M (on main)
+- spend: $X.XX of $CEILING   experiments: N   commits: M (on main)
 - moved: <hypotheses/architectures that changed status>
 - ⚠ flags: <safety-floor findings, failed audits, anything red>
 - QUEUE for operator: <decisions deferred — unanchored ideas, scoring changes, pivots not taken>
 
-## Iterations
-### iter k — <action> on <experiment> → <one-line outcome>
-  metrics: ...   spend this iter: $...   commit: <sha>
+## Experiments
+### <experiment dir> — <held-out headline> → <one-line outcome>
+  metrics: held-out pass + dev-vs-held-out gap, which bets fired   spend: $...   commit: <sha>
   ...
 ```
 
@@ -167,12 +207,18 @@ over coffee and the next night starts from a sanctioned backlog again.
 
 ## How to launch
 
-The driver is a Workflow script, reviewable and version-controlled at
-`experiments/bin/night-runner.mjs`. Launch it (typically at end of day) with:
+The outer driver is a Workflow script at `experiments/bin/night-runner.mjs`. Launch it at
+end of day with:
 
-- `Workflow({ scriptPath: "experiments/bin/night-runner.mjs", args: { date: "<YYYY-MM-DD>", budgetUsd: 100, maxIterations: 12 } })`
+- `Workflow({ scriptPath: "experiments/bin/night-runner.mjs", args: { date: "<YYYY-MM-DD>", budgetUsd: 100, maxExperiments: 8, trials: 3, maxIterations: 3 } })`
 
-It runs in the background and notifies on completion. To validate cheaply before a full
-night, launch with `args: { ..., budgetUsd: 5, maxIterations: 1, smoke: true }` for a
-single-iteration smoke test. Resume a killed/edited run with
+Args: `date` (report/branch label), `budgetUsd` (hard $ ceiling, default 100),
+`maxExperiments` (outer slots, default 8), `trials` (per-task trials in the inner engine,
+default 3), `maxIterations` (inner Decide/Revise cap, default 3).
+
+It runs in the background and notifies on completion. The `smoke: true` flag validates the
+**outer wiring only** (Reset → Director → Spend → Record → report) and **never delegates a
+real experiment**, so it costs only orchestration tokens, never an experiment run. Use it to
+confirm plumbing before a real night:
+`args: { date: "...", smoke: true }`. Resume a killed/edited run with
 `Workflow({ scriptPath, resumeFromRunId: "<id>" })`.

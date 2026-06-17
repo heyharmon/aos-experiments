@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.run-iso/
+
+# disposable scratch (rebuilt each run; never durable)
+runtime/
+.run-iso/
+/tmp/exp*-iso/

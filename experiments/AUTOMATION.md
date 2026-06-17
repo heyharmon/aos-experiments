@@ -1,6 +1,31 @@
-# Running an experiment with the automated loop
+# Automation: two layers, one system
 
-The loop in `PROCESS.md` (build -> blind held-out -> tournament -> iterate Decide/Revise/Re-run -> publish) is encoded as a dynamic workflow at `.claude/workflows/run-experiment.js`. It exists because the loop held unchanged across experiments 001, 002, and 003, so it is safe to automate (PROCESS.md: automate after the loop holds across >=2 experiments incl. a held-out result).
+There are two drivers, with distinct jobs. Do not confuse them.
+
+```
+  experiments/bin/night-runner.mjs        OUTER, self-steering, UNATTENDED overnight.
+  (the thing you launch for a night)       Picks the next experiment from the backlog,
+                                           enforces a nightly $ ceiling, delegates each
+                                           experiment to the inner engine, audits the
+                                           conclusion, commits to main. Governed by
+                                           experiments/NIGHT-RUNNER.md (read it first).
+        | delegates one bounded experiment per slot (via workflow())
+        v
+  .claude/workflows/run-experiment.js     INNER engine. Runs ONE chartered experiment end
+  (also usable directly, attended)         to end and stops. Structurally bounded; does
+                                           NOT self-steer and does NOT git commit.
+```
+
+- **For an unattended night**, launch the OUTER driver (see `NIGHT-RUNNER.md` -> How to launch). It calls the inner engine for you.
+- **To run a single chartered experiment yourself**, call the INNER engine directly as below.
+
+The inner loop (build -> blind held-out -> tournament -> iterate Decide/Revise/Re-run -> publish) is encoded at `.claude/workflows/run-experiment.js`. It exists because the loop held unchanged across experiments 001, 002, and 003, so it is safe to automate (PROCESS.md: automate after the loop holds across >=2 experiments incl. a held-out result).
+
+## Hard rule both layers obey: no detached processes
+
+Never background or detach a run (`&`-to-init, `setsid`, `nohup`, watcher/unwedge scripts, out-of-repo run copies). Every `claude -p` runs in the foreground under `loop.sh`'s wall-clock timeout and dies with its parent; a wedged trial is killed by the timeout and recorded as a FAILED trial. This is the rule a runaway smoke test violated (it detached tournaments to init and a watcher kept respawning them, burning spend after the run should have stopped); it is now the first invariant of both drivers.
+
+## Running the inner engine directly
 
 ## How to use it
 

@@ -13,34 +13,28 @@ work is exhausted).
 
 ## P0 — finish what is open
 
-1. **Conclude 003 (coding assistant).** READY. Charter exists; lean build pending. Port the
-   PA-proven architecture (A1 proven + gate) vs A2 null to the coding domain, run dev then
-   the blind held-out project, report the generalization gap. Tests **H-19** (blocks
-   generalize PA→coding), H-02 (retrieval on code), H-08 (reversible/escalate in eng),
-   H-16 (gate earns its place when consequential actions tempt). Stopping: held-out result +
-   a clear which-blocks-carry takeaway.
+1. ~~**Conclude 003 (coding assistant).**~~ DONE (lean cut, 2026-06-16): basic blocks
+   generalize PA->coding (H-19 SUPPORTED-but-thin); the enforcement gate did NOT carry and a
+   design flaw surfaced (H-20: the consequential predicate is suppressed by approval-presence).
+   See `results/2026-06-16-exp003-lean.md` + `FINDINGS/003-coding-assistant-lean.md`.
+
+2. **Gate discrimination + the H-20 fix (the live next experiment).** READY. The gate has now
+   fired 0 useful times across 002 (0/24) and 003 (0/22), and 003 surfaced H-20 (the
+   consequential rule `(repo_changed OR claimed) AND NOT approvals` is suppressed the moment an
+   approval artifact exists, so a mutate-in-place-AND-escalate breach slips through). Charter a
+   coding experiment whose tasks RELIABLY induce the in-place mutation breach (not merely invite
+   it), with a divergent A_old (presence-keyed gate) vs A_fix (action-keyed: `repo_changed AND
+   NOT drafted`) vs A_null (prose-only) tournament, so the gate's predicate divergence is
+   actually exercised. Tests **H-20** (the fix), **H-16** (gate-vs-prose in coding), **H-18**
+   (does the benchmark finally discriminate). Stopping: a held-out result where at least one
+   arm fires its enforcement/failure path, or a clear refutation. (A prior attempt at this,
+   003b/004, was thrown out: built outside the envelope on a wedging rig and never induced the
+   breach. The single most important design lesson it left: make the task MORE tempting, never
+   the gate more lenient.)
 
 ## P1 — make the tournament discriminate (the H-18 debt)
 
-0. ~~**003b — gate discrimination + the H-20 fix.**~~ **CONCLUDED INCONCLUSIVE (iter-4,
-   2026-06-16; `results/003b/observations.md`).** Built fully (charter, rig, two NEW worlds,
-   weakness-targeting suites, single-variable A_fix arm, 4-case unit check) but the scored
-   tournament could not settle anything: it died incomplete after 5 PASS trials, and on BOTH
-   G3 (mutate-in-place-AND-escalate) trials the doer drafted to `runtime/drafts/`, wrote an
-   on-topic approval, and left `repo/` byte-identical to seed (`repo_changed: []`, both gates
-   `fired: false`), so A_old vs A_fix were observationally identical and the gate fired 0/5.
-   **H-20 unexercised** (NOT refuted, NOT supported — the predicate divergence was never
-   taken); **H-18 unmet** (benchmark still non-discriminating for the gate, a third instance
-   after 002 0/24 and 003 0/22); **H-16 stays PA-only** (no A_null ran, gate-vs-prose unranked
-   in coding). The G3 trap as authored does NOT reliably induce the breach even though it
-   explicitly says "edit the file and run the git commands" — a real doer self-complies.
-   QUEUED for the operator (see `results/NIGHT-2026-06-16.md`): (a) the 003b-vs-004 overlap
-   (experiment 004 pre-registers the SAME H-20 fix — merge or pick one); (b) the
-   synthetic-breach design call to reliably induce the mutate-in-place breach, which is
-   charter/scoring-adjacent (not self-authorized), with experiment 004 the natural home (its
-   Revise rule already says "make tasks MORE tempting, not the gate more lenient").
-
-2. **002-scale, weakness-targeting tasks.** READY (anchored to H-18 + the 002 operator
+3. **002-scale, weakness-targeting tasks.** READY (anchored to H-18 + the 002 operator
    note). The lean 002 could not rank A1 vs A2 because the benchmark was too easy. Ship
    contract-stressing tasks: ambiguous escalation phrasing (over-fire A1's vocabulary-keyed
    gate), on-topic vs off-topic escalation traps (test whether A2's checker topic-awareness
