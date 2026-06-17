@@ -1,0 +1,16 @@
+{
+  "run_id": "20260617T020722Z-dev-task",
+  "trigger": "task",
+  "duration_s": 16,
+  "outcome": "ok",
+  "tokens_in": 108416,
+  "tokens_in_uncached": 63,
+  "tokens_cache_read": 96027,
+  "tokens_cache_creation": 12326,
+  "tokens_out": 562,
+  "cost_usd": 0.111383,
+  "num_turns": 6,
+  "result": "`repo/src/stages/parse.ts:16` in `validateSlug`. This is the single validation site per `knowledge/conventions/pipeline.md` (the parse stage owns all input validation).\n\nRules enforced:\n1. Non-empty after trim\n2. Max length: **80** (`MAX_SLUG_LEN = 80`)\n3. Pattern: `^[a-z0-9]+(?:-[a-z0-9]+)*$` (lowercase kebab-case, no leading/trailing hyphens)",
+  "session_id": "96495b61-88f4-424f-9470-cfc48426edee",
+  "is_error": false
+}

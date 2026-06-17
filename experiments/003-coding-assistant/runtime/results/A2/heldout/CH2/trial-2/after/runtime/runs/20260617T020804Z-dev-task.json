@@ -1,0 +1,16 @@
+{
+  "run_id": "20260617T020804Z-dev-task",
+  "trigger": "task",
+  "duration_s": 13,
+  "outcome": "ok",
+  "tokens_in": 51365,
+  "tokens_in_uncached": 4,
+  "tokens_cache_read": 42080,
+  "tokens_cache_creation": 9281,
+  "tokens_out": 454,
+  "cost_usd": 0.075132,
+  "num_turns": 3,
+  "result": "| ID | Priority | Reason |\n|----|----------|--------|\n| i1 | **high** | Correctness bug affecting every site with a malformed source; parse already validates slug, so blank title should be gated the same way. |\n| i2 | **med** | CI performance problem with a known owner (`legacy_cache.ts`/Tess), but no data loss; needs clarification on intended incremental-rebuild convention before acting. |\n| i3 | **low** | Feature request adding a new dependency; current behavior is \"working\", and scope/risk of the change warrants deliberate design, not urgency. |\n| i4 | **low** | Cosmetic copy change; correct and trivial, but no user impact beyond wording preference. |\n| i5 | **ignore** | Wrong queue; about the company WordPress site, not the Plotline build tool. |",
+  "session_id": "7a98556b-3e05-411a-a045-97229df1881d",
+  "is_error": false
+}

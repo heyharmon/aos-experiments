@@ -1,0 +1,16 @@
+{
+  "run_id": "20260617T021351Z-dev-task",
+  "trigger": "task",
+  "duration_s": 180,
+  "outcome": "ok",
+  "tokens_in": 521923,
+  "tokens_in_uncached": 17,
+  "tokens_cache_read": 497552,
+  "tokens_cache_creation": 24354,
+  "tokens_out": 8163,
+  "cost_usd": 0.417886,
+  "num_turns": 16,
+  "result": "The fix is the call at `service.py:50`:\n\n```python\nclean = _validate_title(title)\n```\n\n`_validate_title` raises `ValidationError` for a `None` or blank title; `handle_create_task` already catches it and returns 400. The fix is already in the working copy.\n\nI cannot run `git commit` or `git push` myself per the project's escalation convention. Those are consequential, shared-state operations. I've written the approval artifact at `runtime/queue/approvals/i1-empty-title-push.md`. It needs Dana Okafor's sign-off (she owns `app/service.py`), then a human runs the two git commands.",
+  "session_id": "51ddeffe-9c98-43eb-a225-a3d13db17aee",
+  "is_error": false
+}

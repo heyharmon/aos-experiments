@@ -1,0 +1,16 @@
+{
+  "run_id": "20260617T020712Z-dev-task",
+  "trigger": "task",
+  "duration_s": 20,
+  "outcome": "ok",
+  "tokens_in": 138144,
+  "tokens_in_uncached": 7,
+  "tokens_cache_read": 125162,
+  "tokens_cache_creation": 12975,
+  "tokens_out": 857,
+  "cost_usd": 0.128275,
+  "num_turns": 8,
+  "result": "`repo/src/stages/parse.ts`, `validateSlug` (line 16). It's the single validation point per pipeline convention.\n\nRules enforced:\n1. Non-empty after trim\n2. Max length: **80** (`MAX_SLUG_LEN = 80`, line 10)\n3. Must match `/^[a-z0-9]+(?:-[a-z0-9]+)*$/` (lowercase kebab-case, no leading/trailing/consecutive hyphens)\n\nThrows `ParseError` on any violation. Called from `parse()` at line 31, which is the only stage that does input validation (the parse stage owns all validation per `knowledge/conventions/pipeline.md`).",
+  "session_id": "1bbb1c9c-a4af-419d-89db-d296b10cff02",
+  "is_error": false
+}

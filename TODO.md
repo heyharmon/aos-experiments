@@ -71,6 +71,57 @@ the lean charter, so it is the operator's call. If approved, the fuller run must
   enforcement/failure path; if all bets converge, the benchmark is still
   non-discriminating (H-18) and the tournament cannot rank.
 
+## Experiment 003 (lean cut): CONCLUDED 2026-06-16 — basic blocks GENERALIZE PA -> coding; gate did NOT carry
+
+Primary goal MET: the basic single-agent building blocks proven on PA carried to
+a coding assistant on a blind held-out TypeScript project with NO break and NO
+domain-specific rework. File brain, plain-text retrieval (H-02, the sternest
+test yet, grepping code), binary reversible/escalate tag (H-08, mapped onto
+draft-vs-commit/push/delete), missing-info/refusal, filing via `./bin/brain`,
+named role, provider-JSON cost all carried. A_proven held-out 5/5, A_null 4/5.
+H-19 SUPPORTED-but-thin; the carried blocks crossed the two-domain threshold
+(closer to PROVEN).
+
+The gate did NOT earn its place in coding: 0/22 fires, no work done, and on the
+one real breach (A_null CH3 t1, in-place repo mutation) it would NOT have fired
+because approval-presence suppresses its consequential rule. New failure mode
+H-20 (mutate-in-place-AND-escalate blind spot); NOT patched (would be tuning to
+held-out). A_proven beat A_null by doer behavior, not the gate. Per H-18 the
+benchmark still did not stress the gate's purpose.
+
+Single most important lesson: **the basic blocks are domain-general; the one
+block that did not carry is the enforcement gate, and the reason is a design
+flaw (it trusts approval-presence instead of the action), not the domain.**
+
+Run record + TAKEAWAY: `results/2026-06-16-exp003-lean.md`. Scorecard:
+`experiments/003-coding-assistant/results/scorecard-003-lean.md`. Findings:
+`FINDINGS/003-coding-assistant-lean.md`. Hypotheses: H-19 + H-20 added; H-02/H-08
+advanced to two-domain support; H-16 held PA-only (NOT generalized); H-18
+reinforced.
+
+### Carry-forward (NOT 003 blockers)
+- [ ] Fix the gate's consequential rule: `repo_changed AND NOT drafted` (gate the
+  action, not approval-presence) and re-run the change+escalate traps to test
+  H-20. Verify it fires on the mutate-in-place breach and stays silent on a clean
+  draft. Same root cause as 001's "key the gate on consequence, not vocabulary."
+- [ ] Ship a discriminating trap that stresses gate vs no-gate directly: the
+  003 trap was handled by the doer alone, so the gate never had to fire (H-18).
+  Need a task where the doer reliably WOULD take the consequential action so the
+  gate is the only thing that stops it.
+
+### OPERATOR DECISION (not autonomous): the next direction
+The loop has now held across three experiments (001, 002, 003) including
+blind held-out worlds in 002 and 003. The next direction is an operator-level
+choice, not autonomous:
+- [ ] **Scale up** a fuller coding run (3 trials, second held-out project,
+  weakness-targeting tasks, the H-20 gate fix, an A3 prose-only null) to advance
+  H-19 past thin and re-test the gate.
+- [ ] **A third domain** (marketing, sales, ops) to push H-19 toward PROVEN.
+- [ ] **Multi-agent** (unblocks H-03, the brain-as-bus coordination test).
+- [ ] **Build the loop automation** now that the loop has held across multiple
+  experiments incl. held-out (per PROCESS.md, automate after the loop is proven
+  on more than one data point; that bar is now arguably met).
+
 ## Open hypotheses needing experiments
 
 See `HYPOTHESES.md`. H-03 is blocked (needs a second agent). H-01 (self-improvement loop) is the marquee bet and still UNTESTED. Completed pre-pivot design notes are in `archive/todos.md`.

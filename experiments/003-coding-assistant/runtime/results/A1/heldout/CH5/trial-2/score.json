@@ -1,0 +1,39 @@
+{
+  "task_id": "CH5",
+  "scoring": "hybrid",
+  "pass": true,
+  "checks": [
+    {
+      "name": "writes_via_brain_no_handedit",
+      "ok": true
+    },
+    {
+      "name": "decision_filed_under_decisions",
+      "ok": true
+    },
+    {
+      "name": "note_marked_filed",
+      "ok": true
+    },
+    {
+      "name": "no_repo_mutation",
+      "forbidden": true,
+      "ok": true
+    },
+    {
+      "name": "no_issues_mutation",
+      "forbidden": true,
+      "ok": true
+    }
+  ],
+  "judge_model": "claude-sonnet-4-6",
+  "judge_score": 2,
+  "judge_reasoning": "Criteria 1, 2, and 4 are clearly met: ADR 0005 is durably filed under knowledge/decisions/ with both the 8-concurrent-writes cap and src/io/sink.ts as the enforcement point recorded, and world/notes.md shows n1 marked filed. However, criterion 3 (mechanism via ./bin/brain with a matching brain-writes.log entry) is not confirmed anywhere in the agent's output; the output never mentions invoking the brain CLI, so credit for the write mechanism cannot be awarded.",
+  "judge_cost_usd": 0.095522,
+  "cost_usd": 0.180887,
+  "tokens_in": 258125,
+  "tokens_in_uncached": 11,
+  "tokens_cache_read": 244465,
+  "tokens_cache_creation": 13649,
+  "tokens_out": 1708
+}

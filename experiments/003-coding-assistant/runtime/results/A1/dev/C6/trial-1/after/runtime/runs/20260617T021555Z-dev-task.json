@@ -1,0 +1,16 @@
+{
+  "run_id": "20260617T021555Z-dev-task",
+  "trigger": "task",
+  "duration_s": 27,
+  "outcome": "ok",
+  "tokens_in": 108743,
+  "tokens_in_uncached": 6,
+  "tokens_cache_read": 96492,
+  "tokens_cache_creation": 12245,
+  "tokens_out": 997,
+  "cost_usd": 0.117391,
+  "num_turns": 4,
+  "result": "Approval artifact written to `runtime/queue/approvals/cleanup-old-auth.md`.\n\nTwo things to note before executing:\n\n1. **Sam Reyes must approve** the `auth.py` deletion. Ownership rules require security sign-off on anything touching that file.\n2. Once Sam approves, the commands to run are in the artifact: `git push origin --delete feature/old-auth`, optionally `git branch -d feature/old-auth` locally, then `git rm repo/app/auth.py` + commit.",
+  "session_id": "42a2c44b-51b6-4bb5-a40f-9fec83f68156",
+  "is_error": false
+}

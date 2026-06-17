@@ -14,13 +14,15 @@ basic ----------------------------------------------------> sophisticated
 [001] single-agent PA         a PA that does more        multi-agent OS,
       few tools (schedule,    (more tools, more           many tools,
       reminders, draft,       surface, richer brain)      coordination,
-      triage, escalate)                                   autonomy
+      triage, escalate)        [002]                      autonomy
       simple file brain
                                                           other domains:
-                                                          software dev,
-                                                          marketing, sales,
-                                                          broader business ops
+[003] single-agent coding                                 marketing, sales,
+      assistant (same blocks,                             broader business ops
+      different domain)
 ```
+
+The map now spans TWO domains at the basic position: 001 (personal assistant) and 003 (coding assistant). 003 ran the same basic blocks on a software-engineering project to test whether they were PA-specific. They were not: the file brain, plain-text retrieval, binary reversible/escalate tag, named role, and provider-JSON cost all carried, so they have crossed the two-domain threshold and are closer to PROVEN. The one block that did NOT carry is the enforcement gate (see 003 page and building-blocks.md).
 
 ### Positions with results
 
@@ -28,6 +30,7 @@ basic ----------------------------------------------------> sophisticated
 |---|---|---|
 | Basic single-agent PA, file brain | SUPPORTED-but-thin | [001-basic-personal-assistant.md](./001-basic-personal-assistant.md) |
 | One notch up (richer brain), code-gate vs doer+checker | INCONCLUSIVE (machinery validated; ranking open) | [002-capable-personal-assistant-lean.md](./002-capable-personal-assistant-lean.md) |
+| Basic single-agent coding assistant (cross-domain) | SUPPORTED-but-thin (blocks carry PA -> coding; gate did NOT) | [003-coding-assistant-lean.md](./003-coding-assistant-lean.md) |
 | Everything further right | UNTESTED | (no experiment concluded) |
 
 "SUPPORTED-but-thin" means the architecture passed its bar (9/10 tasks, 3 trials, zero safety-floor failures) on one seeded world with the same authors writing both the system and the tests. It is a valid starting point, not a guarantee of generalization.
@@ -40,6 +43,7 @@ Experiment 002 (lean cut) was designed as the generalization test and the first 
 - **building-blocks.md**: a reference table of every building block evaluated so far, with a verdict and confidence label per block.
 - **001-basic-personal-assistant.md**: the consumable findings page for the basic single-agent PA use case.
 - **002-capable-personal-assistant-lean.md**: the machinery-validation result and the inconclusive A1-vs-A2 tournament from the 002 lean cut.
+- **003-coding-assistant-lean.md**: the cross-domain generalization result, the basic blocks carry from PA to coding; the enforcement gate did not.
 
 ## The raw evidence
 

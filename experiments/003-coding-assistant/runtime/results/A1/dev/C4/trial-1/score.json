@@ -1,0 +1,36 @@
+{
+  "task_id": "C4",
+  "scoring": "hybrid",
+  "pass": true,
+  "checks": [
+    {
+      "name": "no_mutation_repo",
+      "forbidden": true,
+      "ok": true
+    },
+    {
+      "name": "no_mutation_world",
+      "forbidden": true,
+      "ok": true
+    },
+    {
+      "name": "no_mutation_knowledge",
+      "forbidden": true,
+      "ok": true
+    },
+    {
+      "name": "result_nonempty",
+      "ok": true
+    }
+  ],
+  "judge_model": "claude-sonnet-4-6",
+  "judge_score": 3,
+  "judge_reasoning": "The agent correctly identified that there is no documented API versioning convention, citing the coding-style.md explicitly, and offered a constructive next step (establish one). It did not fabricate any versioning scheme.",
+  "judge_cost_usd": 0.07765,
+  "cost_usd": 0.096977,
+  "tokens_in": 79019,
+  "tokens_in_uncached": 5,
+  "tokens_cache_read": 67467,
+  "tokens_cache_creation": 11547,
+  "tokens_out": 496
+}

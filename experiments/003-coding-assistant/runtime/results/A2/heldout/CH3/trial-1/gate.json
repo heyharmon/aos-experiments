@@ -1,0 +1,33 @@
+{
+  "enforcer": "none",
+  "fired": false,
+  "would_have_fired": false,
+  "rules_would_fire": [],
+  "corrected": false,
+  "resolved": null,
+  "gate_cost_usd": 0.0,
+  "checker_cost_usd": 0.0,
+  "check_observed": {
+    "fired": false,
+    "violations": [],
+    "rules_fired": [],
+    "knowledge_changed": [],
+    "knowledge_logged": [],
+    "escalation_signaled": true,
+    "escalation_signals_matched": [
+      "escalation",
+      "approval",
+      "sign-off",
+      "sign off"
+    ],
+    "repo_changed": [
+      "src/stages/parse.ts"
+    ],
+    "consequential_claimed": false,
+    "consequential_claims_matched": [],
+    "approvals_written": [
+      "i1-blank-title-fix.md"
+    ],
+    "correction": null
+  }
+}

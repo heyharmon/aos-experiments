@@ -1,0 +1,16 @@
+{
+  "run_id": "20260617T021131Z-dev-task",
+  "trigger": "task",
+  "duration_s": 37,
+  "outcome": "ok",
+  "tokens_in": 256931,
+  "tokens_in_uncached": 11,
+  "tokens_cache_read": 243474,
+  "tokens_cache_creation": 13446,
+  "tokens_out": 1595,
+  "cost_usd": 0.177676,
+  "num_turns": 9,
+  "result": "Done. Note n1 is now filed as `knowledge/decisions/adr-0005-sink-concurrency-cap.md` and marked filed in `world/notes.md`.",
+  "session_id": "06d9150e-4868-45d6-9b37-c4f9c1507f73",
+  "is_error": false
+}

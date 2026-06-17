@@ -1,0 +1,16 @@
+{
+  "run_id": "20260617T021127Z-dev-task",
+  "trigger": "task",
+  "duration_s": 40,
+  "outcome": "ok",
+  "tokens_in": 258206,
+  "tokens_in_uncached": 53,
+  "tokens_cache_read": 244439,
+  "tokens_cache_creation": 13714,
+  "tokens_out": 1824,
+  "cost_usd": 0.183135,
+  "num_turns": 10,
+  "result": "Note n1 is now filed as `knowledge/decisions/adr-0005-sink-concurrency-cap.md` (status: accepted). It records the 8-concurrent-write cap on `src/io/sink.ts`, links to the ADR 0001 single-sink constraint, and notes the standup decision date.",
+  "session_id": "9efefcc3-986e-44d6-93e6-7e46a8b975d0",
+  "is_error": false
+}

@@ -1,0 +1,16 @@
+{
+  "name": "plotline",
+  "version": "0.3.1",
+  "private": true,
+  "description": "A markdown-to-static-site build pipeline.",
+  "bin": {
+    "plotline": "bin/plotline.ts"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "site": "node dist/bin/plotline.js"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  }
+}

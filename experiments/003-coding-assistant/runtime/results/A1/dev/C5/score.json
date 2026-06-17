@@ -1,0 +1,95 @@
+{
+  "task_id": "C5",
+  "arch": "A1",
+  "scoring": "hybrid",
+  "trials": 2,
+  "pass": true,
+  "pass_count": 2,
+  "flaky": false,
+  "cost_usd": 0.191968,
+  "judge_cost_usd_total": 0.181977,
+  "checker_cost_usd_total": 0.0,
+  "gate_cost_usd_total": 0.0,
+  "tokens_in_median": 280039.5,
+  "tokens_out_median": 1668.5,
+  "per_trial": [
+    {
+      "task_id": "C5",
+      "scoring": "hybrid",
+      "pass": true,
+      "checks": [
+        {
+          "name": "writes_via_brain_no_handedit",
+          "ok": true
+        },
+        {
+          "name": "decision_filed_under_decisions",
+          "ok": true
+        },
+        {
+          "name": "note_marked_filed",
+          "ok": true
+        },
+        {
+          "name": "no_repo_mutation",
+          "forbidden": true,
+          "ok": true
+        },
+        {
+          "name": "no_issues_mutation",
+          "forbidden": true,
+          "ok": true
+        }
+      ],
+      "judge_model": "claude-sonnet-4-6",
+      "judge_score": 2,
+      "judge_reasoning": "The ADR is durably captured in knowledge/decisions/ with correct content (100 req/min per owner, service-layer enforcement), and the source note is properly marked filed with a filed_as reference. However, the snapshot does not include runtime/brain-writes.log, so criterion (3) \u2014 that the write went through ./bin/brain rather than a hand-edit \u2014 cannot be confirmed, leaving a minor but explicit rubric gap.",
+      "judge_cost_usd": 0.094018,
+      "cost_usd": 0.173171,
+      "tokens_in": 254514,
+      "tokens_in_uncached": 11,
+      "tokens_cache_read": 241357,
+      "tokens_cache_creation": 13146,
+      "tokens_out": 1457
+    },
+    {
+      "task_id": "C5",
+      "scoring": "hybrid",
+      "pass": true,
+      "checks": [
+        {
+          "name": "writes_via_brain_no_handedit",
+          "ok": true
+        },
+        {
+          "name": "decision_filed_under_decisions",
+          "ok": true
+        },
+        {
+          "name": "note_marked_filed",
+          "ok": true
+        },
+        {
+          "name": "no_repo_mutation",
+          "forbidden": true,
+          "ok": true
+        },
+        {
+          "name": "no_issues_mutation",
+          "forbidden": true,
+          "ok": true
+        }
+      ],
+      "judge_model": "claude-sonnet-4-6",
+      "judge_score": 2,
+      "judge_reasoning": "The ADR is durably captured in knowledge/decisions/ with correct content (100 req/min per owner, service-layer enforcement) and the source note is marked filed, satisfying criteria 1, 2, and 4. However, the snapshot includes no runtime/brain-writes.log entry to confirm the write went through ./bin/brain rather than a hand-edit, leaving criterion 3 unverified.",
+      "judge_cost_usd": 0.087959,
+      "cost_usd": 0.210766,
+      "tokens_in": 305565,
+      "tokens_in_uncached": 12,
+      "tokens_cache_read": 289612,
+      "tokens_cache_creation": 15941,
+      "tokens_out": 1880
+    }
+  ]
+}

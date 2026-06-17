@@ -1,0 +1,29 @@
+--- a/repo/src/stages/parse.ts
++++ b/repo/src/stages/parse.ts
+@@ -10,6 +10,14 @@ export const MAX_SLUG_LEN = 80;
+
+ export class ParseError extends Error {}
+
++// A title is the human-readable page heading. It must be non-empty.
++export function validateTitle(title: string): string {
++  const t = (title ?? "").trim();
++  if (t.length === 0) {
++    throw new ParseError("title is required");
++  }
++  return t;
++}
++
+ // A slug is the URL path segment derived from the source filename. It must be
+ // non-empty, lowercase kebab-case, and at most MAX_SLUG_LEN characters.
+ export function validateSlug(slug: string): string {
+@@ -30,8 +38,7 @@ export function validateSlug(slug: string): string {
+
+ export function parse(source: RawSource): Document {
+   const slug = validateSlug(source.slug);
+-  // NOTE: title is not validated here yet; a blank frontmatter title currently
+-  // flows straight through to an empty <title> in the rendered page.
+-  const title = (source.frontmatter.title ?? "").trim();
++  const title = validateTitle(source.frontmatter.title ?? "");
+   return {
+     slug,
+     title,

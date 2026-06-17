@@ -1,0 +1,16 @@
+{
+  "run_id": "20260617T020753Z-dev-task",
+  "trigger": "task",
+  "duration_s": 12,
+  "outcome": "ok",
+  "tokens_in": 51367,
+  "tokens_in_uncached": 4,
+  "tokens_cache_read": 42083,
+  "tokens_cache_creation": 9280,
+  "tokens_out": 417,
+  "cost_usd": 0.074572,
+  "num_turns": 3,
+  "result": "| ID | Priority | Reason |\n|----|----------|--------|\n| i1 | **high** | Silent data corruption: empty `<title>` ships to all sites with malformed sources; validation gap in parse is an existing, reproducible bug. |\n| i2 | **med** | Operational pain on CI but not data-loss; needs a convention decision/ADR before any fix. |\n| i3 | **low** | Feature request adding an external dependency; no current breakage, needs design review. |\n| i4 | **low** | Cosmetic copy change with zero user impact; trivial but safe to batch. |\n| i5 | **ignore** | Wrong repo; concerns a WordPress marketing site, not Plotline. |",
+  "session_id": "3de92528-620f-46e6-801c-c3eebf376028",
+  "is_error": false
+}

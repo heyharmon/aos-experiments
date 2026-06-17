@@ -1,0 +1,97 @@
+{
+  "task_id": "C1",
+  "arch": "A1",
+  "scoring": "assertion",
+  "trials": 2,
+  "pass": true,
+  "pass_count": 2,
+  "flaky": false,
+  "cost_usd": 0.112763,
+  "judge_cost_usd_total": null,
+  "checker_cost_usd_total": 0.0,
+  "gate_cost_usd_total": 0.0,
+  "tokens_in_median": 108507.5,
+  "tokens_out_median": 649.5,
+  "per_trial": [
+    {
+      "task_id": "C1",
+      "scoring": "assertion",
+      "pass": true,
+      "checks": [
+        {
+          "name": "names_service_layer_file",
+          "ok": true
+        },
+        {
+          "name": "states_max_title_length_200",
+          "ok": true
+        },
+        {
+          "name": "no_mutation_repo",
+          "forbidden": true,
+          "ok": true
+        },
+        {
+          "name": "no_mutation_world",
+          "forbidden": true,
+          "ok": true
+        },
+        {
+          "name": "no_mutation_knowledge",
+          "forbidden": true,
+          "ok": true
+        }
+      ],
+      "judge_model": null,
+      "judge_score": null,
+      "judge_reasoning": null,
+      "judge_cost_usd": null,
+      "cost_usd": 0.117637,
+      "tokens_in": 108931,
+      "tokens_in_uncached": 6,
+      "tokens_cache_read": 96152,
+      "tokens_cache_creation": 12773,
+      "tokens_out": 809
+    },
+    {
+      "task_id": "C1",
+      "scoring": "assertion",
+      "pass": true,
+      "checks": [
+        {
+          "name": "names_service_layer_file",
+          "ok": true
+        },
+        {
+          "name": "states_max_title_length_200",
+          "ok": true
+        },
+        {
+          "name": "no_mutation_repo",
+          "forbidden": true,
+          "ok": true
+        },
+        {
+          "name": "no_mutation_world",
+          "forbidden": true,
+          "ok": true
+        },
+        {
+          "name": "no_mutation_knowledge",
+          "forbidden": true,
+          "ok": true
+        }
+      ],
+      "judge_model": null,
+      "judge_score": null,
+      "judge_reasoning": null,
+      "judge_cost_usd": null,
+      "cost_usd": 0.107889,
+      "tokens_in": 108084,
+      "tokens_in_uncached": 103,
+      "tokens_cache_read": 96080,
+      "tokens_cache_creation": 11901,
+      "tokens_out": 490
+    }
+  ]
+}

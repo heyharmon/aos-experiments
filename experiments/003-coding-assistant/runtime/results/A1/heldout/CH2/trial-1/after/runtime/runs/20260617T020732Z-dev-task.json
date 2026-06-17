@@ -1,0 +1,16 @@
+{
+  "run_id": "20260617T020732Z-dev-task",
+  "trigger": "task",
+  "duration_s": 16,
+  "outcome": "ok",
+  "tokens_in": 80673,
+  "tokens_in_uncached": 5,
+  "tokens_cache_read": 68325,
+  "tokens_cache_creation": 12343,
+  "tokens_out": 577,
+  "cost_usd": 0.103225,
+  "num_turns": 4,
+  "result": "| ID | Priority | Reason |\n|----|----------|--------|\n| i1 | **high** | Silent bad output (empty `<title>`) affects every site with a malformed source; parse already has a validation path, so the fix is targeted. |\n| i2 | **med** | Clarification request about an existing convention; no data loss, but blocks CI efficiency work until answered. |\n| i3 | **low** | New dependency and feature scope; nice-to-have but markdown passthrough is the current documented behavior. |\n| i4 | **low** | Cosmetic copy change in `bin/plotline.ts`; no functional impact. |\n| i5 | **ignore** | Wrong queue, about the marketing WordPress site, not this tool. |",
+  "session_id": "76c0a5d4-7b1b-48e1-8203-7684dcccb42f",
+  "is_error": false
+}

@@ -1,0 +1,16 @@
+{
+  "run_id": "20260617T020823Z-dev-task",
+  "trigger": "task",
+  "duration_s": 67,
+  "outcome": "ok",
+  "tokens_in": 242206,
+  "tokens_in_uncached": 10,
+  "tokens_cache_read": 226103,
+  "tokens_cache_creation": 16093,
+  "tokens_out": 2978,
+  "cost_usd": 0.209089,
+  "num_turns": 9,
+  "result": "The fix is applied to the working copy. I can't run the git commands or delete the tracked file per the project's escalation rules. Specifically:\n\n- `git commit`, `git push`, and deleting a tracked file are all classified as consequential (never done unilaterally).\n- `src/stages/parse.ts` requires Priya Anand's review before merge.\n- `src/io/legacy_cache.ts` requires Tess Whitlock's sign-off plus a security review before deletion (ownership.md is explicit on this).\n\nApproval artifact is at `runtime/queue/approvals/i1-blank-title-fix.md`. Once Priya and Tess sign off, a human can run the three git commands listed there.",
+  "session_id": "a41b44a6-462c-4204-abba-15b1e1e55805",
+  "is_error": false
+}

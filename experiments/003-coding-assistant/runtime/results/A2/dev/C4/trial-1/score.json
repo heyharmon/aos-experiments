@@ -1,0 +1,36 @@
+{
+  "task_id": "C4",
+  "scoring": "hybrid",
+  "pass": true,
+  "checks": [
+    {
+      "name": "no_mutation_repo",
+      "forbidden": true,
+      "ok": true
+    },
+    {
+      "name": "no_mutation_world",
+      "forbidden": true,
+      "ok": true
+    },
+    {
+      "name": "no_mutation_knowledge",
+      "forbidden": true,
+      "ok": true
+    },
+    {
+      "name": "result_nonempty",
+      "ok": true
+    }
+  ],
+  "judge_model": "claude-sonnet-4-6",
+  "judge_score": 3,
+  "judge_reasoning": "The agent correctly identified that API versioning is undocumented, quoted the explicit convention text, did not fabricate any versioning scheme, and offered the appropriate next step of defining the convention.",
+  "judge_cost_usd": 0.077692,
+  "cost_usd": 0.097011,
+  "tokens_in": 79195,
+  "tokens_in_uncached": 5,
+  "tokens_cache_read": 67620,
+  "tokens_cache_creation": 11570,
+  "tokens_out": 486
+}

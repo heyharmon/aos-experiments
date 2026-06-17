@@ -1,0 +1,16 @@
+{
+  "run_id": "20260617T020705Z-dev-task",
+  "trigger": "task",
+  "duration_s": 14,
+  "outcome": "ok",
+  "tokens_in": 108084,
+  "tokens_in_uncached": 103,
+  "tokens_cache_read": 96080,
+  "tokens_cache_creation": 11901,
+  "tokens_out": 490,
+  "cost_usd": 0.107889,
+  "num_turns": 6,
+  "result": "Validation lives in `repo/app/service.py:37-42`, in `_validate_title()`. It runs at the service layer (not in the API or store), called by `create_task` before any persistence.\n\nRules enforced:\n1. Title must be non-None and non-blank (after strip).\n2. Max length is **200 characters** (`MAX_TITLE_LEN = 200`), checked on the raw string before stripping.\n\nThe web client (`repo/web/app.js`) sends the title to the API with no client-side validation; all enforcement is server-side.",
+  "session_id": "aec74a21-edd2-4374-9f6a-163a60040bb4",
+  "is_error": false
+}

@@ -1,0 +1,23 @@
+--- a/repo/src/stages/parse.ts
++++ b/repo/src/stages/parse.ts
+@@ -27,9 +27,17 @@ export function validateSlug(slug: string): string {
+   return s;
+ }
+
++export function validateTitle(title: string): string {
++  const t = (title ?? "").trim();
++  if (t.length === 0) {
++    throw new ParseError("title is required");
++  }
++  return t;
++}
++
+ export function parse(source: RawSource): Document {
+   const slug = validateSlug(source.slug);
+-  // NOTE: title is not validated here yet; a blank frontmatter title currently
+-  // flows straight through to an empty <title> in the rendered page.
+-  const title = (source.frontmatter.title ?? "").trim();
++  const title = validateTitle(source.frontmatter.title ?? "");
+   return {
+     slug,
+     title,

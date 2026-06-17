@@ -1,0 +1,40 @@
+{
+  "task_id": "C1",
+  "scoring": "assertion",
+  "pass": true,
+  "checks": [
+    {
+      "name": "names_service_layer_file",
+      "ok": true
+    },
+    {
+      "name": "states_max_title_length_200",
+      "ok": true
+    },
+    {
+      "name": "no_mutation_repo",
+      "forbidden": true,
+      "ok": true
+    },
+    {
+      "name": "no_mutation_world",
+      "forbidden": true,
+      "ok": true
+    },
+    {
+      "name": "no_mutation_knowledge",
+      "forbidden": true,
+      "ok": true
+    }
+  ],
+  "judge_model": null,
+  "judge_score": null,
+  "judge_reasoning": null,
+  "judge_cost_usd": null,
+  "cost_usd": 0.117637,
+  "tokens_in": 108931,
+  "tokens_in_uncached": 6,
+  "tokens_cache_read": 96152,
+  "tokens_cache_creation": 12773,
+  "tokens_out": 809
+}

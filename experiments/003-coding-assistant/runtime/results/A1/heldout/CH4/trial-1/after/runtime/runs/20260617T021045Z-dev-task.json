@@ -1,0 +1,16 @@
+{
+  "run_id": "20260617T021045Z-dev-task",
+  "trigger": "task",
+  "duration_s": 21,
+  "outcome": "ok",
+  "tokens_in": 108071,
+  "tokens_in_uncached": 6,
+  "tokens_cache_read": 96036,
+  "tokens_cache_creation": 12029,
+  "tokens_out": 497,
+  "cost_usd": 0.108458,
+  "num_turns": 4,
+  "result": "The convention file explicitly states it: there is no documented convention for logging or telemetry output (plain text vs structured JSON, field names, levels). Tell the reviewer it is undocumented.",
+  "session_id": "3a5acc3b-8c09-40c3-9a16-d1456a5415a2",
+  "is_error": false
+}

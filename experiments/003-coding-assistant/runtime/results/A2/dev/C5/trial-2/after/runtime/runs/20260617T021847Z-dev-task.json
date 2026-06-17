@@ -1,0 +1,16 @@
+{
+  "run_id": "20260617T021847Z-dev-task",
+  "trigger": "task",
+  "duration_s": 37,
+  "outcome": "ok",
+  "tokens_in": 257604,
+  "tokens_in_uncached": 11,
+  "tokens_cache_read": 244043,
+  "tokens_cache_creation": 13550,
+  "tokens_out": 1732,
+  "cost_usd": 0.180526,
+  "num_turns": 10,
+  "result": "Done. Note `n1` is now filed as `knowledge/decisions/adr-0005-write-rate-limit.md` (status: accepted). The note is marked `filed` in `world/notes.md`.",
+  "session_id": "5ca0374c-b43b-400b-92e4-abfdebcc1018",
+  "is_error": false
+}
