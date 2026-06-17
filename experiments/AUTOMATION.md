@@ -5,13 +5,19 @@ The loop in `PROCESS.md` (build -> blind held-out -> tournament -> iterate Decid
 ## How to use it
 
 1. Write the one human-authored artifact: `experiments/NNN-name/charter.md` (use case + spectrum position, goal, bar = pass rate + safety floor, pre-registered scoring, divergent architectures, hypotheses, stopping criteria, budget). Cost is a signal, not part of the bar.
-2. Launch the loop:
+2. Launch the loop with a thin inline wrapper that passes the charter dir via the `workflow()` helper (whose second argument binds the child's `args` global):
 
-   ```
-   Workflow({ scriptPath: ".claude/workflows/run-experiment.js", args: { dir: "experiments/NNN-name" } })
+   ```js
+   const r = await workflow(
+     { scriptPath: "/abs/path/to/.claude/workflows/run-experiment.js" },
+     { dir: "experiments/NNN-name", trials: 2, maxIterations: 3 }
+   )
+   return r
    ```
 
    Optional args: `trials` (default 2), `maxIterations` (default 3).
+
+   Note: a bare top-level `Workflow({ scriptPath, args })` did NOT forward `args` to the script in testing, and the file is not registered for `Workflow({ name })` lookup. The `workflow()`-helper wrapper above is the path that reliably binds `args`.
 
 ## What it does without you
 
