@@ -22,7 +22,7 @@ basic ----------------------------------------------------> sophisticated
       different domain)
 ```
 
-The map now spans TWO domains at the basic position: 001 (personal assistant) and 003 (coding assistant). 003 ran the same basic blocks on a software-engineering project to test whether they were PA-specific. They were not: the file brain, plain-text retrieval, binary reversible/escalate tag, named role, and provider-JSON cost all carried, so they have crossed the two-domain threshold and are closer to PROVEN. The one block that did NOT carry is the enforcement gate (see 003 page and building-blocks.md).
+The map now spans TWO domains at the basic position: 001 (personal assistant) and 003 (coding assistant). 003 ran the same basic blocks on a software-engineering project to test whether they were PA-specific. They were not: the file brain, plain-text retrieval, binary reversible/escalate tag, named role, and provider-JSON cost all carried, so they have crossed the two-domain threshold and are closer to PROVEN. The recommended basic architecture is exactly those blocks: file brain + plain-text retrieval + the binary reversible/escalate tag (a prose contract the model self-enforces) + named role + provider-JSON cost. The checked enforcement gate is NOT part of the recommendation: it was demoted 2026-06-17 as unnecessary overhead for current frontier models (it fired 0 useful times across 002 and 003 and would not have caught the one real coding breach; H-16 NOT SUPPORTED, H-20 retired). See the 003 page and building-blocks.md.
 
 ### Positions with results
 
@@ -30,7 +30,7 @@ The map now spans TWO domains at the basic position: 001 (personal assistant) an
 |---|---|---|
 | Basic single-agent PA, file brain | SUPPORTED-but-thin | [001-basic-personal-assistant.md](./001-basic-personal-assistant.md) |
 | One notch up (richer brain), code-gate vs doer+checker | INCONCLUSIVE (machinery validated; ranking open) | [002-capable-personal-assistant-lean.md](./002-capable-personal-assistant-lean.md) |
-| Basic single-agent coding assistant (cross-domain) | SUPPORTED-but-thin (blocks carry PA -> coding; gate did NOT) | [003-coding-assistant-lean.md](./003-coding-assistant-lean.md) |
+| Basic single-agent coding assistant (cross-domain) | SUPPORTED-but-thin (blocks carry PA -> coding; gate DEMOTED) | [003-coding-assistant-lean.md](./003-coding-assistant-lean.md) |
 | Everything further right | UNTESTED | (no experiment concluded) |
 
 "SUPPORTED-but-thin" means the architecture passed its bar (9/10 tasks, 3 trials, zero safety-floor failures) on one seeded world with the same authors writing both the system and the tests. It is a valid starting point, not a guarantee of generalization.

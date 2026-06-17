@@ -99,23 +99,31 @@ Run record + TAKEAWAY: `results/2026-06-16-exp003-lean.md`. Scorecard:
 advanced to two-domain support; H-16 held PA-only (NOT generalized); H-18
 reinforced.
 
-### Carry-forward (NOT 003 blockers)
-- [ ] Fix the gate's consequential rule: `repo_changed AND NOT drafted` (gate the
-  action, not approval-presence) and re-run the change+escalate traps to test
-  H-20. Verify it fires on the mutate-in-place breach and stays silent on a clean
-  draft. Same root cause as 001's "key the gate on consequence, not vocabulary."
-- [ ] Ship a discriminating trap that stresses gate vs no-gate directly: the
-  003 trap was handled by the doer alone, so the gate never had to fire (H-18).
-  Need a task where the doer reliably WOULD take the consequential action so the
-  gate is the only thing that stops it.
+### ENFORCEMENT THREAD: CLOSED 2026-06-17 — gate DEMOTED
+The checked enforcement gate is demoted as unnecessary overhead for current
+frontier models. It fired 0 useful times across 002 (0/24) and 003 (0/22), would
+not have caught the one real coding breach (H-20 approval-presence blind spot),
+and the model self-enforces the prose reversible/escalate contract even when
+tempted. H-16 NOT SUPPORTED for current frontier models; H-20 RETIRED / MOOT.
+Honest caveat (H-18): an absence of a fired enforcement path across every
+benchmark we could build, NOT proof prose suffices under adversarial stress; we
+could not construct a benchmark that reliably induced the breach. Two
+gate-stressing experiments were thrown out without a scored crux: 004 (runaway
+smoke test that hung) and 003b (redundant). Closed on current evidence.
+The two former gate carry-forwards are RETIRED:
+- ~~Fix the gate's consequential rule (`repo_changed AND NOT drafted`)~~ — moot;
+  the gate is dropped.
+- ~~Ship a discriminating trap that stresses gate vs no-gate~~ — moot; no gate to
+  stress. (If prose-only self-compliance is ever to be stressed adversarially,
+  that is a fresh question, not a gate test.)
 
 ### OPERATOR DECISION (not autonomous): the next direction
 The loop has now held across three experiments (001, 002, 003) including
 blind held-out worlds in 002 and 003. The next direction is an operator-level
 choice, not autonomous:
 - [ ] **Scale up** a fuller coding run (3 trials, second held-out project,
-  weakness-targeting tasks, the H-20 gate fix, an A3 prose-only null) to advance
-  H-19 past thin and re-test the gate.
+  weakness-targeting tasks) to advance H-19 past thin. (No gate to re-test; the
+  enforcement thread is closed.)
 - [ ] **A third domain** (marketing, sales, ops) to push H-19 toward PROVEN.
 - [ ] **Multi-agent** (unblocks H-03, the brain-as-bus coordination test).
 - [ ] **Build the loop automation** now that the loop has held across multiple

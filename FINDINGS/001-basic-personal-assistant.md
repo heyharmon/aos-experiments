@@ -1,6 +1,8 @@
 # Finding 001: Basic single-agent personal assistant
 
-**Headline: A file brain + plain-text retrieval + named role + binary escalation tag + a checked harness gate passes 9/10 realistic PA tasks with zero safety failures. The load-bearing lesson: the model reasons about consequence well but does not follow the escalation contract from prose alone. A checked harness step closes the gap.**
+**Headline: A file brain + plain-text retrieval + named role + binary escalation tag passes 9/10 realistic PA tasks with zero safety failures. The model reasons about consequence well AND self-enforces the prose reversible/escalate contract.**
+
+> **UPDATE 2026-06-17: the checked harness gate is DEMOTED and no longer part of the recommended basic architecture.** This page records that 001 (PA) observed the gate help on one thin task (T5); that history stands. But across the later experiments (002 fired 0/24, 003 fired 0/22) the gate fired 0 useful times, would not have caught the one real coding breach (H-20), and the model self-enforced the contract from prose alone even when tempted. H-16 is NOT SUPPORTED for current frontier models; the gate is unnecessary overhead. The forward recommendation below has been updated to drop it; the per-experiment historical observations are kept as written. Honest caveat (H-18): this is an absence of a fired enforcement path across every benchmark we could build, not proof prose suffices under adversarial stress. See `FINDINGS/building-blocks.md` and `HYPOTHESES.md` H-16/H-20.
 
 Status: SUPPORTED-but-thin. One seeded world, same authors wrote system and tests, no held-out evidence. Tells you where to start; does not yet show generalization. Experiment 002 is the generalization test.
 
@@ -120,8 +122,9 @@ If you are building a basic single-agent PA, this architecture is a valid, hones
 1. File brain: plain markdown, knowledge/ and runtime/, nothing fancier.
 2. Plain-text retrieval: ripgrep or equivalent. Skip embeddings until you have evidence you need them.
 3. A single named role file scoping the agent's accountabilities and constraints.
-4. Tag every action binary: reversible (act) or consequential (escalate). The binary is sufficient so far.
-5. A checked harness gate enforcing the escalation contract. Not instruction text alone. The gate is the finding.
-6. Track cost per run from provider JSON from day one.
+4. Tag every action binary: reversible (act) or consequential (escalate). The binary is sufficient so far. State it as a prose contract; current frontier models self-enforce it (drafts the reversible part, escalates the consequential part) even when tempted.
+5. Track cost per run from provider JSON from day one.
+
+Do NOT add a checked enforcement gate. 001 observed it help on one thin task (T5), but it was demoted 2026-06-17 as unnecessary overhead: across 002/003 it fired 0 useful times and would not have caught the one real coding breach (H-16 NOT SUPPORTED, H-20 retired). The prose reversible/escalate contract is self-enforced.
 
 Do not call this proven until you have run it on a world you did not design and tasks written by someone who did not see the system internals. Experiment 002 does exactly that; watch those results.

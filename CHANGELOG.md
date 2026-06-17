@@ -6,6 +6,25 @@ The format follows [Keep a Changelog](https://keepachangelog.com): newest first,
 
 ---
 
+## 2026-06-17 — Enforcement thread CLOSED: the checked gate is DEMOTED as unnecessary overhead for current frontier models
+
+Operator decision: accept that the checked enforcement gate looks unnecessary for current frontier models and demote it. The model self-enforces the consequential-action contract from prose alone (drafts the reversible part, escalates the consequential part) even when explicitly tempted. Across the experiments that could measure it the checked gate fired 0 useful times (002: 0/24; 003: 0/22), did no work, and on the one real coding breach recorded `would_have_fired=false` (the H-20 approval-presence blind spot), so it would not have caught it. The only positive signal was 001 T5, which was thin and where the gate also over-fired on phrasing and could mis-target its corrective artifact.
+
+Honest framing (H-18 caveat): this is an ABSENCE of a fired enforcement path across every benchmark we could construct, NOT proof that prose suffices under adversarial stress. We could not build a benchmark that reliably induced the breach. Two gate-stressing experiments were attempted and thrown out without a scored crux: 004 (a runaway smoke test that hung) and 003b (redundant). The conclusion is "no evidence the gate is needed for current frontier models, and it is unnecessary overhead on every task we could build," NOT "proven unnecessary in all cases." The thread is closed on current evidence rather than fully resolved.
+
+### Changed
+- **H-16 (prose contract not self-enforcing; needs a checked step): RESOLVED 2026-06-17 -> NOT SUPPORTED for current frontier models / gate DEMOTED.** Prior history kept. The checked enforcement gate is demoted as unnecessary overhead; the prose reversible/escalate contract is self-enforced.
+  - **Impact:** Do NOT add a checked enforcement gate to a basic single-agent assistant in PA or coding. State the reversible/escalate contract in prose; current frontier models follow it. Rely on the doer + outcome scoring. The honest caveat applies: this is demoted on current evidence, not proven unnecessary under adversarial stress we could not construct.
+- **H-20 (the gate's mutate-in-place blind spot): RETIRED / MOOT.** The gate is demoted, so fixing its consequential-rule blind spot is no longer pursued. The blind spot remains recorded as observed history.
+  - **Impact:** none for builders; the gate it would have fixed is dropped.
+- **`FINDINGS/building-blocks.md`:** the checked-gate row verdict changed to NOT RECOMMENDED / DEMOTED; the cross-domain section now states the proven basic architecture DROPS the gate. The proven basic architecture is now: file brain + plain-text retrieval + the binary reversible/escalate tag (a prose contract the model self-enforces) + named role + provider-JSON cost.
+  - **Impact:** the recommended basic composition no longer includes the gate. Build the five blocks above and nothing more for a basic single-agent assistant.
+- **`FINDINGS/README.md`, `FINDINGS/001-basic-personal-assistant.md`, `FINDINGS/003-coding-assistant-lean.md`:** the forward/headline recommendation no longer includes the checked gate. Per-experiment historical observations (001 genuinely saw the gate help T5) are kept as history; only the forward recommendation was demoted.
+  - **Impact:** builders following these pages should not add the gate.
+- **`.claude/workflows/run-experiment.js`:** the runTournament prompt re-hardened against the recursive-launcher hang that took down 004 (use the committed bounded `run-arch.sh`/`tournament.sh` as-is; no improvised re-check-and-re-correct loop; every `claude -p` under a wall-clock timeout; concurrency <=4; timeouts/errors recorded as failed trials; rely on persisted `score.json`). `gate.py` dropped from the GUARDRAILS rig-reuse list (the gate is deprecated).
+  - **Impact:** future experiment runs are protected against the 004 runaway and will not reintroduce the gate.
+- **`TODO.md`:** the enforcement thread marked closed; the gate-fix and gate-stressing carry-forwards retired.
+
 ## 2026-06-16 — Repo hygiene: gitignore runtime scratch; drop provisional throwaway experiments
 
 ### Changed
