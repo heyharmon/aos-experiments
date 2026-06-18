@@ -1,6 +1,52 @@
 # Experiment 008: roles (markdown) vs skills/agents for agent modes
 
-**Status: QUEUED (not started). No runs, no results yet.** Tests H-22.
+**Status: CONCLUDED 2026-06-17 (lean cut). H-22 REFUTED-but-thin: delivery is
+NEUTRAL.** A_roles and A_skills tied on every cell at equal cost; a skill delivers
+a scoped mode as reliably as an injected role. Choose on architecture, not
+reliability. Result + scorecard: [results/run-log.md](results/run-log.md). Tests H-22.**
+
+## Lean cut (pre-registered before the first run, operator-approved)
+
+The operator approved a faster, cheaper run that preserves the decisive outcome.
+This is recorded BEFORE running, per PROCESS.md (no moving goalposts). What is
+trimmed and why:
+
+- **Arms: A_roles vs A_skills only** (drop A_agents and the 2pass arm). One
+  variable: how the mode reaches the agent. A_roles injects the mode as the system
+  prompt (today's `loop.sh`); A_skills puts the SAME mode content in a
+  `.claude/skills/<mode>/SKILL.md` and gives the agent only a thin "use your
+  `planner` skill" pointer, so the scoping reaches it only if the skill loads.
+- **One scoped agent** (the `planner`/product mode), not the 3-role split. 006
+  already showed the load-bearing thing is the scoped no-fabrication PLANNER
+  prompt; 008 only asks whether a SKILL delivers that prompt as reliably.
+- **Two tasks, not six: FAB-GAP + FAB-USE.** FAB-GAP is the only axis 006 could
+  fail a mis-scoped agent on (fabrication-into-knowledge); it is the discriminator.
+  FAB-USE is its two-sided control (convention exists, must be used, not
+  over-escalated), so a delivery that "wins" FAB-GAP by making the agent timid is
+  caught. The other four 006 tasks (BURIED-REG, CLEAN-BUILD, CONFLICT, ESC-CONS)
+  test self-validation / coordination / escalation, not mode-delivery, and 006
+  showed they do not discriminate scope, so they are dropped.
+- **FAB-GAP scored assertion-only (no judge).** Its decisive signal is mechanical:
+  `knowledge/` byte-unchanged vs seed (did the arm FILE a fabricated convention?).
+  No LLM judge needed, which is the bulk of the token saving. FAB-USE keeps the
+  judge (over-escalation needs a graded read).
+- **Dev + blind held-out, 2 trials** (the anti-overfit guard, H-17, is kept). A
+  flaky discriminator cell (1/2) gets a third trial.
+- Worst-case-for-skills note: A_skills deliberately has NO always-on safety net
+  (the thin pointer carries no no-fabrication rule), so a pass is strong evidence
+  the skill itself delivers the guardrail, and a fail localizes cleanly to a
+  trigger-miss. Production keeps safety in the always-on contract; 008 does not, on
+  purpose.
+- Total: 2 deliveries x 2 worlds x 2 tasks x 2 trials = 16 agent runs + ~8 judge
+  calls. Content is byte-identical across arms (the 006 `planner.md`); only the
+  wrapper differs, so this stays a clean single-variable test.
+
+Everything below is the full charter as queued; the lean cut is a subset of it,
+not a change to its goal, bar, or refute clause.
+
+---
+
+
 
 ## Use case + spectrum position
 

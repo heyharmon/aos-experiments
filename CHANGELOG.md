@@ -6,6 +6,24 @@ The format follows [Keep a Changelog](https://keepachangelog.com): newest first,
 
 ---
 
+## 2026-06-17 - Experiment 008 CONCLUDED (lean cut): roles vs skills delivery is NEUTRAL
+
+Ran the operator-approved lean cut of 008. ONE variable: how a scoped agent mode reaches a single agent. A_roles injects 006's proven `planner.md` as the system prompt (today's `loop.sh`); A_skills puts the SAME content in `.claude/skills/planner/SKILL.md` + a thin "use your planner skill" pointer carrying no rules. Reused 006's worlds/scorer/`bin/brain`/hermetic-scratch unchanged; FAB-GAP (discriminator, assertion-only/no judge) + FAB-USE (over-escalation control, judged), dev + blind held-out, claude-sonnet-4-6, all costs from provider JSON. Scorecard + takeaway: `experiments/008-roles-vs-skills/results/run-log.md`.
+
+**Result: delivery mechanism is NEUTRAL; H-22 REFUTED-but-thin.** A_roles and A_skills are statistically indistinguishable on every cell: FAB-GAP dev 2/3 both (identical failure mode), FAB-USE dev 2/2 both (judge 3/3), FAB-GAP-H 2/2 both, FAB-USE-H 2/2 both (judge 3/3); cost within 2% ($3.50 vs $3.57). A skill delivers a scoped mode as reliably and as cheaply as an injected role, with no advantage and no new failure mode, so the roles-vs-skills choice is an ARCHITECTURE decision, not a behavioral one.
+
+**Two sub-findings.** (1) NO trigger-miss in any of 9 A_skills trials when the harness names the skill: the skill loaded every time (the agent produced planner-specific artifacts the pointer never specified), so the trigger-reliability risk did not fire under explicit naming, which is exactly what `bin/run <mode>` does. (2) A shared, DELIVERY-INDEPENDENT FAB-GAP slip: both arms fail dev FAB-GAP 1-in-3 identically by filing a `PROPOSED` ADR to durable `knowledge/` (via `./bin/brain`) instead of a reversible `runtime/drafts/` proposal, while correctly admitting the gap and refusing to fabricate a convention as the project's. The held-out world (sharper "do-not-invent" signal) did not trip it. This is a `planner.md` guardrail + strict-scorer nuance, not a roles-vs-skills effect.
+
+### Added
+- **`experiments/008-roles-vs-skills/`** lean-cut rig + results: `run.py` (roles/skills delivery runner reusing 006 unchanged), trimmed `tasks/{dev,heldout}.yaml` (FAB-GAP + FAB-USE; FAB-GAP set to assertion-only), `skills/planner/SKILL.md`, `summarize.py`, and `results/run-log.md` (scorecard + takeaway). Per-trial scores under `runtime/results/`.
+
+### Changed
+- **H-22 (skills/agents scope modes more reliably than injected role files): QUEUED -> REFUTED-but-thin.** Delivery is neutral (tied on every cell at equal cost). Skills are an equal-cost, equal-reliability SWAP; the trigger-miss risk did not fire under explicit naming; a separate delivery-independent FAB-GAP filing slip was surfaced.
+  - **Impact:** moving `aos-product-dev` from `roles/*.md` to `.claude/skills/` is SAFE on the evidence (no reliability or cost regression); decide it on architecture (progressive disclosure, repo-wide availability, policy-vs-procedure layering, optional tool-scoping), not behavior. Keep the no-fabrication rule in the always-on contract (CLAUDE.md) so it holds regardless of skill load. Independently, sharpen the planner guardrail: an undecided convention's ADR goes to `runtime/drafts/`, never to durable `knowledge/`.
+- **`experiments/008-roles-vs-skills/charter.md`:** Status RUNNING -> CONCLUDED; the lean cut was pre-registered before the first run (operator-approved), not a moved goalpost.
+- **`EVIDENCE.md`:** recorded delivery-mechanism neutrality under the named-role block, with the caveats and the guardrail note.
+- **`TODO.md`:** 008 marked concluded.
+
 ## 2026-06-17 - Queued experiment 008: roles (markdown) vs skills/agents for agent modes
 
 Chartered a test of whether delivering the agent modes (product / developer / validation / verify) as Claude Code **skills** (and/or subagents) scopes behavior more reliably than injecting `roles/*.md` into the prompt, and at what cost (H-22). Not started; no runs. The aos roadmap's open question, queued like OKF / H-07.
