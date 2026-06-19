@@ -1,25 +1,15 @@
-# Agent OS, an experiment
+# aos-experiments has moved
 
-This repo is not a doctrine. It is an experiment to discover what actually works for putting agents to work.
+The contents of this repo now live in the **[aos](https://github.com/heyharmon/aos)** repo under [`lab/`](https://github.com/heyharmon/aos/tree/main/lab), with full git history preserved.
 
-We build small agent operating systems, give them realistic tasks, and measure outcome quality and token cost. Principles emerge from evidence, not assertion. The aim is to become the authoritative answer to "where do I start, and what is the optimal way to build an agentic solution for my use case?" See `VISION.md`.
+aos is now one place instead of two:
 
-## Structure
-
-| Path | What it is |
+| Where | What |
 | --- | --- |
-| `VISION.md` | The goal: proven agent OS architectures across a complexity spectrum of use cases |
-| `experiments/PROCESS.md` | How we run an experiment from question to clear-cut takeaway |
-| `HYPOTHESES.md` | Every unproven claim as a falsifiable bet |
-| `experiments/` | Each experiment: a charter, a system-under-test, a benchmark, and the hypotheses it bears on |
-| `experiments/001-personal-assistant/` | First experiment: a single-agent personal assistant on a file brain |
-| `results/` | The evidence log: run outputs, scores, costs |
-| `archive/` | Earlier architecture docs, kept for provenance only. Not authoritative. |
+| [`aos/docs/`](https://github.com/heyharmon/aos/tree/main/docs) | The guide: the evidence-backed answer to "what is the simplest architecture that reliably does the job?" |
+| [`aos/lab/`](https://github.com/heyharmon/aos/tree/main/lab) | The evidence engine (formerly this repo): hypotheses, experiments, findings, runs. |
+| [`aos/backlog/`](https://github.com/heyharmon/aos/tree/main/backlog) | Untested ideas and candidate architecture. |
 
-## The one operating principle
+The experiments and the hypothesis register are at `aos/lab/`; the reader-facing guide and evidence at `aos/docs/`. Claims and the runs behind them now live in one graph: `EVIDENCE.md` is no longer a copy of this repo.
 
-For any claim in this repo, you should be able to point at a run in `results/` that supports it. If you cannot, it is a hypothesis, not a fact.
-
-## How to contribute
-
-Follow `experiments/PROCESS.md`: charter an experiment (use case, goal, bar, stopping criteria), build the system under test, run it, find where it breaks, revise, and re-run until a clear-cut takeaway. Pick the hypotheses it tests from `HYPOTHESES.md` and update their status from the evidence.
+**This repo is frozen.** Do not add new work here. Use `aos/lab/`.
